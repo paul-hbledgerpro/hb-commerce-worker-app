@@ -10,20 +10,6 @@ EMAIL_BCC = "paulcamerasystems@gmail.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "hb-commerce-db"
-database_id = "PASTE_YOUR_D1_DATABASE_ID_HERE"
+database_id = "ff20d45f-12ed-45c0-bf00-8760ccd66db2"
 
 # Private setup code is stored as a secret, not here. Run: npx wrangler secret put SETUP_CODE
-
-# Optional sales tax origin settings for TaxJar SmartCalcs. Update these to your fulfillment/origin location.
-# TAX_ORIGIN_COUNTRY = "US"
-# TAX_ORIGIN_ZIP = "60016"
-# TAX_ORIGIN_STATE = "IL"
-# TAX_ORIGIN_CITY = "Des Plaines"
-# TAX_ORIGIN_STREET = ""
-# Private TaxJar token is a secret, not here. Run: npx wrangler secret put TAXJAR_API_KEY
-
-[triggers]
-crons = ["0 14 * * *"]
-
-# Recommended for reminder email links:
-# PUBLIC_BASE_URL = "https://www.hbcommercesolution.com"
