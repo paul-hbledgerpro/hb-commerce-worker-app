@@ -12880,6 +12880,111 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   #printable-document .hb-doc-main{min-height:1260px!important}
 }
 
+
+
+/* V177 exact one-page print layout: force desktop invoice layout in print */
+@media print{
+  @page{size:Letter portrait;margin:0!important}
+  html,body{
+    width:8.5in!important;
+    height:11in!important;
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    overflow:hidden!important;
+  }
+  .admin-app-topbar,.topbar,.footer,.admin-app-footer,.btn-row.no-print,.no-print,#hbInstallWidget{
+    display:none!important;
+  }
+  main.section,main.section>.container{
+    width:8.5in!important;
+    max-width:8.5in!important;
+    height:11in!important;
+    max-height:11in!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    background:#fff!important;
+  }
+  #printable-document.hb-side-doc{
+    width:1080px!important;
+    max-width:none!important;
+    height:1260px!important;
+    min-height:1260px!important;
+    margin:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    border-radius:0!important;
+    overflow:hidden!important;
+    display:grid!important;
+    grid-template-columns:280px 800px!important;
+    transform:scale(.755)!important;
+    transform-origin:top left!important;
+    zoom:1!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  #printable-document .hb-doc-side{
+    width:280px!important;
+    min-height:1260px!important;
+    height:1260px!important;
+    overflow:hidden!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  #printable-document .hb-doc-main{
+    width:800px!important;
+    min-height:1260px!important;
+    height:1260px!important;
+    padding:34px 30px 26px!important;
+    overflow:hidden!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  #printable-document .hb-doc-title-row{
+    display:grid!important;
+    grid-template-columns:1fr auto!important;
+    align-items:start!important;
+  }
+  #printable-document .hb-doc-title-block{
+    justify-self:end!important;
+    width:330px!important;
+  }
+  #printable-document .hb-billship{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:24px!important;
+    margin:22px 0 22px!important;
+  }
+  #printable-document .hb-info-card{
+    min-height:154px!important;
+    padding:58px 18px 16px!important;
+  }
+  #printable-document .hb-side-line-table{
+    width:100%!important;
+    flex:0 0 auto!important;
+  }
+  #printable-document .hb-lower-grid{
+    display:grid!important;
+    grid-template-columns:1fr 360px!important;
+    gap:28px!important;
+    margin-top:auto!important;
+    padding-top:36px!important;
+    align-items:start!important;
+  }
+  #printable-document .hb-secure-payment{
+    display:grid!important;
+    grid-template-columns:76px minmax(0,1fr)!important;
+    gap:16px!important;
+    margin-top:28px!important;
+  }
+  #printable-document .hb-doc-thanks{
+    margin-top:20px!important;
+  }
+}
+
 `;
 
 function installButtonHtml() {
