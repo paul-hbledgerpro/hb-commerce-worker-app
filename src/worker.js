@@ -12853,6 +12853,33 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 /* V175 Fix invoice payment link cursor */
 .hb-secure-payment a.pay-btn{cursor:pointer!important;opacity:1!important;pointer-events:auto!important}.hb-secure-payment button.pay-btn:disabled{cursor:not-allowed!important;opacity:.72!important}
+
+
+/* V176 unified invoice/quote email + print layout */
+@media print{
+  @page{size:Letter portrait;margin:0!important}
+  html,body{width:8.5in!important;min-height:11in!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
+  .admin-app-topbar,.topbar,.footer,.admin-app-footer,.btn-row.no-print,.no-print,#hbInstallWidget{display:none!important}
+  main.section{padding:0!important;margin:0!important;background:#fff!important}
+  main.section>.container{width:8.5in!important;max-width:8.5in!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  #printable-document.hb-side-doc{
+    width:1080px!important;
+    max-width:none!important;
+    min-height:1260px!important;
+    margin:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    border-radius:0!important;
+    zoom:.72!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  #printable-document .hb-doc-side{min-height:1260px!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  #printable-document .hb-doc-main{min-height:1260px!important}
+}
+
 `;
 
 function installButtonHtml() {
@@ -18562,24 +18589,20 @@ async function sendDocEmail(env, doc) {
   if (!doc.email) return false;
   const totals = calcTotals(doc);
   const subject = `HB Commerce Solutions ${doc.type} ${doc.number}`;
-  const isApprovalDoc = doc.type === "Quote";
+  const isQuote = doc.type === "Quote";
   const link = reviewUrl(env, doc);
-  const approveLink = isApprovalDoc ? `${link}#approve` : "";
-  const declineLink = isApprovalDoc ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
-  const intro = doc.type === "Invoice"
-    ? "Please find your invoice attached as a PDF."
-    : `Please find your quote attached as a PDF. You can approve or decline it using the links in this email or inside the PDF.`;
-  const linkHtml = isApprovalDoc
-    ? `<p style="font-size:13px;margin-top:14px"><a href="${approveLink}">Approve Quote online</a> &nbsp; | &nbsp; <a href="${declineLink}">Decline Quote</a></p>`
-    : "";
+  const approveLink = isQuote ? `${link}#approve` : "";
+  const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
+  const payLink = doc.type === "Invoice" ? absoluteInvoicePayUrl(env, doc) : "";
+  const actionHtml = isQuote
+    ? `<p style="margin:18px 0"><a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Approve Quote</a> <a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Decline Quote</a></p>`
+    : `<p style="margin:18px 0"><a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Pay Secure Online</a> <a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">View Invoice</a></p>`;
+  const intro = isQuote
+    ? "Your HB Commerce quote is ready. Please open the secure quote link below to review the full quote design and approve or decline it online."
+    : "Your HB Commerce invoice is ready. Please open the secure invoice link below to view the full invoice design and make payment online.";
   const orderHtml = doc.payment_preference ? `<p><strong>Selected payment option:</strong> ${escapeHtml(doc.payment_preference)}<br><strong>Shipping notice:</strong> Hardware order ships only after approval and payment is received/cleared.</p>` : "";
-  const html = `<p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>${intro}</p><p><strong>Total: ${money(totals.total)}</strong></p>${orderHtml}${linkHtml}<p>Thank you,<br>HB Commerce Solutions</p>`;
-  const pdfBytes = buildPdfBytes(doc, approveLink, declineLink);
-  const attachment = {
-    filename: `${safeFileName(doc.type + "_" + doc.number + "_" + (doc.customer_name || "Customer"))}.pdf`,
-    content: bytesToBase64(pdfBytes)
-  };
-  return await sendEmail(env, { to: doc.email, subject, html, attachments: [attachment] });
+  const html = `<div style="font-family:Arial,sans-serif;color:#10233d;line-height:1.55"><p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>${intro}</p><p><strong>${escapeHtml(doc.type)}:</strong> ${escapeHtml(doc.number || "")}<br><strong>Total:</strong> ${money(totals.total)}</p>${orderHtml}${actionHtml}<p style="font-size:13px;color:#64748b">This secure link always shows the latest HB Commerce invoice/quote layout. If you need a PDF, open the link and use Print / Save PDF from that page.</p><p>Thank you,<br>HB Commerce Solutions</p></div>`;
+  return await sendEmail(env, { to: doc.email, subject, html });
 }
 
 async function sendEmail(env, { to, subject, html, attachments = [], reply_to = "" }) {
@@ -18617,237 +18640,8 @@ function bytesToBase64(bytes) {
   return btoa(binary);
 }
 
-function buildPdfBytes(doc, approvalLink = "", declineLink = "") {
-  const totals = calcTotals(doc);
-  const pages = [];
-  const pdfLinks = [];
-  let ops = [];
-  let y = 740;
-  const navy = "0.024 0.157 0.302";
-  const orange = "1 0.416 0";
-  const green = "0.075 0.541 0.239";
-  const gray = "0.85 0.89 0.94";
-  const ink = "0.12 0.16 0.22";
-  const muted = "0.38 0.45 0.55";
+/* v176: removed old manual PDF builder so emailed invoices/quotes use the exact live document link instead of outdated PDF attachment. */
 
-  function addPdfLink(page, x, yy, w, h, url) {
-    if (url) pdfLinks.push({ page, x, y: yy, w, h, url });
-  }
-
-  function newPage() {
-    if (ops.length) pages.push(ops.join("\n"));
-    ops = [];
-    y = 740;
-    rect(0, 782, 612, 10, orange, null);
-    rect(420, 782, 192, 10, green, null);
-    rect(0, 0, 18, 792, navy, null);
-    image("Logo", 46, 724, 168, 42);
-    text(220, 748, "HB COMMERCE SOLUTIONS", 10, "F2", navy);
-    text(220, 734, "Merchant Services | POS Software | LTS Camera Hardware", 7.5, "F1", muted);
-    text(46, 714, "Merchant Services | POS Software | LTS Camera Hardware", 7.5, "F1", muted);
-    text(566, 748, doc.type || "Document", 24, "F2", navy, "right");
-    line(470, 734, 566, 734, orange, 4);
-    const label = docNumberLabel(doc.type);
-    const dateLabel = doc.type === "Invoice" ? "Due Date" : "Valid Until";
-    metaRow(label, doc.number || "", 712);
-    metaRow("Date", formatDate(doc.doc_date), 696);
-    metaRow(dateLabel, formatDate(doc.valid_until), 680);
-    if (pages.length === 0 && doc.type === "Quote" && approvalLink) {
-      rect(430, 650, 62, 19, green, null);
-      text(461, 656, "APPROVE", 7.8, "F2", "1 1 1", "center");
-      addPdfLink(0, 430, 650, 62, 19, approvalLink);
-      rect(500, 650, 62, 19, orange, null);
-      text(531, 656, "DECLINE", 7.8, "F2", "1 1 1", "center");
-      addPdfLink(0, 500, 650, 62, 19, declineLink || approvalLink);
-    }
-    y = 650;
-  }
-  function metaRow(a,b,yy){ text(430, yy, a, 8.5, "F2", navy); text(566, yy, b, 8.5, "F2", ink, "right"); }
-  function rect(x, yy, w, h, fill, stroke) {
-    ops.push("q");
-    if (fill) ops.push(`${fill} rg`);
-    if (stroke) ops.push(`${stroke} RG 0.6 w`);
-    ops.push(`${x.toFixed(2)} ${yy.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re ${fill && stroke ? "B" : fill ? "f" : "S"}`);
-    ops.push("Q");
-  }
-  function line(x1, y1, x2, y2, color, width=1) {
-    ops.push(`q ${color} RG ${width} w ${x1} ${y1} m ${x2} ${y2} l S Q`);
-  }
-  function image(name, x, yy, w, h) {
-    ops.push(`q ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${x.toFixed(2)} ${yy.toFixed(2)} cm /${name} Do Q`);
-  }
-  function text(x, yy, s, size=10, font="F1", color=ink, align="left") {
-    s = pdfEscape(s);
-    let tx = x;
-    const approx = s.length * size * 0.52;
-    if (align === "right") tx = x - approx;
-    if (align === "center") tx = x - approx / 2;
-    ops.push(`BT /${font} ${size.toFixed(2)} Tf ${color} rg 1 0 0 1 ${tx.toFixed(2)} ${yy.toFixed(2)} Tm (${s}) Tj ET`);
-  }
-  function checkSpace(h=24) { if (y - h < 100) newPage(); }
-
-  newPage();
-
-  rect(46, y-74, 245, 70, "1 1 1", gray); rect(46, y-8, 245, 5, orange, null);
-  rect(320, y-74, 245, 70, "1 1 1", gray); rect(320, y-8, 245, 5, green, null);
-  text(58, y-26, "PREPARED FOR", 8, "F2", navy);
-  text(58, y-44, doc.customer_name || "Customer", 11, "F2", ink);
-  const addr = [doc.street, [doc.city, doc.state, doc.zip].filter(Boolean).join(" ")].filter(Boolean).join(" | ");
-  text(58, y-60, addr, 8, "F1", muted);
-  text(332, y-26, "PREPARED BY", 8, "F2", navy);
-  text(332, y-44, "HANSABIJAL LLC", 11, "F2", ink);
-  text(332, y-60, businessLabel(doc.business), 8, "F1", muted);
-  y -= 105;
-
-  text(46, y, `${businessLabel(doc.business)} ${doc.type}`, 15, "F2", navy); y -= 18;
-  const intro = `Please find below the ${String(doc.type || "document").toLowerCase()} prepared for the requested ${businessLabel(doc.business).toLowerCase()} products and services.`;
-  for (const l of wrapPdfText(intro, 92).slice(0, 3)) { text(46, y, l, 9, "F1", muted); y -= 12; }
-  y -= 8;
-
-  checkSpace(50);
-  const items = Array.isArray(doc.items) ? doc.items : [];
-  const hasDiscountColumn = items.some(item => lineDiscountTotal(item) > 0.004);
-  rect(46, y-20, 520, 22, navy, null);
-  text(60, y-12, "Qty", 7.5, "F2", "1 1 1");
-  text(98, y-12, "Item / Service", 7.5, "F2", "1 1 1");
-  text(214, y-12, "Description", 7.5, "F2", "1 1 1");
-  if (hasDiscountColumn) {
-    text(418, y-12, "Unit Price", 7.0, "F2", "1 1 1", "right");
-    text(492, y-12, "Discounted", 7.0, "F2", "1 1 1", "right");
-    text(558, y-12, "Line Total", 7.0, "F2", "1 1 1", "right");
-  } else {
-    text(460, y-12, "Unit Price", 7.5, "F2", "1 1 1", "right");
-    text(558, y-12, "Line Total", 7.5, "F2", "1 1 1", "right");
-  }
-  y -= 22;
-
-  for (const item of items) {
-    const descLines = wrapPdfText(item.desc || "", hasDiscountColumn ? 35 : 46).slice(0, 4);
-    const rowH = Math.max(34, 14 + descLines.length * 10);
-    checkSpace(rowH + 8);
-    rect(46, y-rowH, 520, rowH, "1 1 1", gray);
-    text(65, y-15, item.qty || "0", 8, "F1", ink, "center");
-    text(98, y-15, item.name || "", 7.5, "F2", ink);
-    descLines.forEach((l, idx) => text(214, y-15-(idx*10), l, 7.3, "F1", ink));
-    const qty = parseInt(item.qty || 0, 10) || 0;
-    const unit = regularUnit(item);
-    const discounted = discountedUnit(item);
-    const lineAmt = qty * discounted;
-    const hasLineDiscount = lineDiscountTotal(item) > 0.004;
-    if (hasDiscountColumn) {
-      text(418, y-15, money(unit), 7.8, "F1", hasLineDiscount ? muted : ink, "right");
-      if (hasLineDiscount) line(378, y-12, 418, y-12, muted, 0.8);
-      text(492, y-15, hasLineDiscount ? money(discounted) : "-", 7.8, hasLineDiscount ? "F2" : "F1", hasLineDiscount ? green : muted, "right");
-      text(558, y-15, money(lineAmt), 8, "F1", ink, "right");
-    } else {
-      text(462, y-15, money(unit), 8, "F1", ink, "right");
-      text(558, y-15, money(lineAmt), 8, "F1", ink, "right");
-    }
-    y -= rowH;
-  }
-
-  y -= 22;
-  checkSpace(168);
-  const tx = 326, tw = 240, rh = 22;
-  const rows = [
-    ["Regular Subtotal", totals.regular, false, false],
-    ["Less Accumulated Line Discounts", totals.discounts, true, false],
-    ["Subtotal After Discounts", totals.subtotal, false, false],
-    ["Shipping Cost (Non-Taxable)", totals.shipping, false, false],
-    ["Taxable Subtotal", totals.taxable, false, false],
-    [`Sales Tax (${Number(totals.rate).toFixed(3)}%)`, totals.tax, false, false],
-    ["TOTAL", totals.total, false, true]
-  ];
-  rows.forEach(([label, val, negative, grand], i) => {
-    rect(tx, y-rh, tw, rh, grand ? navy : "1 1 1", gray);
-    text(tx+12, y-14, label, 7.9, grand ? "F2" : "F1", grand ? "1 1 1" : ink);
-    text(tx+tw-12, y-14, (negative ? "-" : "") + money(val), 8.0, "F2", grand ? "1 1 1" : ink, "right");
-    y -= rh;
-  });
-
-  y -= 24;
-  checkSpace(105);
-  text(46, y, "Terms & Acceptance", 10, "F2", navy); y -= 15;
-  const terms = String(doc.terms_conditions || defaultDocumentTerms(doc));
-  for (const l of wrapPdfText(terms, 95).slice(0,5)) { text(46, y, l, 8, "F1", muted); y -= 11; }
-  if (doc.payment_preference) {
-    y -= 4;
-    text(46, y, "Customer Selected Payment Option: " + doc.payment_preference, 8.5, "F2", navy); y -= 11;
-    text(46, y, "Hardware order will ship only after approval and payment is received/cleared.", 8, "F1", muted); y -= 11;
-  }
-  if (doc.type === "Invoice") {
-    y -= 4;
-    text(46, y, "Payment Options: ACH, Wire, Check, Zelle, or Cash as arranged.", 8.5, "F2", navy);
-    y -= 11;
-    if (doc.payment_link) { text(46, y, "Pay Online: " + String(doc.payment_link).slice(0, 96), 8, "F1", green); addPdfLink(pages.length, 46, y-3, 310, 12, doc.payment_link); y -= 11; }
-    text(46, y, doc.paid ? ("Status: Paid" + (doc.payment_method ? " by " + doc.payment_method : "")) : "Status: Open", 8, "F1", ink);
-  } else if (doc.status === "Approved") {
-    y -= 8;
-    text(46, y, "Electronically Approved By: " + (doc.approved_by || ""), 8, "F2", ink);
-    y -= 11;
-    if (doc.approved_at) { text(46, y, "Approved At: " + formatDateTime(doc.approved_at), 8, "F1", ink); y -= 11; }
-    text(46, y, "Signature captured and stored with the online quote record.", 8, "F1", muted);
-  } else if (doc.status === "Declined") {
-    y -= 8;
-    text(46, y, "Quote Declined By: " + (doc.declined_by || ""), 8, "F2", ink);
-    y -= 11;
-    if (doc.declined_at) { text(46, y, "Declined At: " + formatDateTime(doc.declined_at), 8, "F1", ink); y -= 11; }
-  } else {
-    y -= 10; text(46, y, "Approved By: ________________________________", 8, "F2", ink); text(390, y, "Date: ____________________", 8, "F2", ink);
-    if (approvalLink) {
-      y -= 28;
-      text(46, y, "Online Quote Response:", 8.5, "F2", navy); y -= 18;
-      rect(46, y-4, 96, 18, green, null); text(94, y+2, "APPROVE QUOTE", 7.5, "F2", "1 1 1", "center"); addPdfLink(pages.length, 46, y-4, 96, 18, approvalLink);
-      rect(152, y-4, 96, 18, orange, null); text(200, y+2, "DECLINE QUOTE", 7.5, "F2", "1 1 1", "center"); addPdfLink(pages.length, 152, y-4, 96, 18, declineLink || approvalLink);
-    }
-  }
-  y -= 22; text(46, y, "Thank you for your business.", 9, "F2", green);
-
-  pages.push(ops.join("\n"));
-
-  const objects = [];
-  function addObj(s) { objects.push(s); return objects.length; }
-  const font1 = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-  const font2 = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
-  const logoId = addObj(`<< /Type /XObject /Subtype /Image /Width ${PDF_LOGO_W} /Height ${PDF_LOGO_H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter [/ASCII85Decode /DCTDecode] /Length ${PDF_LOGO_A85.length} >>\nstream\n${PDF_LOGO_A85}\nendstream`);
-  const pageIds = [];
-  const contentIds = [];
-  for (const content of pages) {
-    const streamBytes = new TextEncoder().encode(content);
-    const contentId = addObj(`<< /Length ${streamBytes.length} >>\nstream\n${content}\nendstream`);
-    contentIds.push(contentId);
-    pageIds.push(null);
-  }
-  const annotsByPage = pages.map(() => []);
-  for (const l of pdfLinks) {
-    const pageNum = Math.max(0, Math.min(pages.length - 1, Number(l.page) || 0));
-    const uri = pdfEscape(l.url);
-    const annotId = addObj(`<< /Type /Annot /Subtype /Link /Rect [${l.x.toFixed(2)} ${l.y.toFixed(2)} ${(l.x+l.w).toFixed(2)} ${(l.y+l.h).toFixed(2)}] /Border [0 0 0] /A << /S /URI /URI (${uri}) >> >>`);
-    annotsByPage[pageNum].push(`${annotId} 0 R`);
-  }
-  const pagesIdPlaceholder = "PAGES_PARENT";
-  for (let i = 0; i < pages.length; i++) {
-    const annotPart = annotsByPage[i].length ? ` /Annots [${annotsByPage[i].join(" ")}]` : "";
-    const pageObj = `<< /Type /Page /Parent ${pagesIdPlaceholder} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${font1} 0 R /F2 ${font2} 0 R >> /XObject << /Logo ${logoId} 0 R >> >>${annotPart} /Contents ${contentIds[i]} 0 R >>`;
-    pageIds[i] = addObj(pageObj);
-  }
-  const kids = pageIds.map(id => `${id} 0 R`).join(" ");
-  const pagesId = addObj(`<< /Type /Pages /Kids [${kids}] /Count ${pageIds.length} >>`);
-  const catalogId = addObj(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
-  for (let i = 0; i < objects.length; i++) objects[i] = objects[i].replaceAll(pagesIdPlaceholder, String(pagesId));
-
-  let pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
-  const offsets = [0];
-  for (let i = 0; i < objects.length; i++) {
-    offsets.push(new TextEncoder().encode(pdf).length);
-    pdf += `${i+1} 0 obj\n${objects[i]}\nendobj\n`;
-  }
-  const xref = new TextEncoder().encode(pdf).length;
-  pdf += `xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
-  for (let i = 1; i < offsets.length; i++) pdf += `${String(offsets[i]).padStart(10,"0")} 00000 n \n`;
-  pdf += `trailer\n<< /Size ${objects.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  return new TextEncoder().encode(pdf);
-}
 
 
 async function adminCancelDocument(request, env) {
