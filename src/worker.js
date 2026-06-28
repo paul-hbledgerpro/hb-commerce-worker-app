@@ -13205,6 +13205,35 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   }
 }
 
+
+
+/* V184: eufy readability, checkout/card form, cart layout, compliance placement, mobile/print invoice refinements */
+.eufy-page,.eufy-detail-page,.eufy-cart-page,.eufy-checkout-page{background:#06111f!important;color:#eef7ff!important}
+.eufy-store-card,.eufy-detail-info,.eufy-cart-panel,.eufy-checkout-form{background:#07192e!important;border-color:rgba(148,184,220,.24)!important;color:#eef7ff!important}
+.eufy-store-card h3,.eufy-detail-info h1,.eufy-cart-panel h2,.eufy-checkout-form h4,.eufy-checkout-form label,.cart-line strong a{color:#fff!important}
+.eufy-store-card p,.eufy-detail-info p,.cart-line small,.eufy-checkout-form .hint{color:#c8d8ec!important}
+.eufy-current,.cart-regular{color:#74b8ff!important;text-decoration:line-through!important;opacity:1!important}
+.eufy-after,.no-coupon-price,.discounted-price{color:#e9fff0!important;background:#dcffe7!important;color:#11743b!important}
+.eufy-coupon-check,.cart-coupon-toggle{color:#10233d!important;background:#eaf8ff!important;border-color:#c8edff!important}
+.eufy-cart-page .cart-line,.shopping-cart-line{background:#0b2039!important;border:1px solid rgba(148,184,220,.22)!important;border-radius:18px!important;padding:14px!important;box-shadow:0 14px 34px rgba(0,0,0,.20)!important}
+.eufy-cart-page .cart-line-img,.shopping-cart-line .cart-line-img{background:#fff!important;border-radius:16px!important;overflow:hidden!important}
+.eufy-cart-page .cart-line input,.eufy-checkout-form input{background:#fff!important;color:#0f172a!important;border:1px solid #cbd5e1!important;border-radius:12px!important}
+.eufy-checkout.shopping-checkout{display:grid!important;grid-template-columns:minmax(320px,.95fr) minmax(360px,1.05fr)!important;gap:24px!important;align-items:start!important}
+.eufy-tax-summary,.totals-card{background:rgba(255,255,255,.06)!important;border:1px solid rgba(126,230,108,.26)!important;border-radius:18px!important}
+.payment-choice-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+.payment-choice-row label{background:#0c2544!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:14px!important;padding:12px!important;color:#fff!important;font-weight:900!important}
+.payment-choice-row label:has(input:checked){border-color:#ff8c21!important;box-shadow:0 0 0 2px rgba(255,140,33,.22)!important}
+.hb-eufy-card-fields{margin:14px 0;padding:16px;border-radius:18px;background:#f8fbff!important;border:1px solid #cbdff4!important;color:#10233d!important}
+.hb-eufy-card-fields .card-field-title{font-weight:1000;font-size:18px;color:#06284d!important;margin-bottom:4px}
+.hb-eufy-card-fields p{color:#405169!important;margin:0 0 12px}
+.hb-v72-bottom-grid{display:block!important;width:min(1532px,calc(100% - 72px))!important;margin:26px auto 0!important}
+.hb-v72-compliance{max-width:920px!important;margin:22px auto 0!important;min-height:auto!important;padding:20px 26px!important;display:grid!important;grid-template-columns:58px 1fr!important;gap:18px!important;align-items:center!important;border-radius:24px!important;background:linear-gradient(135deg,#061a32,#082b4d 60%,#07351f)!important;box-shadow:0 18px 46px rgba(0,0,0,.22)!important}
+.hb-v72-compliance .check{width:58px!important;height:58px!important;border-radius:18px!important;font-size:32px!important;background:rgba(126,230,108,.12)!important;color:#dcffe7!important;display:grid!important;place-items:center!important}
+.hb-v72-compliance h3{margin:0 0 4px!important;font-size:22px!important;color:#fff!important}
+.hb-v72-compliance p{margin:0!important;color:#d7e5f7!important}
+@media(max-width:900px){.eufy-checkout.shopping-checkout{grid-template-columns:1fr!important}.payment-choice-row{grid-template-columns:1fr!important}.section .container:has(#printable-document){overflow-x:auto!important}.hb-side-doc{width:1080px!important;max-width:none!important;grid-template-columns:280px 800px!important}.hb-doc-side{min-height:1260px!important}.hb-doc-main{min-height:1260px!important}}
+@media print{@page{size:Letter portrait;margin:0!important}html,body{margin:0!important;background:#fff!important}.topbar,.footer,.btn-row.no-print,.no-print{display:none!important}main.section,.container{margin:0!important;padding:0!important;width:8.5in!important;max-width:8.5in!important;overflow:hidden!important}#printable-document.hb-side-doc{width:1080px!important;height:1260px!important;min-height:1260px!important;grid-template-columns:280px 800px!important;transform:scale(.69)!important;transform-origin:top left!important;box-shadow:none!important;border:0!important;margin:0!important;break-inside:avoid!important;page-break-inside:avoid!important}.hb-doc-side{height:1260px!important;min-height:1260px!important}.hb-doc-main{height:1260px!important;min-height:1260px!important;padding:28px!important}.hb-lower-grid{padding-top:20px!important}.hb-secure-payment{margin-top:18px!important}}
+
 `;
 
 function installButtonHtml() {
@@ -13688,110 +13717,8 @@ function industryTrustStrip(){
 
 
 
-function homeEufyDealsCarousel() {
-  const deals = [
-    {
-      id:"s4max-4-s4-addons",
-      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-4-s4-addons",
-      title:"eufy PoE NVR Security System S4 Max + 4 PoE Cam S4 Add-Ons",
-      desc:"Expanded PoE coverage with S4 Max base system plus 4 extra S4 Bullet-PTZ cameras.",
-      regular:"$2,819.99",
-      sale:"$2,299.99",
-      save:"Save $520.00",
-      coupon:"WS24BPOE81ST",
-      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-5_3840x.png?v=1760087772",
-      bullets:["S4 Max NVR base bundle","4 additional S4 Bullet-PTZ cameras","PoE wired connectivity","Built for larger property coverage"]
-    },
-    {
-      id:"s4max-2-s4-addons",
-      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-2-s4-addons",
-      title:"eufy PoE NVR Security System S4 Max + 2 PoE Cam S4 Add-Ons",
-      desc:"S4 Max PoE NVR system with two S4 Bullet-PTZ add-on cameras.",
-      regular:"$2,159.99",
-      sale:"$1,899.99",
-      save:"Save $260.00",
-      coupon:"WS24BPOE2S4",
-      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-4_3840x.png?v=1760087486",
-      bullets:["S4 Max NVR base system","2 S4 add-on cameras","Bullet-PTZ style monitoring","Local NVR recording workflow"]
-    },
-    {
-      id:"s4max-2-e40-addons",
-      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-2-e40-addons",
-      title:"eufy PoE NVR Security System S4 Max + 2 PoE Cam E40 Add-Ons",
-      desc:"S4 Max PoE NVR system with two E40 4K bullet camera add-ons.",
-      regular:"$1,759.99",
-      sale:"$1,599.99",
-      save:"Save $160.00",
-      coupon:"WS24BPOE2E40",
-      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-6_3840x.png?v=1760087251",
-      bullets:["S4 Max base system","2 E40 4K bullet add-ons","4K camera coverage","PoE wired reliability"]
-    },
-    {
-      id:"e40-8-bullet",
-      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/e40-8-bullet",
-      title:"eufy PoE NVR Security System E40 - 8× 4K Bullet Cameras",
-      desc:"E40 PoE NVR security bundle with eight 4K bullet cameras.",
-      regular:"$1,299.99",
-      sale:"$899.99",
-      save:"Save $400.00",
-      coupon:"HB24BPOE8E40",
-      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/Group2121234924_2_3840x.png?v=1751452080",
-      bullets:["8-camera E40 bullet bundle","4K bullet coverage","PoE NVR recording system","Built for broader property coverage"]
-    }
-  ];
-  const slides = deals.map((d, i) => `<article class="hb-eufy-deal-slide ${i === 0 ? "active" : ""}" data-slide="${i}">
-      <a class="hb-eufy-deal-hit" href="${d.href}" aria-label="${escapeHtml(d.title)}"></a>
-      <div class="hb-eufy-deal-bg"></div>
-      <div class="hb-eufy-deal-copy">
-        <img class="hb-eufy-deal-logo" src="/assets/logo-v182.webp" alt="HB Commerce Solutions">
-        <div class="hb-eufy-product-brand">eufy PoE NVR Security System</div>
-        <h2>${escapeHtml(d.title)}</h2>
-        <p>${escapeHtml(d.desc)}</p>
-        <div class="hb-eufy-price-row">
-          <div><span>Regular</span><strong class="regular">${escapeHtml(d.regular)}</strong></div>
-          <div><span>After coupon</span><strong class="sale">${escapeHtml(d.sale)}</strong></div>
-          <div><span>${escapeHtml(d.save)}</span><strong class="coupon">${escapeHtml(d.coupon)}</strong></div>
-        </div>
-        <div class="hb-eufy-bullets">${d.bullets.map(b => `<span><i>✓</i>${escapeHtml(b)}</span>`).join("")}</div>
-      </div>
-      <div class="hb-eufy-deal-visual">
-        <img src="${d.image}" alt="${escapeHtml(d.title)} product image">
-      </div>
-    </article>`).join("");
-  const dots = deals.map((d, i) => `<button type="button" class="hb-eufy-dot ${i === 0 ? "active" : ""}" data-slide="${i}" aria-label="Show ${escapeHtml(d.title)}"></button>`).join("");
-  return `<section class="hb-eufy-deals-home" aria-label="Featured eufy PoE NVR security bundles">
-    <div class="hb-eufy-deal-slider">
-      ${slides}
-      <div class="hb-eufy-dots">${dots}</div>
-    </div>
-    <script>
-    (function(){
-      var root=document.currentScript && document.currentScript.previousElementSibling;
-      if(!root || !root.classList.contains('hb-eufy-deal-slider')) root=document.querySelector('.hb-eufy-deal-slider');
-      if(!root || root.__hbEufySliderReady) return;
-      root.__hbEufySliderReady=true;
-      var slides=[].slice.call(root.querySelectorAll('.hb-eufy-deal-slide'));
-      var dots=[].slice.call(root.querySelectorAll('.hb-eufy-dot'));
-      var current=0;
-      var timer=null;
-      function show(n){
-        if(!slides.length) return;
-        current=(n+slides.length)%slides.length;
-        slides.forEach(function(s,i){s.classList.toggle('active',i===current);});
-        dots.forEach(function(d,i){d.classList.toggle('active',i===current);});
-      }
-      function stop(){if(timer){clearInterval(timer);timer=null;}}
-      function play(){stop();timer=setInterval(function(){show(current+1);},5200);}
-      dots.forEach(function(d,i){d.addEventListener('click',function(e){e.preventDefault();stop();show(i);play();});});
-      root.addEventListener('mouseenter',stop);
-      root.addEventListener('mouseleave',play);
-      root.addEventListener('focusin',stop);
-      root.addEventListener('focusout',play);
-      show(0);play();
-    })();
-    </script>
-  </section>`;
-}
+/* v184: removed unused legacy eufy deals carousel. */
+
 
 
 function homeCombinedBannerSlider() {
@@ -15014,7 +14941,7 @@ function eufyCartPanel(showCheckout = true) {
 }
 
 function eufyCheckoutForm() {
-  return `<form method="post" action="/eufy-order" id="eufyOrderForm" class="eufy-checkout-form" onsubmit="return eufyBeforeSubmit()"><input type="hidden" name="cart_json" id="eufyCartJson" value="[]"><div class="form-title">Checkout / Online Order</div><div class="notice success"><strong>Order review:</strong> Review your cart, confirm your contact and shipping details, then choose credit card, check, or Zelle. Eligible priced eufy items use ZipTax destination sales tax at checkout.</div><div class="checkout-coupon-box"><label>Coupon Code</label><div class="checkout-coupon-row"><input name="checkout_coupon_code" id="checkoutCouponCode" placeholder="Paste copied coupon code here"><button type="button" class="btn small" onclick="eufyApplyCheckoutCoupon(false)">Apply Code</button></div><small id="checkoutCouponNote">A coupon can be applied only once per eufy item, either from the item checkbox/cart checkbox or by entering the matching code here.</small></div><div class="grid-2"><div class="field"><label>First Name</label><input name="first_name" required></div><div class="field"><label>Last Name</label><input name="last_name" required></div></div><div class="grid-2"><div class="field"><label>Email</label><input type="email" name="email" required></div><div class="field"><label>Phone</label><input name="phone" type="tel"></div></div><h4>Billing Address</h4><div class="field"><label>Street Address</label><input name="billing_street" required></div><div class="grid-3"><div class="field"><label>City</label><input name="billing_city" required></div><div class="field"><label>State</label><input name="billing_state" required maxlength="2" placeholder="PA"></div><div class="field"><label>ZIP</label><input name="billing_zip" required></div></div><label class="check same-ship"><input type="checkbox" id="sameShipping" onchange="eufyCopyBilling()"> Shipping address same as billing</label><h4>Shipping Address</h4><div class="field"><label>Street Address</label><input name="shipping_street" id="shipStreet" required></div><div class="grid-3"><div class="field"><label>City</label><input name="shipping_city" id="shipCity" required></div><div class="field"><label>State</label><input name="shipping_state" id="shipState" required maxlength="2" placeholder="PA"></div><div class="field"><label>ZIP</label><input name="shipping_zip" id="shipZip" required></div></div><div class="notice tax-final-note"><strong>Sales tax:</strong> Eligible priced eufy products use destination tax from ZipTax at checkout. Quote-only items will be reviewed and finalized before approval.</div><div class="field"><label>Payment Method</label><div class="payment-choice-row"><label><input type="radio" name="payment_preference" value="Credit Card" required> Credit Card</label><label><input type="radio" name="payment_preference" value="Check" required> Check</label><label><input type="radio" name="payment_preference" value="Zelle" required> Zelle</label></div><small class="hint">Credit card payments open the secure Authorize.Net payment page after you place the order. Check/Zelle orders are submitted to Admin as online orders.</small></div><button class="primary">Place Order</button></form>`;
+  return `<form method="post" action="/eufy-order" id="eufyOrderForm" class="eufy-checkout-form" onsubmit="return eufyBeforeSubmit()"><input type="hidden" name="cart_json" id="eufyCartJson" value="[]"><div class="form-title">Checkout / Online Order</div><div class="notice success"><strong>Order review:</strong> Review your cart, confirm your contact and shipping details, then choose credit card, check, or Zelle. Eligible priced eufy items use ZipTax destination sales tax at checkout.</div><div class="checkout-coupon-box"><label>Coupon Code</label><div class="checkout-coupon-row"><input name="checkout_coupon_code" id="checkoutCouponCode" placeholder="Paste copied coupon code here"><button type="button" class="btn small" onclick="eufyApplyCheckoutCoupon(false)">Apply Code</button></div><small id="checkoutCouponNote">A coupon can be applied only once per eufy item, either from the item checkbox/cart checkbox or by entering the matching code here.</small></div><div class="grid-2"><div class="field"><label>First Name</label><input name="first_name" required></div><div class="field"><label>Last Name</label><input name="last_name" required></div></div><div class="grid-2"><div class="field"><label>Email</label><input type="email" name="email" required></div><div class="field"><label>Phone</label><input name="phone" type="tel"></div></div><h4>Billing Address</h4><div class="field"><label>Street Address</label><input name="billing_street" required></div><div class="grid-3"><div class="field"><label>City</label><input name="billing_city" required></div><div class="field"><label>State</label><input name="billing_state" required maxlength="2" placeholder="PA"></div><div class="field"><label>ZIP</label><input name="billing_zip" required></div></div><label class="check same-ship"><input type="checkbox" id="sameShipping" onchange="eufyCopyBilling()"> Shipping address same as billing</label><h4>Shipping Address</h4><div class="field"><label>Street Address</label><input name="shipping_street" id="shipStreet" required></div><div class="grid-3"><div class="field"><label>City</label><input name="shipping_city" id="shipCity" required></div><div class="field"><label>State</label><input name="shipping_state" id="shipState" required maxlength="2" placeholder="PA"></div><div class="field"><label>ZIP</label><input name="shipping_zip" id="shipZip" required></div></div><div class="notice tax-final-note"><strong>Sales tax:</strong> Eligible priced eufy products use destination tax from ZipTax at checkout. Quote-only items will be reviewed and finalized before approval.</div><div class="field"><label>Payment Method</label><div class="payment-choice-row"><label><input type="radio" name="payment_preference" value="Credit Card" required> Credit Card</label><label><input type="radio" name="payment_preference" value="Check" required> Check</label><label><input type="radio" name="payment_preference" value="Zelle" required> Zelle</label></div><small class="hint">Credit card payments are processed securely on this checkout page using Authorize.Net tokenization. Check/Zelle orders are submitted to Admin as online orders.</small></div><div id="eufyCardFields" class="hb-eufy-card-fields" hidden><div class="card-field-title">Secure Credit Card Payment</div><p>Card data is tokenized by Authorize.Net. HB Commerce does not store card numbers.</p><div class="grid-2"><div class="field"><label>Card Number</label><input id="ccNumber" inputmode="numeric" autocomplete="cc-number" placeholder="•••• •••• •••• ••••"></div><div class="field"><label>Card Code</label><input id="ccCode" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV"></div></div><div class="grid-2"><div class="field"><label>Exp. Month</label><input id="ccMonth" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM"></div><div class="field"><label>Exp. Year</label><input id="ccYear" inputmode="numeric" autocomplete="cc-exp-year" placeholder="YYYY"></div></div><input type="hidden" name="dataDescriptor" id="dataDescriptor"><input type="hidden" name="dataValue" id="dataValue"><div id="cardError" class="notice error" style="display:none"></div></div><button id="eufyPlaceOrderButton" class="primary">Place Order</button></form>`;
 }
 
 function eufyStoreScript(products = null) {
@@ -15046,7 +14973,8 @@ window.eufyToggleCartCoupon=function(key,checked){let cart=getCart();let row=car
 window.eufyApplyCheckoutCoupon=function(silent){let input=document.getElementById('checkoutCouponCode');let code=(input&&input.value||'').trim().toUpperCase();if(!code){if(!silent)note('Enter a coupon code first.',false);return false}let cart=getCart();let changed=0,already=0,matched=0;cart.forEach(row=>{let p=find(row.id);if(!hasCoupon(p))return;if(String(p.coupon||'').toUpperCase()===code){matched++;if(row.coupon)already++;else{row.coupon=true;changed++;}}});if(changed>0){saveCart(cart);note('Coupon applied once to matching item(s).',true);return true}if(already>0){note('This coupon was already applied to matching item(s). No duplicate discount was added.',true);return true}if(!silent)note('Coupon code did not match any item currently in your cart.',false);return false};
 window.eufyCopyBilling=function(){let on=document.getElementById('sameShipping')&&document.getElementById('sameShipping').checked;if(!on)return;let q=s=>document.querySelector(s);if(q('[name=billing_street]'))document.getElementById('shipStreet').value=q('[name=billing_street]').value;if(q('[name=billing_city]'))document.getElementById('shipCity').value=q('[name=billing_city]').value;if(q('[name=billing_state]'))document.getElementById('shipState').value=q('[name=billing_state]').value;if(q('[name=billing_zip]'))document.getElementById('shipZip').value=q('[name=billing_zip]').value;};
 window.eufyCalculateTax=async function(){return null;};
-window.eufyBeforeSubmit=function(){let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let msg=hasQuote?'Please confirm: priced eufy products will use destination sales tax. Quote-only items will be reviewed before final approval.':'Please confirm: this will place your order with destination sales tax calculated at checkout.';return confirm(msg)};
+function selectedPay(){let r=document.querySelector('input[name=payment_preference]:checked');return r?r.value:''}function toggleCard(){let on=selectedPay()==='Credit Card',b=document.getElementById('eufyCardFields'),btn=document.getElementById('eufyPlaceOrderButton');if(b)b.hidden=!on;if(btn)btn.textContent=on?'Pay & Place Order':'Place Order'}function cardErr(msg){let e=document.getElementById('cardError');if(e){e.textContent=msg;e.style.display=msg?'block':'none'}else alert(msg)}function tokenizeAndSubmit(form){let cfg=window.HB_ACCEPT_CONFIG||{};if(!cfg.ready||!window.Accept){cardErr('Credit card processing is not ready. Please choose Check or Zelle, or contact support.');return}let n=(document.getElementById('ccNumber')||{}).value||'',m=(document.getElementById('ccMonth')||{}).value||'',y=(document.getElementById('ccYear')||{}).value||'',c=(document.getElementById('ccCode')||{}).value||'';n=n.replace(/\D/g,'');m=m.replace(/\D/g,'');y=y.replace(/\D/g,'');c=c.replace(/\D/g,'');if(!n||!m||!y||!c){cardErr('Please enter card number, expiration, and card code.');return}cardErr('');Accept.dispatchData({authData:{clientKey:cfg.clientKey,apiLoginID:cfg.login},cardData:{cardNumber:n,month:m,year:y,cardCode:c}},function(r){if(r.messages.resultCode==='Error'){cardErr(r.messages.message.map(function(x){return x.text}).join(' | '));return}document.getElementById('dataDescriptor').value=r.opaqueData.dataDescriptor;document.getElementById('dataValue').value=r.opaqueData.dataValue;form.submit();});}
+window.eufyBeforeSubmit=function(){let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let pay=selectedPay();if(pay==='Credit Card'){if(hasQuote){alert('Credit card checkout is only available for priced eufy items. Remove quote-only items or choose Check/Zelle.');return false}if(!document.getElementById('dataValue').value){tokenizeAndSubmit(document.getElementById('eufyOrderForm'));return false}}let msg=hasQuote?'Please confirm: priced eufy products will use destination sales tax. Quote-only items will be reviewed before final approval.':'Please confirm: this will place your order with destination sales tax calculated at checkout.';return confirm(msg)};document.addEventListener('change',function(e){if(e.target&&e.target.name==='payment_preference')toggleCard()});setTimeout(toggleCard,50);
 function render(){let wrap=document.getElementById('eufyCartItems');let empty=document.getElementById('eufyCartEmpty');let hidden=document.getElementById('eufyCartJson');let checkoutBtn=document.getElementById('eufyCheckoutBtn');if(!wrap){if(hidden)hidden.value=JSON.stringify(getCart());return}let cart=normalizeCart(getCart());let subtotal=0;let hasQuoteOnly=false;if(empty)empty.style.display=cart.length?'none':'block';wrap.innerHTML=cart.map(row=>{let p=find(row.id);if(!p)return '';let qty=Math.max(1,parseInt(row.qty)||1);let key=cartKey(row);let regular=regularPrice(p);let unit=linePrice(p,row);let line=unit*qty;if(quoteOnly(p))hasQuoteOnly=true;else subtotal+=line;let couponHtml=quoteOnly(p)?'<span class="cart-coupon-toggle muted">Pricing to be quoted by HB Commerce</span>':(hasCoupon(p)?'<label class="cart-coupon-toggle"><input type="checkbox" '+(row.coupon?'checked':'')+' onchange="eufyToggleCartCoupon(\\\''+key+'\\\',this.checked)"> Save '+money(p.discount||0)+' with Code: '+(p.coupon||'')+'</label>':'<span class="cart-coupon-toggle muted">No coupon for this item</span>');let url=productUrl(p);let img=p.image?'<img src="'+p.image+'" alt="">':'<div class="lts-cart-thumb">LTS</div>';let priceText=quoteOnly(p)?'Pricing to be quoted':('<span class="cart-regular">'+(row.coupon?money(regular):'')+'</span> '+money(unit)+' each');let lineText=quoteOnly(p)?'Quote':money(line);return '<div class="cart-line shopping-cart-line"><a class="cart-line-img" href="'+url+'">'+img+'</a><div><strong><a href="'+url+'">'+p.name+'</a></strong><small>'+priceText+'</small>'+couponHtml+'</div><input type="number" min="1" value="'+qty+'" onchange="eufyUpdateCartQty(\\\''+key+'\\\',this.value)"><span>'+lineText+'</span><button type="button" onclick="eufyRemoveFromCart(\\\''+key+'\\\')">×</button></div>'}).join('');if(hidden)hidden.value=JSON.stringify(cart);let tax=subtotal*TAX_RATE;let grand=subtotal+tax;let subtotalEl=document.getElementById('eufyCartSubtotal');let taxEl=document.getElementById('eufyCartTax');let totalEl=document.getElementById('eufyCartTotal');let noteEl=document.getElementById('eufyQuoteItemNote');if(subtotalEl)subtotalEl.textContent=money(subtotal);if(taxEl)taxEl.textContent=money(tax);if(totalEl)totalEl.textContent=money(grand)+(hasQuoteOnly?' + quote items':'');if(noteEl)noteEl.textContent=hasQuoteOnly?'Quote-only items do not show a public price and will be reviewed before final approval.':'Destination tax is calculated at checkout after shipping ZIP/address is entered.';if(checkoutBtn)checkoutBtn.classList.toggle('disabled',!cart.length)}
 window.addEventListener('storage',e=>{if(e.key===KEY)render()});document.addEventListener('DOMContentLoaded',function(){render();});render();
 })();</script>`;
@@ -15069,7 +14997,9 @@ async function pageEufyCart(env) {
 
 async function pageEufyCheckout(env) {
   const products = await quoteProductsForEnv(env);
-  const body = `<main class="eufy-checkout-page"><section class="eufy-collection-hero checkout-hero"><div class="container"><div class="kicker">Checkout</div><h1>Submit Hardware Order</h1><p>Enter billing, shipping, and payment information. Priced eufy items use ZipTax destination sales tax; quote-only items are reviewed before final approval.</p></div></section><section class="section"><div class="container"><div class="eufy-checkout shopping-checkout">${eufyCartPanel(false)}${eufyCheckoutForm()}</div>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}async function calc(){let cart=[];try{cart=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}if(!cart.length)return;let ship={street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''};try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart,shipping:ship,checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination sales tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(calc,350));el.addEventListener('blur',calc)}});document.addEventListener('DOMContentLoaded',()=>setTimeout(calc,700));})();</script></div></section></main>`;
+  const acfg = authNetConfig(env);
+  const acceptJsV1 = String(env.AUTHORIZE_NET_ENV || "production").toLowerCase() === "sandbox" ? "https://jstest.authorize.net/v1/Accept.js" : "https://js.authorize.net/v1/Accept.js";
+  const body = `<main class="eufy-checkout-page"><section class="eufy-collection-hero checkout-hero"><div class="container"><div class="kicker">Checkout</div><h1>Submit Hardware Order</h1><p>Enter billing, shipping, and payment information. Priced eufy items use ZipTax destination sales tax; quote-only items are reviewed before final approval.</p></div></section><section class="section"><div class="container"><div class="eufy-checkout shopping-checkout">${eufyCartPanel(false)}${eufyCheckoutForm()}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};</script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}async function calc(){let cart=[];try{cart=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}if(!cart.length)return;let ship={street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''};try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart,shipping:ship,checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination sales tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(calc,350));el.addEventListener('blur',calc)}});document.addEventListener('DOMContentLoaded',()=>setTimeout(calc,700));})();</script></div></section></main>`;
   return htmlPage('Checkout | HB Commerce Solutions', layout(env, 'Checkout', body));
 }
 
@@ -15130,10 +15060,25 @@ async function handleEufyOrder(request, env, customer = null) {
       shipping: { street: String(fd.get('shipping_street') || ''), city: String(fd.get('shipping_city') || ''), state: shipState, zip: String(fd.get('shipping_zip') || '') }
     }
   };
+  let paidOnline = false, payResult = null;
+  if (orderType === "OnlineOrder" && paymentPreference === "Credit Card") {
+    try {
+      payResult = await authNetChargeOpaque(request, env, order, String(fd.get("dataDescriptor") || ""), String(fd.get("dataValue") || ""));
+      paidOnline = true;
+      order.paid = 1;
+      order.paid_at = now();
+      order.payment_method = "Credit Card";
+      order.status = "Paid Online";
+      order.authnet_transaction_id = payResult.transId;
+      order.authnet_auth_code = payResult.authCode;
+      order.authnet_paid_amount = payResult.amount;
+    } catch (err) {
+      return htmlPage("Card Payment Failed", layout(env, "Checkout", `<main class="section"><div class="container"><div class="form-section"><div class="form-title">Card Payment Failed</div><div class="notice error">${escapeHtml(err.message || "The card payment was not approved.")}</div><p>Your card was not charged. Please return to checkout and try again, or choose Check/Zelle.</p><div class="btn-row"><a class="btn orange" href="/checkout">Back to Checkout</a><a class="btn" href="/cart">View Cart</a></div></div></div></main>`));
+    }
+  }
   await saveDoc(env, order);
-  await sendAdminMobileNotification(env, orderType === "OnlineQuoteOrder" ? "New Online Quote Order" : "New Online Order", `${order.number} received from ${order.customer_name || order.email || "website customer"}.`, `${new URL(request.url).origin}${orderType === "OnlineQuoteOrder" ? "/admin/quote-orders" : "/admin/orders"}`).catch(err => console.error("online order phone notification failed", err));
-  if (orderType === "OnlineOrder" && paymentPreference === "Credit Card") return redirect(`/pay/order/${encodeURIComponent(order.id)}/${encodeURIComponent(order.token)}`);
-  return htmlPage(orderLabel + ' Received', layout(env, 'Security', `<main class="section"><div class="container"><div class="form-section success-order"><div class="form-title">${escapeHtml(orderLabel)} Received</div><div class="notice success"><strong>Thank you.</strong> Your online hardware request ${escapeHtml(order.number)} was received.</div><p>HB Commerce Solutions will review your request. Tax was calculated from the shipping destination when available. Check/Zelle orders appear in Admin Portal as online orders for follow-up.</p><div class="btn-row"><a class="btn" href="/security-camera-systems">Back to eufy Products</a><a class="btn orange" href="/">Return Home</a></div></div></div><script>localStorage.removeItem('hb_eufy_quote_cart');if(window.hbEufyCartUpdate)window.hbEufyCartUpdate();</script></main>`));
+  await sendAdminMobileNotification(env, orderType === "OnlineQuoteOrder" ? "New Online Quote Order" : (paidOnline ? "Paid eufy Online Order" : "New Online Order"), `${order.number} received from ${order.customer_name || order.email || "website customer"}.`, `${new URL(request.url).origin}${orderType === "OnlineQuoteOrder" ? "/admin/quote-orders" : "/admin/orders"}`).catch(err => console.error("online order phone notification failed", err));
+  return htmlPage(paidOnline ? "Payment Approved" : orderLabel + ' Received', layout(env, 'Security', `<main class="section"><div class="container"><div class="form-section success-order"><div class="form-title">${paidOnline ? "Payment Approved" : escapeHtml(orderLabel) + " Received"}</div><div class="notice success"><strong>Thank you.</strong> ${paidOnline ? "Your card payment was approved and your online order was received." : "Your online hardware request " + escapeHtml(order.number) + " was received."}</div><p>${paidOnline ? "Transaction ID: " + escapeHtml(payResult && payResult.transId || "") : "Tax was calculated from the shipping destination when available. Check/Zelle orders appear in Admin Portal as online orders for follow-up."}</p><div class="btn-row"><a class="btn" href="/account/orders">My Orders</a><a class="btn orange" href="/">Return Home</a></div></div></div><script>localStorage.removeItem('hb_eufy_quote_cart');if(window.hbEufyCartUpdate)window.hbEufyCartUpdate();</script></main>`));
 }
 
 function nextOrderNumber(type = 'OnlineOrder') {
