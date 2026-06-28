@@ -1,0 +1,14 @@
+{
+  "name": "hb-commerce-solutions-worker-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "db:create": "wrangler d1 create hb-commerce-db",
+    "db:init": "wrangler d1 execute hb-commerce-db --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
