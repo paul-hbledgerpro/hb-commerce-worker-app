@@ -13248,6 +13248,202 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 #shippingAddressBlock{display:block}
 @media(max-width:760px){.eufy-cart-page .cart-line{grid-template-columns:86px 1fr!important}.eufy-cart-page .cart-line input,.eufy-cart-page .cart-line>span,.eufy-cart-page .cart-line>button{grid-column:2!important}.fulfillment-options{grid-template-columns:1fr!important}}
 
+
+
+/* V186 professional cart/checkout redesign + clean UPS fallback */
+.hb-shop-cart-layout{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 390px!important;
+  gap:24px!important;
+  align-items:start!important;
+  width:100%!important;
+}
+.hb-shop-cart-layout.checkout-summary-mode{
+  display:block!important;
+}
+.hb-cart-items-card,.hb-cart-summary-card{
+  background:linear-gradient(180deg,#07192e,#081629)!important;
+  border:1px solid rgba(148,184,220,.22)!important;
+  border-radius:24px!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.24)!important;
+}
+.hb-cart-items-card{padding:22px!important}
+.hb-cart-summary-card{
+  position:sticky!important;
+  top:96px!important;
+  padding:22px!important;
+}
+.hb-cart-summary-card h3{
+  margin:0 0 14px!important;
+  color:#fff!important;
+  font-size:26px!important;
+  letter-spacing:-.03em!important;
+}
+.hb-cart-eyebrow{
+  color:#ff8c21!important;
+  font-size:12px!important;
+  text-transform:uppercase!important;
+  letter-spacing:.13em!important;
+  font-weight:1000!important;
+}
+.hb-cart-items-card .cart-panel-head{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  margin-bottom:18px!important;
+}
+.hb-cart-items-card .cart-panel-head h3{
+  margin:2px 0 0!important;
+  color:#fff!important;
+  font-size:34px!important;
+  letter-spacing:-.04em!important;
+}
+.hb-cart-lines{
+  display:grid!important;
+  gap:16px!important;
+}
+.hb-cart-items-card .shopping-cart-line{
+  display:grid!important;
+  grid-template-columns:120px minmax(0,1fr) 118px 138px 56px!important;
+  gap:18px!important;
+  align-items:center!important;
+  background:#0c223d!important;
+  border:1px solid rgba(148,184,220,.20)!important;
+  border-radius:22px!important;
+  padding:16px!important;
+}
+.hb-cart-items-card .cart-line-img{
+  width:120px!important;
+  min-height:104px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#fff!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+}
+.hb-cart-items-card .cart-line-img img{
+  width:100%!important;
+  height:104px!important;
+  object-fit:contain!important;
+}
+.hb-cart-items-card .shopping-cart-line strong a{
+  color:#fff!important;
+  font-size:18px!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+}
+.hb-cart-items-card .shopping-cart-line small{
+  color:#cbd8e8!important;
+  display:block!important;
+  margin-top:6px!important;
+  font-weight:850!important;
+}
+.hb-cart-items-card .cart-coupon-toggle{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin-top:12px!important;
+  max-width:100%!important;
+}
+.hb-cart-items-card .shopping-cart-line input[type=number]{
+  height:54px!important;
+  text-align:center!important;
+  font-weight:950!important;
+}
+.hb-cart-items-card .shopping-cart-line>span{
+  color:#fff!important;
+  font-weight:1000!important;
+  font-size:20px!important;
+  text-align:right!important;
+}
+.hb-cart-items-card .shopping-cart-line>button{
+  height:52px!important;
+  min-width:52px!important;
+  border-radius:14px!important;
+  background:#fff2f2!important;
+  color:#b64242!important;
+  font-weight:1000!important;
+}
+.hb-cart-summary-card .eufy-tax-summary{
+  background:transparent!important;
+  border:0!important;
+  padding:0!important;
+}
+.hb-cart-summary-card .eufy-tax-summary>div{
+  padding:13px 0!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important;
+}
+.hb-cart-summary-card .eufy-tax-summary span{
+  color:#d8e7f6!important;
+  font-weight:900!important;
+}
+.hb-cart-summary-card .eufy-tax-summary strong{
+  color:#7ee66c!important;
+  font-size:20px!important;
+}
+.hb-cart-summary-card .eufy-tax-summary .grand{
+  margin-top:8px!important;
+  padding:16px!important;
+  border-radius:16px!important;
+  background:linear-gradient(135deg,#06284d,#0b4c82)!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+}
+.hb-cart-summary-card .eufy-tax-summary .grand strong,
+.hb-cart-summary-card .eufy-tax-summary .grand span{
+  color:#fff!important;
+  font-size:24px!important;
+}
+.hb-cart-summary-card .cart-checkout-actions .btn{
+  width:100%!important;
+  justify-content:center!important;
+  min-height:56px!important;
+  margin-top:18px!important;
+  font-size:18px!important;
+}
+.hb-checkout-summary-note{
+  color:#cbd8e8!important;
+  margin-top:12px!important;
+  line-height:1.45!important;
+  font-weight:800!important;
+}
+.eufy-checkout-form{
+  padding:26px!important;
+  border-radius:24px!important;
+}
+.eufy-checkout-form h4{
+  margin:24px 0 12px!important;
+  padding-top:10px!important;
+  border-top:1px solid rgba(255,255,255,.10)!important;
+  font-size:24px!important;
+  letter-spacing:-.03em!important;
+}
+.eufy-checkout-form .form-title{
+  font-size:15px!important;
+  color:#ff8c21!important;
+}
+.eufy-checkout-form .field input{
+  min-height:52px!important;
+  font-size:16px!important;
+}
+.shipping-rate-box{
+  color:#fff!important;
+}
+.shipping-rate-box small{
+  color:#d8e7f6!important;
+}
+@media(max-width:980px){
+  .hb-shop-cart-layout{grid-template-columns:1fr!important}
+  .hb-cart-summary-card{position:static!important}
+  .hb-cart-items-card .shopping-cart-line{grid-template-columns:92px 1fr!important}
+  .hb-cart-items-card .shopping-cart-line input[type=number],
+  .hb-cart-items-card .shopping-cart-line>span,
+  .hb-cart-items-card .shopping-cart-line>button{
+    grid-column:2!important;
+    width:100%!important;
+    text-align:left!important;
+  }
+}
+
 `;
 
 function installButtonHtml() {
@@ -14951,7 +15147,24 @@ function securitySolutionsSection(products = null) {
 }
 
 function eufyCartPanel(showCheckout = true) {
-  return `<div class="eufy-cart-panel shopping-cart-panel"><div class="cart-panel-head"><h3>Your Cart</h3><a class="btn small" href="/security-camera-systems">Continue Shopping</a></div><div id="eufyCartEmpty" class="notice">Your cart is empty.</div><div id="eufyCartItems"></div><div class="eufy-cart-total eufy-tax-summary"><div><span>Product Subtotal</span><strong id="eufyCartSubtotal">$0.00</strong></div><div><span>Sales Tax</span><strong id="eufyCartTax">$0.00</strong></div><div><span>Shipping</span><strong id="eufyCartShipping">$0.00</strong></div><div class="grand"><span>Estimated Total</span><strong id="eufyCartTotal">$0.00</strong></div><small id="eufyQuoteItemNote"></small></div>${showCheckout ? `<div class="cart-checkout-actions"><a class="btn orange" href="/checkout" id="eufyCheckoutBtn">Checkout</a></div>` : ``}</div>`;
+  return `<div class="hb-shop-cart-layout ${showCheckout ? "cart-page-mode" : "checkout-summary-mode"}">
+    <section class="eufy-cart-panel shopping-cart-panel hb-cart-items-card">
+      <div class="cart-panel-head"><div><span class="hb-cart-eyebrow">Shopping Bag</span><h3>Your Cart</h3></div><a class="btn small" href="/security-camera-systems">Continue Shopping</a></div>
+      <div id="eufyCartEmpty" class="notice">Your cart is empty.</div>
+      <div id="eufyCartItems" class="hb-cart-lines"></div>
+    </section>
+    <aside class="hb-cart-summary-card">
+      <h3>Order Summary</h3>
+      <div class="eufy-cart-total eufy-tax-summary">
+        <div><span>Product Subtotal</span><strong id="eufyCartSubtotal">$0.00</strong></div>
+        <div><span>Sales Tax</span><strong id="eufyCartTax">$0.00</strong></div>
+        <div><span>Shipping</span><strong id="eufyCartShipping">$0.00</strong></div>
+        <div class="grand"><span>Estimated Total</span><strong id="eufyCartTotal">$0.00</strong></div>
+        <small id="eufyQuoteItemNote"></small>
+      </div>
+      ${showCheckout ? `<div class="cart-checkout-actions"><a class="btn orange" href="/checkout" id="eufyCheckoutBtn">Checkout</a></div>` : `<div class="hb-checkout-summary-note">Taxes and shipping finalize after delivery details are entered.</div>`}
+    </aside>
+  </div>`;
 }
 
 function eufyCheckoutForm() {
@@ -17449,8 +17662,8 @@ async function publicShippingRate(request, env) {
     if (!zip) return jsonResponse({ ok:false, message:"Enter shipping ZIP to calculate shipping." }, 400);
     const ups = await upsGroundRate(env, ship, body.cart || []).catch(err => ({ ok:false, error:String(err && err.message || err) }));
     if (ups && ups.ok) return jsonResponse({ ok:true, rates:[ups.rate], source:"UPS" });
-    const fallback = Number(env.STANDARD_SHIPPING_FALLBACK || 0);
-    return jsonResponse({ ok:true, needs_review:true, rates:[{ code:"standard", label:"Standard Shipping", amount:fallback, carrier:"HB Commerce" }], source: ups && ups.error ? "UPS unavailable: "+ups.error : "fallback" });
+    const fallback = Number(env.STANDARD_SHIPPING_FALLBACK || 19.99);
+    return jsonResponse({ ok:true, needs_review:true, rates:[{ code:"standard", label:"Standard Shipping", amount:fallback, carrier:"HB Commerce" }], source:"Standard shipping fallback" });
   } catch (err) {
     return jsonResponse({ ok:false, message:"Shipping rate calculation failed." }, 500);
   }
@@ -17468,7 +17681,7 @@ async function upsGroundRate(env, ship = {}, cart = []) {
   const data=await fetch(base+"/api/rating/v1/Rate",{method:"POST",headers:{authorization:"Bearer "+tok,"content-type":"application/json"},body:JSON.stringify(req)}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.response?.errors?.[0]?.message||"UPS rate failed");return j});
   const rated=data.RateResponse?.RatedShipment, val=Number(rated?.TotalCharges?.MonetaryValue||0);
   if(!val) throw new Error("UPS returned no rate.");
-  return {ok:true, rate:{code:"ups_ground", label:"UPS Ground", amount:val, carrier:"UPS"}};
+  return {ok:true, rate:{code:"ups_ground", label:"Standard Shipping (UPS Ground)", amount:val, carrier:"UPS"}};
 }
 
 async function publicTaxCalculate(request, env) {
