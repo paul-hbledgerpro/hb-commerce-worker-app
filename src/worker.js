@@ -13134,6 +13134,77 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 /* V182 unified uploaded HB Commerce logo restored on v181 base */
+
+
+/* V183 homepage banner right-side image integration.
+   Only adjusts right-side visual panels; left text/logo/font sizing is untouched. */
+.hb-current-merchant .hb-current-banner-visual,
+.hb-current-pos .hb-current-banner-visual,
+.hb-current-security .hb-current-banner-visual,
+.hb-home-eufy-slide .hb-eufy-deal-visual{
+  align-self:stretch!important;
+  height:100%!important;
+  min-height:0!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+.hb-current-merchant .hb-current-banner-visual::before,
+.hb-current-pos .hb-current-banner-visual::before,
+.hb-current-security .hb-current-banner-visual::before,
+.hb-home-eufy-slide .hb-eufy-deal-visual::before{
+  content:""!important;
+  position:absolute!important;
+  inset:clamp(4px,.7vw,14px) 0 clamp(4px,.7vw,14px) clamp(4px,.7vw,14px)!important;
+  z-index:-1!important;
+  border-radius:34px 0 0 34px!important;
+  background:
+    radial-gradient(circle at 52% 48%,rgba(255,255,255,.12),transparent 38%),
+    radial-gradient(circle at 75% 32%,rgba(255,106,0,.16),transparent 34%),
+    radial-gradient(circle at 35% 76%,rgba(19,138,61,.16),transparent 34%)!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  opacity:.95!important;
+}
+.hb-current-merchant .hb-current-banner-visual img,
+.hb-current-pos .hb-current-banner-visual img,
+.hb-current-security .hb-current-banner-visual img,
+.hb-home-eufy-slide .hb-eufy-deal-visual img{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:96%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  padding:clamp(2px,.45vw,9px)!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+  filter:drop-shadow(0 32px 50px rgba(0,0,0,.48)) saturate(1.08) contrast(1.03)!important;
+}
+.hb-home-eufy-slide .hb-eufy-deal-visual img{
+  max-height:98%!important;
+  padding:clamp(0px,.25vw,6px)!important;
+}
+@media(max-width:980px){
+  .hb-current-merchant .hb-current-banner-visual::before,
+  .hb-current-pos .hb-current-banner-visual::before,
+  .hb-current-security .hb-current-banner-visual::before,
+  .hb-home-eufy-slide .hb-eufy-deal-visual::before{
+    display:none!important;
+  }
+  .hb-current-merchant .hb-current-banner-visual img,
+  .hb-current-pos .hb-current-banner-visual img,
+  .hb-current-security .hb-current-banner-visual img,
+  .hb-home-eufy-slide .hb-eufy-deal-visual img{
+    height:auto!important;
+    max-height:310px!important;
+    padding:0!important;
+  }
+}
+
 `;
 
 function installButtonHtml() {
