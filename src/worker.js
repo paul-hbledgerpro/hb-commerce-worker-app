@@ -240,6 +240,7 @@ async function handleRequest(request, env, ctx) {
   if (method === "GET" && path === "/admin/tax") return adminTaxPage(request, env);
   if (method === "POST" && path === "/admin/tax") return adminTaxPost(request, env);
   if (method === "GET" && path === "/admin/tax-lookup") return adminTaxLookup(request, env);
+  if (method === "GET" && path === "/admin/ups-test") return adminUpsTest(request, env);
   if (method === "POST" && path === "/admin/eufy") return adminEufyPost(request, env);
   if (method === "POST" && path === "/admin/lts") return adminLtsPost(request, env);
   if (method === "GET" && path === "/admin/create-quote") return redirect("/admin/document?type=Quote");
@@ -13250,199 +13251,25 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V186 professional cart/checkout redesign + clean UPS fallback */
-.hb-shop-cart-layout{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) 390px!important;
-  gap:24px!important;
-  align-items:start!important;
-  width:100%!important;
-}
-.hb-shop-cart-layout.checkout-summary-mode{
-  display:block!important;
-}
-.hb-cart-items-card,.hb-cart-summary-card{
-  background:linear-gradient(180deg,#07192e,#081629)!important;
-  border:1px solid rgba(148,184,220,.22)!important;
-  border-radius:24px!important;
-  box-shadow:0 24px 70px rgba(0,0,0,.24)!important;
-}
-.hb-cart-items-card{padding:22px!important}
-.hb-cart-summary-card{
-  position:sticky!important;
-  top:96px!important;
-  padding:22px!important;
-}
-.hb-cart-summary-card h3{
-  margin:0 0 14px!important;
-  color:#fff!important;
-  font-size:26px!important;
-  letter-spacing:-.03em!important;
-}
-.hb-cart-eyebrow{
-  color:#ff8c21!important;
-  font-size:12px!important;
-  text-transform:uppercase!important;
-  letter-spacing:.13em!important;
-  font-weight:1000!important;
-}
-.hb-cart-items-card .cart-panel-head{
-  display:flex!important;
-  justify-content:space-between!important;
-  align-items:center!important;
-  margin-bottom:18px!important;
-}
-.hb-cart-items-card .cart-panel-head h3{
-  margin:2px 0 0!important;
-  color:#fff!important;
-  font-size:34px!important;
-  letter-spacing:-.04em!important;
-}
-.hb-cart-lines{
-  display:grid!important;
-  gap:16px!important;
-}
-.hb-cart-items-card .shopping-cart-line{
-  display:grid!important;
-  grid-template-columns:120px minmax(0,1fr) 118px 138px 56px!important;
-  gap:18px!important;
-  align-items:center!important;
-  background:#0c223d!important;
-  border:1px solid rgba(148,184,220,.20)!important;
-  border-radius:22px!important;
-  padding:16px!important;
-}
-.hb-cart-items-card .cart-line-img{
-  width:120px!important;
-  min-height:104px!important;
-  display:grid!important;
-  place-items:center!important;
-  background:#fff!important;
-  border-radius:18px!important;
-  overflow:hidden!important;
-}
-.hb-cart-items-card .cart-line-img img{
-  width:100%!important;
-  height:104px!important;
-  object-fit:contain!important;
-}
-.hb-cart-items-card .shopping-cart-line strong a{
-  color:#fff!important;
-  font-size:18px!important;
-  line-height:1.25!important;
-  text-decoration:none!important;
-}
-.hb-cart-items-card .shopping-cart-line small{
-  color:#cbd8e8!important;
-  display:block!important;
-  margin-top:6px!important;
-  font-weight:850!important;
-}
-.hb-cart-items-card .cart-coupon-toggle{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:10px!important;
-  margin-top:12px!important;
-  max-width:100%!important;
-}
-.hb-cart-items-card .shopping-cart-line input[type=number]{
-  height:54px!important;
-  text-align:center!important;
-  font-weight:950!important;
-}
-.hb-cart-items-card .shopping-cart-line>span{
-  color:#fff!important;
-  font-weight:1000!important;
-  font-size:20px!important;
-  text-align:right!important;
-}
-.hb-cart-items-card .shopping-cart-line>button{
-  height:52px!important;
-  min-width:52px!important;
-  border-radius:14px!important;
-  background:#fff2f2!important;
-  color:#b64242!important;
-  font-weight:1000!important;
-}
-.hb-cart-summary-card .eufy-tax-summary{
-  background:transparent!important;
-  border:0!important;
-  padding:0!important;
-}
-.hb-cart-summary-card .eufy-tax-summary>div{
-  padding:13px 0!important;
-  border-bottom:1px solid rgba(255,255,255,.12)!important;
-}
-.hb-cart-summary-card .eufy-tax-summary span{
-  color:#d8e7f6!important;
-  font-weight:900!important;
-}
-.hb-cart-summary-card .eufy-tax-summary strong{
-  color:#7ee66c!important;
-  font-size:20px!important;
-}
-.hb-cart-summary-card .eufy-tax-summary .grand{
-  margin-top:8px!important;
-  padding:16px!important;
-  border-radius:16px!important;
-  background:linear-gradient(135deg,#06284d,#0b4c82)!important;
-  border:1px solid rgba(255,255,255,.14)!important;
-}
-.hb-cart-summary-card .eufy-tax-summary .grand strong,
-.hb-cart-summary-card .eufy-tax-summary .grand span{
-  color:#fff!important;
-  font-size:24px!important;
-}
-.hb-cart-summary-card .cart-checkout-actions .btn{
-  width:100%!important;
-  justify-content:center!important;
-  min-height:56px!important;
-  margin-top:18px!important;
-  font-size:18px!important;
-}
-.hb-checkout-summary-note{
-  color:#cbd8e8!important;
-  margin-top:12px!important;
-  line-height:1.45!important;
-  font-weight:800!important;
-}
-.eufy-checkout-form{
-  padding:26px!important;
-  border-radius:24px!important;
-}
-.eufy-checkout-form h4{
-  margin:24px 0 12px!important;
-  padding-top:10px!important;
-  border-top:1px solid rgba(255,255,255,.10)!important;
-  font-size:24px!important;
-  letter-spacing:-.03em!important;
-}
-.eufy-checkout-form .form-title{
-  font-size:15px!important;
-  color:#ff8c21!important;
-}
-.eufy-checkout-form .field input{
-  min-height:52px!important;
-  font-size:16px!important;
-}
-.shipping-rate-box{
-  color:#fff!important;
-}
-.shipping-rate-box small{
-  color:#d8e7f6!important;
-}
-@media(max-width:980px){
-  .hb-shop-cart-layout{grid-template-columns:1fr!important}
-  .hb-cart-summary-card{position:static!important}
-  .hb-cart-items-card .shopping-cart-line{grid-template-columns:92px 1fr!important}
-  .hb-cart-items-card .shopping-cart-line input[type=number],
-  .hb-cart-items-card .shopping-cart-line>span,
-  .hb-cart-items-card .shopping-cart-line>button{
-    grid-column:2!important;
-    width:100%!important;
-    text-align:left!important;
-  }
-}
+/* V187 rebuilt professional cart/checkout layout with normal 100% scale sizing */
+.hb-shop-compact-hero{padding:30px 0 8px!important;background:linear-gradient(135deg,#06111f,#08223e)!important;color:#fff!important}
+.hb-shop-compact-hero .container{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;width:min(1280px,calc(100% - 40px))!important}
+.hb-shop-compact-hero h1{margin:4px 0 6px!important;font-size:clamp(30px,3vw,44px)!important;line-height:1.05!important;color:#fff!important}
+.hb-shop-compact-hero p{margin:0!important;color:#cbd8e8!important;font-size:15px!important;line-height:1.45!important}
+.hb-cart-section>.container,.hb-checkout-section>.container{width:min(1280px,calc(100% - 40px))!important;max-width:1280px!important}
+.eufy-cart-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;color:#eef7ff!important}
+.hb-cart-main-panel{display:grid!important;grid-template-columns:minmax(0,1fr) 380px!important;grid-template-areas:'head head' 'empty summary' 'items summary' 'actions summary'!important;gap:22px!important;align-items:start!important}
+.hb-cart-main-panel .cart-panel-head{grid-area:head!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 0 8px!important;border:0!important}
+.hb-cart-main-panel .cart-panel-head h3,.hb-checkout-summary-panel .cart-panel-head h3{font-size:24px!important;margin:0!important;color:#fff!important;letter-spacing:-.02em!important}
+.hb-cart-main-panel #eufyCartEmpty{grid-area:empty!important}.hb-cart-main-panel #eufyCartItems{grid-area:items!important;display:grid!important;gap:14px!important}.hb-cart-main-panel .eufy-tax-summary{grid-area:summary!important;position:sticky!important;top:96px!important}.hb-cart-main-panel .cart-checkout-actions{grid-area:actions!important;text-align:right!important}
+.shopping-cart-line{display:grid!important;grid-template-columns:112px minmax(0,1fr) 92px 128px 44px!important;gap:16px!important;align-items:center!important;background:#0b2039!important;border:1px solid rgba(148,184,220,.22)!important;border-radius:20px!important;padding:16px!important;box-shadow:0 18px 44px rgba(0,0,0,.18)!important}
+.shopping-cart-line .cart-line-img{width:112px!important;height:112px!important;background:#fff!important;border-radius:16px!important;display:grid!important;place-items:center!important;overflow:hidden!important}.shopping-cart-line .cart-line-img img{max-width:100%!important;max-height:100%!important;object-fit:contain!important}.shopping-cart-line strong a{font-size:17px!important;line-height:1.25!important;color:#fff!important;text-decoration:none!important}.shopping-cart-line small{display:block!important;color:#c8d8ec!important;font-size:13px!important;margin-top:5px!important}.shopping-cart-line input{height:44px!important;text-align:center!important;border-radius:12px!important;background:#fff!important;color:#10233d!important}.shopping-cart-line>span{font-size:17px!important;font-weight:950!important;color:#fff!important;text-align:right!important}.shopping-cart-line>button{height:44px!important;width:44px!important;border-radius:12px!important;background:#fff1f1!important;color:#bd3030!important;font-size:20px!important;padding:0!important}
+.eufy-tax-summary{background:#0d2138!important;border:1px solid rgba(126,230,108,.32)!important;border-radius:22px!important;padding:20px!important;box-shadow:0 22px 55px rgba(0,0,0,.22)!important}.eufy-tax-summary .summary-title{display:block!important;color:#fff!important;font-size:20px!important;font-weight:1000!important;margin-bottom:12px!important}.eufy-tax-summary>div:not(.summary-title){display:flex!important;justify-content:space-between!important;align-items:center!important;gap:14px!important;padding:10px 0!important;border-bottom:1px solid rgba(255,255,255,.10)!important}.eufy-tax-summary span{font-size:14px!important;color:#cbd8e8!important}.eufy-tax-summary strong{font-size:16px!important;color:#7ee66c!important}.eufy-tax-summary .grand{border-bottom:0!important;border-top:2px solid rgba(255,106,0,.75)!important;margin-top:8px!important;padding-top:14px!important}.eufy-tax-summary .grand span,.eufy-tax-summary .grand strong{font-size:20px!important;color:#fff!important}
+.shopping-checkout{display:grid!important;grid-template-columns:minmax(0,1fr) 390px!important;gap:24px!important;align-items:start!important}.shopping-checkout .eufy-checkout-form{order:1!important}.shopping-checkout .hb-checkout-summary-panel{order:2!important;position:sticky!important;top:96px!important}.hb-checkout-summary-panel #eufyCartItems{display:grid!important;gap:10px!important}.hb-checkout-summary-panel .shopping-cart-line{grid-template-columns:64px 1fr!important;padding:10px!important;gap:10px!important}.hb-checkout-summary-panel .shopping-cart-line .cart-line-img{width:64px!important;height:64px!important}.hb-checkout-summary-panel .shopping-cart-line input,.hb-checkout-summary-panel .shopping-cart-line>button{display:none!important}.hb-checkout-summary-panel .shopping-cart-line>span{grid-column:2!important;text-align:left!important;font-size:14px!important}.hb-checkout-summary-panel .cart-panel-head a{display:none!important}
+.eufy-checkout-form{background:#081b31!important;border:1px solid rgba(148,184,220,.22)!important;border-radius:24px!important;padding:22px!important;box-shadow:0 22px 58px rgba(0,0,0,.20)!important;color:#eef7ff!important}.eufy-checkout-form .form-title{font-size:18px!important;letter-spacing:.02em!important;color:#fff!important;margin-bottom:12px!important}.eufy-checkout-form h4{font-size:18px!important;color:#fff!important;margin:22px 0 12px!important}.eufy-checkout-form .field{margin-bottom:12px!important}.eufy-checkout-form label{font-size:13px!important;font-weight:900!important;color:#dbe8f7!important;margin-bottom:6px!important}.eufy-checkout-form input{height:44px!important;border-radius:12px!important;font-size:14px!important;padding:0 12px!important;background:#fff!important;color:#10233d!important}.eufy-checkout-form .grid-2,.eufy-checkout-form .grid-3{gap:12px!important}.eufy-checkout-form .notice{font-size:13px!important;line-height:1.45!important;border-radius:16px!important;padding:12px 14px!important}.checkout-coupon-row{display:grid!important;grid-template-columns:1fr auto!important;gap:10px!important}.checkout-coupon-row .btn{height:44px!important;padding:0 14px!important;font-size:13px!important}.same-ship{font-size:13px!important;padding:8px 10px!important;max-width:max-content!important}.same-ship input{width:16px!important;height:16px!important}
+.fulfillment-options,.payment-choice-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin:8px 0 12px!important}.payment-choice-row{grid-template-columns:repeat(3,1fr)!important}.fulfillment-options label,.payment-choice-row label{display:flex!important;align-items:center!important;gap:8px!important;min-height:54px!important;background:#0c2544!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:15px!important;color:#fff!important;padding:12px!important;font-size:14px!important;font-weight:950!important}.fulfillment-options label:has(input:checked),.payment-choice-row label:has(input:checked){border-color:#7ee66c!important;box-shadow:0 0 0 2px rgba(126,230,108,.20)!important}.fulfillment-options input,.payment-choice-row input{width:16px!important;height:16px!important;min-width:16px!important}
+.shipping-rate-box{font-size:13px!important;line-height:1.4!important;border-radius:15px!important;padding:12px!important;background:rgba(126,230,108,.08)!important;color:#eafff0!important;border:1px solid rgba(126,230,108,.30)!important}.hb-eufy-card-fields{padding:14px!important;border-radius:16px!important}.hb-eufy-card-fields .card-field-title{font-size:17px!important}.hb-eufy-card-fields p{font-size:13px!important}.eufy-checkout-form button.primary{height:48px!important;border-radius:14px!important;font-size:15px!important;margin-top:8px!important;width:auto!important;min-width:180px!important;padding:0 22px!important}
+@media(max-width:980px){.hb-cart-main-panel,.shopping-checkout{grid-template-columns:1fr!important;grid-template-areas:'head' 'items' 'summary' 'actions'!important}.hb-cart-main-panel .eufy-tax-summary,.shopping-checkout .hb-checkout-summary-panel{position:static!important}.shopping-cart-line{grid-template-columns:86px 1fr!important}.shopping-cart-line input,.shopping-cart-line>span,.shopping-cart-line>button{grid-column:2!important;text-align:left!important}.payment-choice-row,.fulfillment-options{grid-template-columns:1fr!important}.hb-shop-compact-hero .container{width:calc(100% - 28px)!important;align-items:flex-start!important;flex-direction:column!important}.hb-cart-section>.container,.hb-checkout-section>.container{width:calc(100% - 28px)!important}}
 
 `;
 
@@ -15147,24 +14974,7 @@ function securitySolutionsSection(products = null) {
 }
 
 function eufyCartPanel(showCheckout = true) {
-  return `<div class="hb-shop-cart-layout ${showCheckout ? "cart-page-mode" : "checkout-summary-mode"}">
-    <section class="eufy-cart-panel shopping-cart-panel hb-cart-items-card">
-      <div class="cart-panel-head"><div><span class="hb-cart-eyebrow">Shopping Bag</span><h3>Your Cart</h3></div><a class="btn small" href="/security-camera-systems">Continue Shopping</a></div>
-      <div id="eufyCartEmpty" class="notice">Your cart is empty.</div>
-      <div id="eufyCartItems" class="hb-cart-lines"></div>
-    </section>
-    <aside class="hb-cart-summary-card">
-      <h3>Order Summary</h3>
-      <div class="eufy-cart-total eufy-tax-summary">
-        <div><span>Product Subtotal</span><strong id="eufyCartSubtotal">$0.00</strong></div>
-        <div><span>Sales Tax</span><strong id="eufyCartTax">$0.00</strong></div>
-        <div><span>Shipping</span><strong id="eufyCartShipping">$0.00</strong></div>
-        <div class="grand"><span>Estimated Total</span><strong id="eufyCartTotal">$0.00</strong></div>
-        <small id="eufyQuoteItemNote"></small>
-      </div>
-      ${showCheckout ? `<div class="cart-checkout-actions"><a class="btn orange" href="/checkout" id="eufyCheckoutBtn">Checkout</a></div>` : `<div class="hb-checkout-summary-note">Taxes and shipping finalize after delivery details are entered.</div>`}
-    </aside>
-  </div>`;
+  return `<div class="eufy-cart-panel shopping-cart-panel ${showCheckout ? 'hb-cart-main-panel' : 'hb-checkout-summary-panel'}"><div class="cart-panel-head"><h3>${showCheckout ? 'Shopping Cart' : 'Order Summary'}</h3><a class="btn small" href="/security-camera-systems">Continue Shopping</a></div><div id="eufyCartEmpty" class="notice">Your cart is empty.</div><div id="eufyCartItems"></div><div class="eufy-cart-total eufy-tax-summary"><div class="summary-title">Order Summary</div><div><span>Product Subtotal</span><strong id="eufyCartSubtotal">$0.00</strong></div><div><span>Sales Tax</span><strong id="eufyCartTax">$0.00</strong></div><div><span>Shipping</span><strong id="eufyCartShipping">$0.00</strong></div><div class="grand"><span>Estimated Total</span><strong id="eufyCartTotal">$0.00</strong></div><small id="eufyQuoteItemNote"></small></div>${showCheckout ? `<div class="cart-checkout-actions"><a class="btn orange" href="/checkout" id="eufyCheckoutBtn">Secure Checkout</a></div>` : ``}</div>`;
 }
 
 function eufyCheckoutForm() {
@@ -15201,7 +15011,7 @@ window.eufyApplyCheckoutCoupon=function(silent){let input=document.getElementByI
 window.eufyCopyBilling=function(){let on=document.getElementById('sameShipping')&&document.getElementById('sameShipping').checked;if(!on)return;let q=s=>document.querySelector(s);if(q('[name=billing_street]'))document.getElementById('shipStreet').value=q('[name=billing_street]').value;if(q('[name=billing_city]'))document.getElementById('shipCity').value=q('[name=billing_city]').value;if(q('[name=billing_state]'))document.getElementById('shipState').value=q('[name=billing_state]').value;if(q('[name=billing_zip]'))document.getElementById('shipZip').value=q('[name=billing_zip]').value;};
 window.eufyCalculateTax=async function(){return null;};
 function selectedPay(){let r=document.querySelector('input[name=payment_preference]:checked');return r?r.value:''}function toggleCard(){let on=selectedPay()==='Credit Card',b=document.getElementById('eufyCardFields'),btn=document.getElementById('eufyPlaceOrderButton');if(b)b.hidden=!on;if(btn)btn.textContent=on?'Pay & Place Order':'Place Order'}function cardErr(msg){let e=document.getElementById('cardError');if(e){e.textContent=msg;e.style.display=msg?'block':'none'}else alert(msg)}function tokenizeAndSubmit(form){let cfg=window.HB_ACCEPT_CONFIG||{};if(!cfg.ready||!window.Accept){cardErr('Credit card processing is not ready. Please choose Check or Zelle, or contact support.');return}let n=(document.getElementById('ccNumber')||{}).value||'',m=(document.getElementById('ccMonth')||{}).value||'',y=(document.getElementById('ccYear')||{}).value||'',c=(document.getElementById('ccCode')||{}).value||'';n=n.replace(/\D/g,'');m=m.replace(/\D/g,'');y=y.replace(/\D/g,'');c=c.replace(/\D/g,'');if(!n||!m||!y||!c){cardErr('Please enter card number, expiration, and card code.');return}cardErr('');Accept.dispatchData({authData:{clientKey:cfg.clientKey,apiLoginID:cfg.login},cardData:{cardNumber:n,month:m,year:y,cardCode:c}},function(r){if(r.messages.resultCode==='Error'){cardErr(r.messages.message.map(function(x){return x.text}).join(' | '));return}document.getElementById('dataDescriptor').value=r.opaqueData.dataDescriptor;document.getElementById('dataValue').value=r.opaqueData.dataValue;form.submit();});}
-window.eufyBeforeSubmit=function(){let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);if(document.querySelector('input[name=fulfillment_type]:checked')&&document.querySelector('input[name=fulfillment_type]:checked').value==='shipping'&&!document.getElementById('shipZip').value){alert('Please enter shipping ZIP before placing the order.');return false}let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let pay=selectedPay();if(pay==='Credit Card'){if(hasQuote){alert('Credit card checkout is only available for priced eufy items. Remove quote-only items or choose Check/Zelle.');return false}if(!document.getElementById('dataValue').value){tokenizeAndSubmit(document.getElementById('eufyOrderForm'));return false}}let msg=hasQuote?'Please confirm: priced eufy products will use destination sales tax. Quote-only items will be reviewed before final approval.':'Please confirm: this will place your order with destination sales tax calculated at checkout.';return confirm(msg)};document.addEventListener('change',function(e){if(e.target&&e.target.name==='payment_preference')toggleCard()});setTimeout(toggleCard,50);
+window.eufyBeforeSubmit=function(){let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);if(document.querySelector('input[name=fulfillment_type]:checked')&&document.querySelector('input[name=fulfillment_type]:checked').value==='shipping'){if(!document.getElementById('shipZip').value){alert('Please enter shipping ZIP before placing the order.');return false}if(window.hbEufyShippingReady!==true){alert('UPS shipping rate is required before checkout. Please verify the shipping ZIP or choose Pickup.');return false}}let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let pay=selectedPay();if(pay==='Credit Card'){if(hasQuote){alert('Credit card checkout is only available for priced eufy items. Remove quote-only items or choose Check/Zelle.');return false}if(!document.getElementById('dataValue').value){tokenizeAndSubmit(document.getElementById('eufyOrderForm'));return false}}let msg=hasQuote?'Please confirm: priced eufy products will use destination sales tax. Quote-only items will be reviewed before final approval.':'Please confirm: this will place your order with destination sales tax calculated at checkout.';return confirm(msg)};document.addEventListener('change',function(e){if(e.target&&e.target.name==='payment_preference')toggleCard()});setTimeout(toggleCard,50);
 function render(){let wrap=document.getElementById('eufyCartItems');let empty=document.getElementById('eufyCartEmpty');let hidden=document.getElementById('eufyCartJson');let checkoutBtn=document.getElementById('eufyCheckoutBtn');if(!wrap){if(hidden)hidden.value=JSON.stringify(getCart());return}let cart=normalizeCart(getCart());let subtotal=0;let hasQuoteOnly=false;if(empty)empty.style.display=cart.length?'none':'block';wrap.innerHTML=cart.map(row=>{let p=find(row.id);if(!p)return '';let qty=Math.max(1,parseInt(row.qty)||1);let key=cartKey(row);let regular=regularPrice(p);let unit=linePrice(p,row);let line=unit*qty;if(quoteOnly(p))hasQuoteOnly=true;else subtotal+=line;let couponHtml=quoteOnly(p)?'<span class="cart-coupon-toggle muted">Pricing to be quoted by HB Commerce</span>':(hasCoupon(p)?'<label class="cart-coupon-toggle"><input type="checkbox" '+(row.coupon?'checked':'')+' onchange="eufyToggleCartCoupon(\\\''+key+'\\\',this.checked)"> Save '+money(p.discount||0)+' with Code: '+(p.coupon||'')+'</label>':'<span class="cart-coupon-toggle muted">No coupon for this item</span>');let url=productUrl(p);let img=p.image?'<img src="'+p.image+'" alt="">':'<div class="lts-cart-thumb">LTS</div>';let priceText=quoteOnly(p)?'Pricing to be quoted':('<span class="cart-regular">'+(row.coupon?money(regular):'')+'</span> '+money(unit)+' each');let lineText=quoteOnly(p)?'Quote':money(line);return '<div class="cart-line shopping-cart-line"><a class="cart-line-img" href="'+url+'">'+img+'</a><div><strong><a href="'+url+'">'+p.name+'</a></strong><small>'+priceText+'</small>'+couponHtml+'</div><input type="number" min="1" value="'+qty+'" onchange="eufyUpdateCartQty(\\\''+key+'\\\',this.value)"><span>'+lineText+'</span><button type="button" onclick="eufyRemoveFromCart(\\\''+key+'\\\')">×</button></div>'}).join('');if(hidden)hidden.value=JSON.stringify(cart);let ship=Number(window.hbEufyShipCost||0);let tax=subtotal*TAX_RATE;let grand=subtotal+tax+ship;let subtotalEl=document.getElementById('eufyCartSubtotal');let taxEl=document.getElementById('eufyCartTax');let shipEl=document.getElementById('eufyCartShipping');let totalEl=document.getElementById('eufyCartTotal');let noteEl=document.getElementById('eufyQuoteItemNote');if(subtotalEl)subtotalEl.textContent=money(subtotal);if(taxEl)taxEl.textContent=money(tax);if(shipEl)shipEl.textContent=money(ship);if(totalEl)totalEl.textContent=money(grand)+(hasQuoteOnly?' + quote items':'');if(noteEl)noteEl.textContent=hasQuoteOnly?'Quote-only items do not show a public price and will be reviewed before final approval.':'Destination tax is calculated at checkout after shipping ZIP/address is entered.';if(checkoutBtn)checkoutBtn.classList.toggle('disabled',!cart.length)}
 window.addEventListener('storage',e=>{if(e.key===KEY)render()});document.addEventListener('DOMContentLoaded',function(){render();});render();
 })();</script>`;
@@ -15218,7 +15028,7 @@ async function pageEufyCollection(env) {
 
 async function pageEufyCart(env) {
   const products = await quoteProductsForEnv(env);
-  const body = `<main class="eufy-cart-page"><section class="eufy-collection-hero cart-hero"><div class="container"><div class="kicker">Cart</div><h1>Your Cart</h1><p>Review your products, estimated tax, and order details before checkout.</p><div class="eufy-hero-actions"><a class="btn orange" href="/checkout">Checkout</a><a class="btn" href="/security-camera-systems">Continue Shopping</a></div></div></section><section class="section"><div class="container">${eufyCartPanel(true)}${eufyStoreScript(products)}</div></section></main>`;
+  const body = `<main class="eufy-cart-page hb-shop-cart-page"><section class="hb-shop-compact-hero"><div class="container"><div><div class="kicker">Cart</div><h1>Your Cart</h1><p>Review items, coupons, tax estimate, and delivery cost before checkout.</p></div><a class="btn" href="/security-camera-systems">Continue Shopping</a></div></section><section class="section hb-cart-section"><div class="container hb-cart-shell">${eufyCartPanel(true)}${eufyStoreScript(products)}</div></section></main>`;
   return htmlPage('Quote Cart | HB Commerce Solutions', layout(env, 'Cart', body));
 }
 
@@ -15226,7 +15036,7 @@ async function pageEufyCheckout(env) {
   const products = await quoteProductsForEnv(env);
   const acfg = authNetConfig(env);
   const acceptJsV1 = String(env.AUTHORIZE_NET_ENV || "production").toLowerCase() === "sandbox" ? "https://jstest.authorize.net/v1/Accept.js" : "https://js.authorize.net/v1/Accept.js";
-  const body = `<main class="eufy-checkout-page"><section class="eufy-collection-hero checkout-hero"><div class="container"><div class="kicker">Checkout</div><h1>Submit Hardware Order</h1><p>Enter billing, shipping, and payment information. Priced eufy items use ZipTax destination sales tax; quote-only items are reviewed before final approval.</p></div></section><section class="section"><div class="container"><div class="eufy-checkout shopping-checkout">${eufyCartPanel(false)}${eufyCheckoutForm()}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};</script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}function cart(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}}function ship(){return{street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''}}function fulfill(){let r=document.querySelector('input[name=fulfillment_type]:checked');return r?r.value:'shipping'}function setShipReq(on){['shipStreet','shipCity','shipState','shipZip'].forEach(id=>{let e=q(id);if(e)e.required=on});let b=q('shippingAddressBlock');if(b)b.style.display=on?'block':'none'}async function rate(){let box=q('shippingRateBox'),c=cart(),f=fulfill();setShipReq(f==='shipping');if(f==='pickup'){window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(0);if(box)box.textContent='Pickup selected — no shipping charge.';calc();return}try{let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),fulfillment_type:f})});let j=await r.json(),x=j.rates&&j.rates[0];if(x){window.hbEufyShipCost=Number(x.amount||0);if(q('shipCost'))q('shipCost').value=String(x.amount||0);if(q('shipService'))q('shipService').value=x.code||'standard';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(x.amount||0);if(box)box.innerHTML='<strong>'+x.label+'</strong> '+m(x.amount||0)+'<br><small>'+(j.source||'Shipping rate')+'</small>'}}catch(e){if(box)box.textContent='Shipping rate unavailable. Admin will verify if needed.'}calc()}async function calc(){let c=cart();if(!c.length)return;try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0),sh=Number(window.hbEufyShipCost||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax+sh);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination sales tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}window.hbUpdateShippingRate=rate;['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(rate,350));el.addEventListener('blur',rate)}});document.addEventListener('change',e=>{if(e.target&&e.target.name==='fulfillment_type')rate()});document.addEventListener('DOMContentLoaded',()=>setTimeout(rate,700));})();</script></div></section></main>`;
+  const body = `<main class="eufy-checkout-page hb-shop-checkout-page"><section class="hb-shop-compact-hero"><div class="container"><div><div class="kicker">Secure Checkout</div><h1>Checkout</h1><p>Choose shipping or pickup, confirm destination tax, and select payment method.</p></div><a class="btn" href="/cart">Back to Cart</a></div></section><section class="section hb-checkout-section"><div class="container"><div class="eufy-checkout shopping-checkout">${eufyCheckoutForm()}${eufyCartPanel(false)}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};</script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}function cart(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}}function ship(){return{street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''}}function fulfill(){let r=document.querySelector('input[name=fulfillment_type]:checked');return r?r.value:'shipping'}function setShipReq(on){['shipStreet','shipCity','shipState','shipZip'].forEach(id=>{let e=q(id);if(e)e.required=on});let b=q('shippingAddressBlock');if(b)b.style.display=on?'block':'none'}async function rate(){let box=q('shippingRateBox'),c=cart(),f=fulfill();setShipReq(f==='shipping');if(f==='pickup'){window.hbEufyShippingReady=true;window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(0);if(box)box.innerHTML='<strong>Pickup</strong><br><small>No shipping charge.</small>';calc();return}window.hbEufyShippingReady=false;try{let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),fulfillment_type:f})});let j=await r.json(),x=j.rates&&j.rates[0];if(!j.ok||!x){throw new Error(j.message||'UPS rate unavailable')}window.hbEufyShippingReady=true;window.hbEufyShipCost=Number(x.amount||0);if(q('shipCost'))q('shipCost').value=String(x.amount||0);if(q('shipService'))q('shipService').value=x.code||'ups_ground';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(x.amount||0);if(box)box.innerHTML='<strong>'+x.label+'</strong> '+m(x.amount||0)+'<br><small>Live UPS Ground rate</small>'}catch(e){window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='';if(q('eufyCartShipping'))q('eufyCartShipping').textContent='UPS needed';if(box)box.innerHTML='<strong>UPS rate unavailable</strong><br><small>Use Pickup or contact HB Commerce while UPS API credentials are fixed.</small>'}calc()}async function calc(){let c=cart();if(!c.length)return;try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0),sh=Number(window.hbEufyShipCost||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax+sh);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination sales tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}window.hbUpdateShippingRate=rate;['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(rate,350));el.addEventListener('blur',rate)}});document.addEventListener('change',e=>{if(e.target&&e.target.name==='fulfillment_type')rate()});document.addEventListener('DOMContentLoaded',()=>setTimeout(rate,700));})();</script></div></section></main>`;
   return htmlPage('Checkout | HB Commerce Solutions', layout(env, 'Checkout', body));
 }
 
@@ -17662,8 +17472,12 @@ async function publicShippingRate(request, env) {
     if (!zip) return jsonResponse({ ok:false, message:"Enter shipping ZIP to calculate shipping." }, 400);
     const ups = await upsGroundRate(env, ship, body.cart || []).catch(err => ({ ok:false, error:String(err && err.message || err) }));
     if (ups && ups.ok) return jsonResponse({ ok:true, rates:[ups.rate], source:"UPS" });
-    const fallback = Number(env.STANDARD_SHIPPING_FALLBACK || 19.99);
-    return jsonResponse({ ok:true, needs_review:true, rates:[{ code:"standard", label:"Standard Shipping", amount:fallback, carrier:"HB Commerce" }], source:"Standard shipping fallback" });
+    if (ups && ups.error) console.error("UPS rating unavailable", ups.error);
+    if (String(env.ALLOW_STANDARD_SHIPPING_FALLBACK || "") === "1") {
+      const fallback = Number(env.STANDARD_SHIPPING_FALLBACK || 0);
+      return jsonResponse({ ok:true, needs_review:true, rates:[{ code:"standard", label:"Standard Shipping", amount:fallback, carrier:"HB Commerce" }], source:"Standard shipping fallback" });
+    }
+    return jsonResponse({ ok:false, ups_required:true, message:"UPS shipping rate is unavailable. Please choose Pickup or contact HB Commerce until UPS API credentials are fixed." }, 503);
   } catch (err) {
     return jsonResponse({ ok:false, message:"Shipping rate calculation failed." }, 500);
   }
@@ -17674,14 +17488,14 @@ async function upsGroundRate(env, ship = {}, cart = []) {
   if(!id||!sec||!acct) throw new Error("UPS credentials are not configured.");
   const prod=String(env.UPS_ENV||"production").toLowerCase()!=="sandbox";
   const base=prod?"https://onlinetools.ups.com":"https://wwwcie.ups.com";
-  const tok=await fetch(base+"/security/v1/oauth/token",{method:"POST",headers:{authorization:"Basic "+btoa(id+":"+sec),"content-type":"application/x-www-form-urlencoded"},body:"grant_type=client_credentials"}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok||!j.access_token)throw new Error(j.response?.errors?.[0]?.message||"UPS OAuth failed");return j.access_token});
+  const tx="hb-"+Date.now();const tok=await fetch(base+"/security/v1/oauth/token",{method:"POST",headers:{authorization:"Basic "+btoa(id+":"+sec),"content-type":"application/x-www-form-urlencoded","transId":tx,"transactionSrc":"hb-commerce"},body:"grant_type=client_credentials"}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok||!j.access_token)throw new Error(j.response?.errors?.[0]?.message||"UPS OAuth failed - verify UPS_CLIENT_ID, UPS_CLIENT_SECRET, UPS_ENV, and that the app has Rating API access.");return j.access_token});
   const fromZip=String(env.UPS_ORIGIN_ZIP||env.TAX_ORIGIN_ZIP||"60193"), toZip=normalizeTaxZip(ship.zip||"");
   const weight=Math.max(1, cart.reduce((s,r)=>s+(Number(r.qty||1)*Number(env.EUFY_PACKAGE_WEIGHT_LB||18)),0));
   const req={RateRequest:{Request:{RequestOption:"Rate"},Shipment:{Shipper:{Name:"HB Commerce Solutions",ShipperNumber:acct,Address:{PostalCode:fromZip,CountryCode:"US"}},ShipTo:{Address:{PostalCode:toZip,CountryCode:"US",ResidentialAddressIndicator:""}},ShipFrom:{Address:{PostalCode:fromZip,CountryCode:"US"}},PaymentDetails:{ShipmentCharge:{Type:"01",BillShipper:{AccountNumber:acct}}},Service:{Code:"03",Description:"UPS Ground"},Package:{PackagingType:{Code:"02",Description:"Package"},PackageWeight:{UnitOfMeasurement:{Code:"LBS"},Weight:String(Math.ceil(weight))}}}}};
-  const data=await fetch(base+"/api/rating/v1/Rate",{method:"POST",headers:{authorization:"Bearer "+tok,"content-type":"application/json"},body:JSON.stringify(req)}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.response?.errors?.[0]?.message||"UPS rate failed");return j});
+  const data=await fetch(base+"/api/rating/v1/Rate",{method:"POST",headers:{authorization:"Bearer "+tok,"content-type":"application/json","transId":tx,"transactionSrc":"hb-commerce"},body:JSON.stringify(req)}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.response?.errors?.[0]?.message||"UPS rate failed");return j});
   const rated=data.RateResponse?.RatedShipment, val=Number(rated?.TotalCharges?.MonetaryValue||0);
   if(!val) throw new Error("UPS returned no rate.");
-  return {ok:true, rate:{code:"ups_ground", label:"Standard Shipping (UPS Ground)", amount:val, carrier:"UPS"}};
+  return {ok:true, rate:{code:"ups_ground", label:"UPS Ground", amount:val, carrier:"UPS"}};
 }
 
 async function publicTaxCalculate(request, env) {
@@ -17768,6 +17582,24 @@ async function adminTaxLookup(request, env) {
 
 function jsonResponse(obj, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
+}
+
+
+async function adminUpsTest(request, env) {
+  const user = await requireAuth(request, env);
+  if (!user) return redirect('/admin-app');
+  const url = new URL(request.url);
+  const zip = normalizeTaxZip(url.searchParams.get('zip') || '60193');
+  const envMode = String(env.UPS_ENV || 'production').toLowerCase() === 'sandbox' ? 'sandbox' : 'production';
+  let result = '';
+  try {
+    const r = await upsGroundRate(env, { zip }, [{ qty: 1 }]);
+    result = `<div class="notice success"><strong>UPS rating connected.</strong><br>${escapeHtml(r.rate.label)} to ZIP ${escapeHtml(zip)}: ${money(r.rate.amount)}</div>`;
+  } catch (err) {
+    result = `<div class="notice error"><strong>UPS test failed.</strong><br>${escapeHtml(err.message || String(err))}</div><div class="notice"><strong>Check these Cloudflare secrets:</strong><br>UPS_CLIENT_ID, UPS_CLIENT_SECRET, UPS_ACCOUNT_NUMBER, UPS_ORIGIN_ZIP. Also confirm UPS_ENV is ${envMode} and the UPS app has Rating API access.</div>`;
+  }
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><h2>UPS Rating API Test</h2><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/orders">Online Orders</a></div></div><section class="form-section"><div class="form-title">UPS Connection Test</div><p>Environment: <strong>${escapeHtml(envMode)}</strong></p><form method="get"><div class="field"><label>Destination ZIP for test</label><input name="zip" value="${escapeHtml(zip)}"></div><button class="orange">Run UPS Test</button></form>${result}</section></div></main>`;
+  return htmlPage('UPS Test | HB Commerce', layout(env, 'Dashboard', body));
 }
 
 async function adminTaxPage(request, env, message = "") {
