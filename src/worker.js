@@ -13118,6 +13118,66 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 /* V179 unified uploaded HB Commerce logo across website/admin/document screens */
 .logo-link img,.admin-centered-logo img,.logo-wrap img,.hb-full-logo-img{object-fit:contain!important}
 
+
+
+/* V180 homepage banner copy lift + enhanced branded header logo */
+.hb-v72-topbar .hb-v72-nav{
+  min-height:96px!important;
+}
+.hb-v72-topbar .hb-v72-logo{
+  background:radial-gradient(circle at 35% 15%,rgba(255,255,255,.16),transparent 38%),linear-gradient(135deg,rgba(4,13,26,.98),rgba(6,40,77,.96))!important;
+  border:1.4px solid rgba(255,106,0,.55)!important;
+  border-radius:24px!important;
+  padding:8px 22px!important;
+  margin:8px 0!important;
+  box-shadow:0 0 0 1px rgba(126,230,108,.15),0 18px 40px rgba(0,0,0,.32),0 0 26px rgba(255,106,0,.16)!important;
+}
+.hb-v72-topbar .hb-v72-logo img{
+  height:86px!important;
+  max-width:320px!important;
+  filter:drop-shadow(0 10px 22px rgba(0,0,0,.58)) saturate(1.14) contrast(1.08)!important;
+}
+.hb-v72-topbar .hb-v72-logo:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 0 0 1px rgba(126,230,108,.24),0 24px 52px rgba(0,0,0,.38),0 0 34px rgba(255,106,0,.24)!important;
+}
+.hb-current-merchant .hb-current-banner-copy,
+.hb-current-pos .hb-current-banner-copy,
+.hb-current-security .hb-current-banner-copy{
+  align-self:start!important;
+  padding-top:clamp(4px,1.15vw,24px)!important;
+  transform:translateY(clamp(-28px,-1.7vw,-12px))!important;
+}
+.hb-current-merchant .hb-current-banner-logo,
+.hb-current-pos .hb-current-banner-logo,
+.hb-current-security .hb-current-banner-logo{
+  margin-bottom:clamp(12px,1.35vw,24px)!important;
+}
+.hb-current-merchant .hb-current-kicker,
+.hb-current-pos .hb-current-kicker,
+.hb-current-security .hb-current-kicker{
+  margin-bottom:clamp(6px,.8vw,11px)!important;
+}
+.hb-current-merchant .hb-current-banner-copy h2,
+.hb-current-pos .hb-current-banner-copy h2,
+.hb-current-security .hb-current-banner-copy h2{
+  font-size:clamp(40px,4.1vw,72px)!important;
+  line-height:1.0!important;
+}
+.hb-current-merchant .hb-current-banner-copy p,
+.hb-current-pos .hb-current-banner-copy p,
+.hb-current-security .hb-current-banner-copy p{
+  margin:clamp(10px,1vw,18px) 0 clamp(12px,1.2vw,22px)!important;
+}
+@media(max-width:760px){
+  .hb-v72-topbar .hb-v72-nav{min-height:auto!important}
+  .hb-v72-topbar .hb-v72-logo{justify-content:center!important;margin:6px auto!important;padding:7px 14px!important}
+  .hb-v72-topbar .hb-v72-logo img{height:70px!important;max-width:260px!important}
+  .hb-current-merchant .hb-current-banner-copy,
+  .hb-current-pos .hb-current-banner-copy,
+  .hb-current-security .hb-current-banner-copy{transform:none!important;padding-top:0!important}
+}
+
 `;
 
 function installButtonHtml() {
