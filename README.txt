@@ -2298,3 +2298,10 @@ V201 AUTHORIZE.NET AUTH DIAGNOSTICS
 - AUTHORIZE_NET_ENV is now trimmed and accepts sandbox/test/testing/apitest as sandbox aliases; production remains the default when unset.
 - Worker raw size: 3140296 bytes. Cloudflare free-plan headroom: 5432 bytes.
 - Node syntax check passed.
+
+
+---
+
+## v204 visual contrast update
+
+Create Quote and Create Invoice now include a page-level checkout-style contrast override. The form background uses the secure checkout navy theme, while inputs/selects/textareas use high-contrast white fields with dark text so values remain readable in Chrome, Edge, Safari, and mobile browsers.

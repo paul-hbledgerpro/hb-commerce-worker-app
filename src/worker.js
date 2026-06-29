@@ -18993,7 +18993,264 @@ function documentFormHtml(doc, error = "") {
   const shippingSame = !!doc.shipping_same_as_billing;
   const selectedState = ship.state || bill.state || "PA";
   const shippingCarrier = String(doc.shipping_carrier || "manual").toLowerCase();
-  return `<main class="section admin-dashboard admin-document-page"><div class="container"><div class="section-title"><h2>${doc.id ? "Edit " + doc.type : "New " + doc.type}</h2><a class="btn" href="/admin/dashboard">Back to Dashboard</a></div>${error ? `<div class="notice error">${escapeHtml(error)}</div>` : ""}<form method="post" action="/admin/document" id="docForm"><input type="hidden" name="id" value="${escapeHtml(doc.id || "")}"><input type="hidden" name="token" value="${escapeHtml(doc.token || "")}"><input type="hidden" name="tax_source" id="tax_source" value="${escapeHtml(doc.tax_source || "")}"><input type="hidden" name="tax_lookup_address" id="tax_lookup_address" value="${escapeHtml(doc.tax_lookup_address || "")}">
+  return `<style id="hb-v204-document-form-contrast">
+/* v204: checkout-style create quote/invoice form with strict high-contrast field text */
+html body main.admin-document-page{
+  min-height:calc(100vh - 0px)!important;
+  background:
+    radial-gradient(circle at 84% 2%,rgba(19,138,61,.24),transparent 35%),
+    radial-gradient(circle at 8% 0%,rgba(255,106,0,.15),transparent 30%),
+    linear-gradient(180deg,#06101f 0%,#082247 48%,#06101f 100%)!important;
+  color:#eaf2ff!important;
+  -webkit-text-fill-color:initial!important;
+}
+html body main.admin-document-page .container{position:relative;z-index:1!important;}
+html body main.admin-document-page .section-title{
+  margin-bottom:22px!important;
+  padding:24px 28px!important;
+  border-radius:28px!important;
+  border:1.5px solid rgba(255,106,0,.45)!important;
+  background:
+    radial-gradient(circle at 88% 18%,rgba(19,138,61,.25),transparent 34%),
+    linear-gradient(135deg,#06101f,#082247 70%,#06101f)!important;
+  color:#fff!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body main.admin-document-page .section-title h2{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:0 2px 0 rgba(0,0,0,.35)!important;
+}
+html body main.admin-document-page #docForm{
+  padding:24px!important;
+  border-radius:30px!important;
+  border:1.5px solid rgba(255,106,0,.45)!important;
+  background:linear-gradient(135deg,#06101f,#082247 70%,#06101f)!important;
+  color:#fff!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body main.admin-document-page #docForm > .form-section,
+html body main.admin-document-page #docForm .line-item-card{
+  background:
+    radial-gradient(circle at 92% 0%,rgba(255,106,0,.13),transparent 32%),
+    linear-gradient(135deg,rgba(13,35,66,.98),rgba(5,15,31,.99))!important;
+  border:1.5px solid rgba(255,106,0,.36)!important;
+  border-radius:24px!important;
+  color:#eaf2ff!important;
+  box-shadow:0 16px 40px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html body main.admin-document-page #docForm .form-title,
+html body main.admin-document-page #docForm .field > label,
+html body main.admin-document-page #docForm label,
+html body main.admin-document-page #docForm .same-address-check,
+html body main.admin-document-page #docForm .item-head span{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.42)!important;
+  opacity:1!important;
+}
+html body main.admin-document-page #docForm .hint,
+html body main.admin-document-page #docForm p,
+html body main.admin-document-page #docForm small{
+  color:#dbe7f5!important;
+  -webkit-text-fill-color:#dbe7f5!important;
+  opacity:1!important;
+}
+html body main.admin-document-page #docForm input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+html body main.admin-document-page #docForm select,
+html body main.admin-document-page #docForm textarea{
+  background:#ffffff!important;
+  background-color:#ffffff!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  caret-color:#ff6a00!important;
+  border:1.7px solid rgba(255,106,0,.70)!important;
+  border-radius:14px!important;
+  min-height:48px!important;
+  font-weight:850!important;
+  font-size:15px!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 8px 20px rgba(0,0,0,.16)!important;
+  color-scheme:light!important;
+}
+html body main.admin-document-page #docForm textarea{
+  line-height:1.45!important;
+  min-height:150px!important;
+}
+html body main.admin-document-page #docForm input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus,
+html body main.admin-document-page #docForm select:focus,
+html body main.admin-document-page #docForm textarea:focus{
+  background:#fffdf9!important;
+  background-color:#fffdf9!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  border-color:#ffb14f!important;
+  outline:3px solid rgba(255,106,0,.32)!important;
+  box-shadow:0 0 0 3px rgba(255,106,0,.18),0 10px 24px rgba(0,0,0,.20)!important;
+}
+html body main.admin-document-page #docForm input[readonly],
+html body main.admin-document-page #docForm input:read-only{
+  background:#e9eef7!important;
+  background-color:#e9eef7!important;
+  color:#23324a!important;
+  -webkit-text-fill-color:#23324a!important;
+  border-color:#cbd7e8!important;
+}
+html body main.admin-document-page #docForm input::placeholder,
+html body main.admin-document-page #docForm textarea::placeholder{
+  color:#66758d!important;
+  -webkit-text-fill-color:#66758d!important;
+  opacity:1!important;
+}
+html body main.admin-document-page #docForm option,
+html body main.admin-document-page #docForm optgroup{
+  background:#ffffff!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+}
+html body main.admin-document-page #docForm input:-webkit-autofill,
+html body main.admin-document-page #docForm input:-webkit-autofill:hover,
+html body main.admin-document-page #docForm input:-webkit-autofill:focus,
+html body main.admin-document-page #docForm textarea:-webkit-autofill,
+html body main.admin-document-page #docForm textarea:-webkit-autofill:hover,
+html body main.admin-document-page #docForm textarea:-webkit-autofill:focus,
+html body main.admin-document-page #docForm select:-webkit-autofill,
+html body main.admin-document-page #docForm select:-webkit-autofill:hover,
+html body main.admin-document-page #docForm select:-webkit-autofill:focus{
+  -webkit-text-fill-color:#06101f!important;
+  color:#06101f!important;
+  caret-color:#ff6a00!important;
+  border:1.7px solid rgba(255,106,0,.70)!important;
+  box-shadow:0 0 0 1000px #ffffff inset,0 8px 20px rgba(0,0,0,.16)!important;
+  transition:background-color 999999s ease-in-out 0s!important;
+}
+html body main.admin-document-page #docForm input[type="checkbox"],
+html body main.admin-document-page #docForm input[type="radio"]{
+  -webkit-appearance:auto!important;
+  appearance:auto!important;
+  accent-color:#00bd6f!important;
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  margin:0 8px 0 0!important;
+  background:#fff!important;
+  border:2px solid #ff8c21!important;
+  box-shadow:none!important;
+  -webkit-text-fill-color:initial!important;
+  color:#00bd6f!important;
+  opacity:1!important;
+}
+html body main.admin-document-page #docForm .same-address-check,
+html body main.admin-document-page #docForm .inline-check{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-height:48px!important;
+  padding:10px 12px!important;
+  border-radius:14px!important;
+  background:rgba(255,255,255,.075)!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body main.admin-document-page #docForm .notice,
+html body main.admin-document-page #docForm #taxNote,
+html body main.admin-document-page #docForm #shippingRateNote,
+html body main.admin-document-page #docForm #billingZipNote{
+  background:rgba(3,14,29,.78)!important;
+  border:1px solid rgba(255,106,0,.30)!important;
+  color:#eaf2ff!important;
+  -webkit-text-fill-color:#eaf2ff!important;
+  border-radius:16px!important;
+}
+html body main.admin-document-page #docForm .notice strong,
+html body main.admin-document-page #docForm #shippingRateNote strong{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body main.admin-document-page #docForm .line-item-row,
+html body main.admin-document-page #docForm .calc-strip{
+  background:rgba(255,255,255,.07)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:20px!important;
+}
+html body main.admin-document-page #docForm .calc-box{
+  background:#ffffff!important;
+  border:1px solid #d9e2ef!important;
+  border-radius:14px!important;
+  color:#06101f!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.14)!important;
+}
+html body main.admin-document-page #docForm .calc-box b,
+html body main.admin-document-page #docForm .calc-box span{
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  text-shadow:none!important;
+}
+html body main.admin-document-page #docForm .private{
+  border-left:4px solid #ff8c21!important;
+  padding-left:10px!important;
+}
+html body main.admin-document-page #docForm .auto-rate-pill{
+  min-height:48px!important;
+  display:flex!important;
+  align-items:center!important;
+  padding:12px 14px!important;
+  border-radius:14px!important;
+  background:#ffffff!important;
+  border:1.7px solid rgba(255,106,0,.70)!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  font-weight:900!important;
+  text-shadow:none!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.16)!important;
+}
+html body main.admin-document-page #docForm .auto-rate-pill.success{border-color:#00bd6f!important;background:#ecfdf3!important;color:#064e3b!important;-webkit-text-fill-color:#064e3b!important;}
+html body main.admin-document-page #docForm .auto-rate-pill.error{border-color:#ef4444!important;background:#fff1f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+html body main.admin-document-page #docForm .auto-rate-pill.loading{border-color:#ffb14f!important;background:#fff7ed!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important;}
+html body main.admin-document-page #docForm #builderTotals{
+  background:#ffffff!important;
+  color:#06101f!important;
+  border:1px solid #d9e2ef!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.20)!important;
+}
+html body main.admin-document-page #docForm #builderTotals .total-row,
+html body main.admin-document-page #docForm #builderTotals .total-row span{
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  text-shadow:none!important;
+}
+html body main.admin-document-page #docForm #builderTotals .discount-row span:last-child{
+  color:#138a3d!important;
+  -webkit-text-fill-color:#138a3d!important;
+}
+html body main.admin-document-page #docForm #builderTotals .grand{
+  background:#06284d!important;
+  color:#ffffff!important;
+  border-top:3px solid #ff6a00!important;
+}
+html body main.admin-document-page #docForm #builderTotals .grand span{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+html body main.admin-document-page #docForm .summary-grid > .notice{
+  background:rgba(3,14,29,.78)!important;
+  color:#eaf2ff!important;
+  -webkit-text-fill-color:#eaf2ff!important;
+}
+html body main.admin-document-page #docForm .btn-row button,
+html body main.admin-document-page #docForm .btn-row .btn{
+  font-weight:950!important;
+}
+@media(max-width:760px){
+  html body main.admin-document-page #docForm{padding:16px!important;border-radius:22px!important;}
+  html body main.admin-document-page .section-title{padding:18px!important;border-radius:22px!important;}
+}
+</style><main class="section admin-dashboard admin-document-page"><div class="container"><div class="section-title"><h2>${doc.id ? "Edit " + doc.type : "New " + doc.type}</h2><a class="btn" href="/admin/dashboard">Back to Dashboard</a></div>${error ? `<div class="notice error">${escapeHtml(error)}</div>` : ""}<form method="post" action="/admin/document" id="docForm"><input type="hidden" name="id" value="${escapeHtml(doc.id || "")}"><input type="hidden" name="token" value="${escapeHtml(doc.token || "")}"><input type="hidden" name="tax_source" id="tax_source" value="${escapeHtml(doc.tax_source || "")}"><input type="hidden" name="tax_lookup_address" id="tax_lookup_address" value="${escapeHtml(doc.tax_lookup_address || "")}">
 <datalist id="adminInventoryList"></datalist><section class="form-section"><div class="form-title">Document & Business</div><div class="grid-4"><div class="field"><label>Document Type</label><select name="type" id="type" onchange="updateLabels()">${option("Quote", doc.type)}${option("Invoice", doc.type)}</select></div><div class="field"><label>Business</label><select name="business" id="business" onchange="updateLabels()"><option value="processing" ${doc.business==="processing"?"selected":""}>Merchant Services</option><option value="pos" ${doc.business==="pos"?"selected":""}>POS Software for Retail</option><option value="camera" ${doc.business==="camera"?"selected":""}>Security Camera Systems</option></select></div><div class="field"><label id="numberLabel">${docNumberLabel(doc.type)}</label><input name="number" id="number" value="${escapeHtml(doc.number)}"></div><div class="field"><label>Prepared By</label><input name="prepared_by" value="${escapeHtml(doc.prepared_by || "")}"></div></div><div class="grid-3"><div class="field"><label>Date</label><input type="date" name="doc_date" value="${escapeHtml(doc.doc_date)}"></div><div class="field"><label id="validLabel">${validLabel(doc.type)}</label><input type="date" name="valid_until" value="${escapeHtml(doc.valid_until)}"></div><div class="field"><label>Customer-Facing Heading</label><input id="heading" readonly value="${escapeHtml(businessLabel(doc.business) + " " + doc.type)}"></div></div></section>
 <section class="form-section"><div class="form-title">Customer & Billing Address</div><div class="grid-2"><div class="field"><label>Customer Name</label><input name="customer_name" value="${escapeHtml(doc.customer_name || "")}" required></div><div class="field"><label>Client Email</label><input name="email" type="email" value="${escapeHtml(doc.email || "")}"></div></div><div class="grid-2"><div class="field"><label>Client Mobile / WhatsApp</label><input name="phone" id="phone" type="tel" value="${escapeHtml(doc.phone || "")}"></div><div class="field"><label>Billing Street Address</label><input name="billing_street" id="billing_street" value="${escapeHtml(bill.street || "")}" autocomplete="billing street-address"></div></div><div class="grid-4"><div class="field"><label>Billing ZIP <span class="hint">auto city/state</span></label><input name="billing_zip" id="billing_zip" value="${escapeHtml(bill.zip || "")}" maxlength="10" autocomplete="billing postal-code"></div><div class="field"><label>Billing City</label><input name="billing_city" id="billing_city" value="${escapeHtml(bill.city || "")}" autocomplete="billing address-level2"></div><div class="field"><label>Billing State</label><input name="billing_state" id="billing_state" value="${escapeHtml(bill.state || "")}" maxlength="2" autocomplete="billing address-level1" placeholder="IL"></div><div class="field tax-rate-field"><label>Tax Rate (%)</label><input name="tax_rate" id="tax_rate" type="number" min="0" step="0.001" value="${Number(doc.tax_rate || 10).toFixed(3)}"><button type="button" class="small orange" onclick="lookupDestinationTax()">Lookup Destination Tax</button></div></div><div class="notice zip-lookup-note" id="billingZipNote">Enter a 5-digit billing ZIP and the city/state will fill automatically.</div></section>
 <section class="form-section same-address-section"><label class="check same-address-check"><input name="shipping_same_as_billing" id="shipping_same_as_billing" value="1" type="checkbox" ${shippingSame ? "checked" : ""}> Shipping address same as billing address</label><p class="hint">This is intentionally unchecked by default. Check it only when the shipping destination is the same as the billing address.</p></section>
