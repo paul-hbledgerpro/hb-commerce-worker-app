@@ -1,3 +1,14 @@
+HB Commerce Worker App v206 - Website Final Notice Modal + PDF Quote/Invoice Emails
+
+Changes in v206:
+- Checkout Place Order final-sale notice is enforced as an in-page website modal with an OK button, not a browser alert.
+- Admin-created quotes and invoices now include Download PDF actions using /admin/document.pdf.
+- Customer review links now include a direct Download PDF button using /review/{id}/{token}.pdf.
+- Save and Email, Email Client PDF, payment-link emails, and reminder emails now attach a generated PDF copy of the quote/invoice.
+- Quote/invoice email HTML now uses the newer HB Commerce navy/orange/green design with Bill To, Ship To, totals, action buttons, and PDF download link.
+- PDF output uses the newer branded layout with separate Bill To and Ship To sections, shipping, tax, totals, payment information, and multi-page line item support.
+- No database migration is required.
+
 HB Commerce Worker App v203 - Auto ZIP, Auto Shipping, FedEx Rate Fix, Checkout-Style Admin Theme
 
 Changes in v203:
@@ -2318,4 +2329,15 @@ Create Quote and Create Invoice now include a page-level checkout-style contrast
 - Zelle instructions show PAULCAMERASYSTEMS@GMAIL.COM and the requested payment-email disclaimer.
 - Place Order / Pay & Place Order now shows an OK-only final-sale notice before the order/payment submission continues.
 - The final-sale notice acknowledgement is stored inside the online order JSON and is shown in the Admin Online Order detail view.
+- No database migration required.
+
+---
+
+## v206 checkout modal + PDF quote/invoice email update
+
+- Place Order final-sale notice now uses an in-website modal window with an OK button instead of the browser alert box.
+- Admin Quote / Invoice PDF download routes are wired at /admin/document.pdf?id=... and /review/{id}/{token}.pdf.
+- Quote, invoice, and invoice payment-link emails now use the updated HB Commerce email design and attach a generated PDF copy of the quote or invoice.
+- PDF filenames are generated safely from the document type and number.
+- Billing ZIP live lookup from v205 remains active: changing the billing ZIP triggers city/state lookup and destination tax refresh.
 - No database migration required.

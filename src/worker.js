@@ -255,6 +255,7 @@ async function handleRequest(request, env, ctx) {
   if (method === "POST" && path === "/admin/pos-support") return adminPosSupportPost(request, env);
   if (method === "GET" && path === "/admin/document") return adminDocumentPage(request, env);
   if (method === "POST" && path === "/admin/document") return adminDocumentPost(request, env);
+  if (method === "GET" && path === "/admin/document.pdf") return adminDocumentPdf(request, env);
   if (method === "GET" && path === "/admin/email") return adminEmail(request, env);
   if (method === "GET" && path === "/admin/send-payment-link") return adminSendPaymentLink(request, env);
   if (method === "GET" && path === "/admin/reminder-emails") return adminReminderEmailsPage(request, env);
@@ -284,6 +285,8 @@ async function handleRequest(request, env, ctx) {
   if (method === "GET" && path === "/admin/reports.pdf") return adminReportsPdf(request, env);
   if (method === "POST" && path === "/admin/reports/email") return adminReportsEmail(request, env);
 
+  const reviewPdfMatch = path.match(/^\/review\/([^\/]+)\/([^\/]+)\.pdf$/);
+  if (reviewPdfMatch && method === "GET") return publicReviewPdf(request, env, reviewPdfMatch[1], reviewPdfMatch[2]);
   const reviewMatch = path.match(/^\/review\/([^\/]+)\/([^\/]+)$/);
   if (reviewMatch && method === "GET") return reviewPage(request, env, reviewMatch[1], reviewMatch[2], "");
   if (reviewMatch && method === "POST") return approvePost(request, env, reviewMatch[1], reviewMatch[2]);
@@ -15205,7 +15208,17 @@ function eufyCartPanel(showCheckout = true) {
 }
 
 function eufyCheckoutForm() {
-  return `<form method="post" action="/eufy-order" id="eufyOrderForm" class="hb-pro-checkout-form" onsubmit="return eufyBeforeSubmit()"><input type="hidden" name="cart_json" id="eufyCartJson" value="[]"><input type="hidden" name="final_sale_notice_ack" id="finalSaleNoticeAck" value="0">
+  return `<style id="hb-final-sale-modal-style">
+.hb-final-sale-modal[hidden]{display:none!important}
+.hb-final-sale-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.74);backdrop-filter:blur(8px)}
+.hb-final-sale-modal-card{max-width:720px;width:min(720px,96vw);border-radius:28px;border:1.5px solid rgba(255,106,0,.55);background:linear-gradient(135deg,#06101f,#082247 70%,#06101f);box-shadow:0 32px 120px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);color:#fff;padding:30px;text-align:left}
+.hb-final-sale-modal-card .kicker{color:#ffb14f;font-weight:900;letter-spacing:.16em;text-transform:uppercase;font-size:12px;margin-bottom:8px}
+.hb-final-sale-modal-card h2{margin:0 0 12px;color:#fff;font-size:28px;line-height:1.1}
+.hb-final-sale-modal-card p{margin:0 0 18px;color:#eaf2ff;font-weight:700;line-height:1.55}
+.hb-final-sale-modal-card .hb-final-sale-text{padding:18px;border-radius:18px;background:#000;border:1px solid rgba(255,255,255,.16);color:#fff;font-weight:850;line-height:1.55;text-transform:none}
+.hb-final-sale-modal-card button{margin-top:22px;background:#00b86b;color:#fff;border:0;border-radius:16px;padding:14px 28px;font-weight:950;font-size:16px;cursor:pointer;box-shadow:0 16px 34px rgba(0,184,107,.30)}
+.hb-final-sale-modal-card button:focus{outline:3px solid rgba(255,177,79,.55);outline-offset:3px}
+</style><form method="post" action="/eufy-order" id="eufyOrderForm" class="hb-pro-checkout-form" onsubmit="return eufyBeforeSubmit()"><input type="hidden" name="cart_json" id="eufyCartJson" value="[]"><input type="hidden" name="final_sale_notice_ack" id="finalSaleNoticeAck" value="0">
     <div class="hb-pro-checkout-head"><span>Secure Checkout</span><h2>Complete Your Order</h2><p>Enter your delivery and payment details below. Card details are tokenized securely by Authorize.Net.</p></div>
     <div class="hb-pro-checkout-progress"><span class="active">Cart</span><i></i><span class="active">Delivery</span><i></i><span>Payment</span></div>
 
@@ -15220,6 +15233,7 @@ function eufyCheckoutForm() {
     <section class="hb-pro-step payment-step"><div class="hb-pro-step-num">5</div><div class="hb-pro-step-body"><h3>Payment Method</h3><p>Pay securely now by card or submit for Check/Zelle follow-up.</p><div class="hb-pro-option-grid payment-choice-row"><label><input type="radio" name="payment_preference" value="Credit Card" required><span><b>Credit Card</b><em>Pay now</em></span></label><label><input type="radio" name="payment_preference" value="Check" required><span><b>Check</b><em>Admin follow-up</em></span></label><label><input type="radio" name="payment_preference" value="Zelle" required><span><b>Zelle</b><em>Admin follow-up</em></span></label></div><div id="paymentInstructionBox" class="hb-pro-payment-instruction" role="alert" aria-live="polite"></div><div id="eufyCardFields" class="hb-pro-card-box" hidden><div><strong>Secure Card Payment</strong><p>Card information is tokenized by Authorize.Net. HB Commerce does not store raw card numbers.</p></div><div class="hb-pro-fields two"><div class="field"><label>Card Number</label><input id="ccNumber" inputmode="numeric" autocomplete="cc-number" placeholder="•••• •••• •••• ••••"></div><div class="field"><label>Card Code</label><input id="ccCode" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV"></div></div><div class="hb-pro-fields two"><div class="field"><label>Exp. Month</label><input id="ccMonth" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM"></div><div class="field"><label>Exp. Year</label><input id="ccYear" inputmode="numeric" autocomplete="cc-exp-year" placeholder="YYYY"></div></div><input type="hidden" name="dataDescriptor" id="dataDescriptor"><input type="hidden" name="dataValue" id="dataValue"><div id="cardError" class="notice error" style="display:none"></div></div></div></section>
 
     <button id="eufyPlaceOrderButton" class="hb-pro-place-order">Place Order</button>
+    <div id="hbFinalSaleModal" class="hb-final-sale-modal" hidden role="dialog" aria-modal="true" aria-labelledby="hbFinalSaleTitle"><div class="hb-final-sale-modal-card"><div class="kicker">Notice Before Placing Order</div><h2 id="hbFinalSaleTitle">All Sales Are Final</h2><p>Please read and acknowledge this notice before your order continues.</p><div class="hb-final-sale-text">ALL SALES ARE FINAL. Any changes in the pricing after placing the order anywhere online are not subject for difference refund or return of an order. We are not responsible for change in web price after the sale is completed.</div><button type="button" id="hbFinalSaleOk">OK</button></div></div>
   </form>`;
 }
 
@@ -15269,12 +15283,22 @@ function updatePaymentInstruction(){
 }
 function toggleCard(){let on=selectedPay()==='Credit Card',b=document.getElementById('eufyCardFields'),btn=document.getElementById('eufyPlaceOrderButton');if(b)b.hidden=!on;if(btn)btn.textContent=on?'Pay & Place Order':'Place Order';updatePaymentInstruction()}
 function cardErr(msg){let e=document.getElementById('cardError');if(e){e.textContent=msg;e.style.display=msg?'block':'none'}else alert(msg)}
-function finalSaleNotice(){
-  alert('ALL SALES ARE FINAL. Any changes in the pricing after placing the order anywhere online are not subject for difference refund or return of an order. We are not responsible for change in web price after the sale is completed.');
-  let ack=document.getElementById('finalSaleNoticeAck');if(ack)ack.value='1';
+function markFinalSaleNoticeAck(){let ack=document.getElementById('finalSaleNoticeAck');if(ack)ack.value='1'}
+function finalSaleNotice(callback){
+  let modal=document.getElementById('hbFinalSaleModal'),ok=document.getElementById('hbFinalSaleOk');
+  function continueNow(){markFinalSaleNoticeAck();if(modal){modal.hidden=true;modal.classList.remove('show')}if(typeof callback==='function')callback()}
+  if(!modal||!ok){continueNow();return}
+  modal.hidden=false;modal.classList.add('show');
+  ok.onclick=continueNow;
+  setTimeout(()=>{try{ok.focus()}catch(e){}},50);
+}
+function eufyContinueAfterFinalNotice(form,pay){
+  markFinalSaleNoticeAck();
+  if(pay==='Credit Card'&&!document.getElementById('dataValue').value){tokenizeAndSubmit(form);return}
+  form.submit();
 }
 function tokenizeAndSubmit(form){let cfg=window.HB_ACCEPT_CONFIG||{};if(!cfg.ready||!window.Accept){cardErr('Credit card processing is not ready. Please choose Check or Zelle, or contact support.');return}let n=(document.getElementById('ccNumber')||{}).value||'',m=(document.getElementById('ccMonth')||{}).value||'',y=(document.getElementById('ccYear')||{}).value||'',c=(document.getElementById('ccCode')||{}).value||'';n=n.replace(/\D/g,'');m=m.replace(/\D/g,'');y=y.replace(/\D/g,'');c=c.replace(/\D/g,'');if(!n||!m||!y||!c){cardErr('Please enter card number, expiration, and card code.');return}cardErr('');Accept.dispatchData({authData:{clientKey:cfg.clientKey,apiLoginID:cfg.login},cardData:{cardNumber:n,month:m,year:y,cardCode:c}},function(r){if(r.messages.resultCode==='Error'){cardErr(r.messages.message.map(function(x){return (x.code?x.code+': ':'')+x.text}).join(' | '));return}document.getElementById('dataDescriptor').value=r.opaqueData.dataDescriptor;document.getElementById('dataValue').value=r.opaqueData.dataValue;form.submit();});}
-window.eufyBeforeSubmit=function(){let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);if(document.querySelector('input[name=fulfillment_type]:checked')&&document.querySelector('input[name=fulfillment_type]:checked').value!=='pickup'){if(!document.getElementById('shipZip').value){alert('Please enter shipping ZIP before placing the order.');return false}if(window.hbEufyShippingReady!==true){alert('Live carrier shipping rate is required before checkout. Please verify the shipping ZIP or choose Pickup.');return false}}let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let pay=selectedPay();if(!pay){alert('Please select a payment method.');return false}if(pay==='Credit Card'){if(hasQuote){alert('Credit card checkout is only available for priced eufy items. Remove quote-only items or choose Check/Zelle.');return false}if(!document.getElementById('dataValue').value){finalSaleNotice();tokenizeAndSubmit(document.getElementById('eufyOrderForm'));return false}}finalSaleNotice();return true};document.addEventListener('change',function(e){if(e.target&&e.target.name==='payment_preference')toggleCard()});setTimeout(toggleCard,50);
+window.eufyBeforeSubmit=function(){let form=document.getElementById('eufyOrderForm');let code=document.getElementById('checkoutCouponCode');if(code&&code.value.trim())eufyApplyCheckoutCoupon(true);let cart=getCart();if(cart.length===0){alert('Please add at least one product to the cart.');return false}let hidden=document.getElementById('eufyCartJson');if(hidden)hidden.value=JSON.stringify(cart);if(document.querySelector('input[name=fulfillment_type]:checked')&&document.querySelector('input[name=fulfillment_type]:checked').value!=='pickup'){if(!document.getElementById('shipZip').value){alert('Please enter shipping ZIP before placing the order.');return false}if(window.hbEufyShippingReady!==true){alert('Live carrier shipping rate is required before checkout. Please verify the shipping ZIP or choose Pickup.');return false}}let hasQuote=cart.some(row=>{let p=find(row.id);return p&&quoteOnly(p)});let pay=selectedPay();if(!pay){alert('Please select a payment method.');return false}if(pay==='Credit Card'&&hasQuote){alert('Credit card checkout is only available for priced eufy items. Remove quote-only items or choose Check/Zelle.');return false}finalSaleNotice(function(){eufyContinueAfterFinalNotice(form,pay)});return false};document.addEventListener('change',function(e){if(e.target&&e.target.name==='payment_preference')toggleCard()});setTimeout(toggleCard,50);
 function safeAttr(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function safeText(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function render(){let wrap=document.getElementById('eufyCartItems'),empty=document.getElementById('eufyCartEmpty'),hidden=document.getElementById('eufyCartJson'),checkoutBtn=document.getElementById('eufyCheckoutBtn');if(!wrap){if(hidden)hidden.value=JSON.stringify(getCart());return}let cart=normalizeCart(getCart()),subtotal=0,hasQuoteOnly=false,isSummary=wrap.classList.contains('hb-pro-summary-items');if(empty)empty.style.display=cart.length?'none':'block';wrap.innerHTML=cart.map(row=>{let p=find(row.id);if(!p)return '';let qty=Math.max(1,parseInt(row.qty)||1),key=cartKey(row),regular=regularPrice(p),unit=linePrice(p,row),line=unit*qty;if(quoteOnly(p))hasQuoteOnly=true;else subtotal+=line;let sk=safeAttr(key),url=productUrl(p),img=p.image?'<img src="'+safeAttr(p.image)+'" alt="">':'<div class="lts-cart-thumb">LTS</div>';let couponHtml=quoteOnly(p)?'<span class="hb-pro-pill muted">Pricing to be quoted</span>':(hasCoupon(p)?'<label class="hb-pro-coupon-pill"><input type="checkbox" '+(row.coupon?'checked':'')+' data-cart-coupon="'+sk+'"> Save '+money(p.discount||0)+' with code '+safeText(p.coupon||'')+'</label>':'<span class="hb-pro-pill">No coupon</span>');let priceText=quoteOnly(p)?'Quote pricing':('<span class="hb-pro-old-price">'+(row.coupon?money(regular):'')+'</span><strong>'+money(unit)+'</strong><em> each</em>'),lineText=quoteOnly(p)?'Quote':money(line);if(isSummary)return '<article class="hb-pro-summary-item"><a href="'+safeAttr(url)+'">'+img+'</a><div><strong>'+safeText(p.name)+'</strong><small>Qty '+qty+' · '+lineText+'</small></div></article>';return '<article class="hb-pro-cart-item"><a class="hb-pro-item-img" href="'+safeAttr(url)+'">'+img+'</a><div class="hb-pro-item-copy"><span class="hb-pro-item-kicker">PoE NVR Security System</span><h3><a href="'+safeAttr(url)+'">'+safeText(p.name)+'</a></h3><div class="hb-pro-item-price">'+priceText+'</div>'+couponHtml+'</div><div class="hb-pro-qty"><label>Qty</label><input type="number" min="1" value="'+qty+'" data-cart-qty="'+sk+'"></div><div class="hb-pro-line-total"><label>Line Total</label><strong>'+lineText+'</strong></div><button class="hb-pro-remove" type="button" data-cart-remove="'+sk+'" aria-label="Remove item">×</button></article>'}).join('');if(hidden)hidden.value=JSON.stringify(cart);let ship=Number(window.hbEufyShipCost||0),tax=subtotal*TAX_RATE,grand=subtotal+tax+ship;let subtotalEl=document.getElementById('eufyCartSubtotal'),taxEl=document.getElementById('eufyCartTax'),shipEl=document.getElementById('eufyCartShipping'),totalEl=document.getElementById('eufyCartTotal'),noteEl=document.getElementById('eufyQuoteItemNote');if(subtotalEl)subtotalEl.textContent=money(subtotal);if(taxEl)taxEl.textContent=money(tax);if(shipEl)shipEl.textContent=money(ship);if(totalEl)totalEl.textContent=money(grand)+(hasQuoteOnly?' + quote items':'');if(noteEl)noteEl.textContent=hasQuoteOnly?'Quote-only items will be reviewed before final approval.':'Destination tax, UPS shipping, and FedEx rates are handled at checkout.';if(checkoutBtn)checkoutBtn.classList.toggle('disabled',!cart.length)}
@@ -18986,23 +19010,27 @@ function cleanStateCode(value, fallback = "") {
 }
 
 function docBillingAddress(doc = {}) {
+  const legacy = doc.billing_address && typeof doc.billing_address === "object" ? doc.billing_address : {};
+  const streetFromString = typeof doc.billing_address === "string" ? doc.billing_address : "";
   return {
-    street: String(doc.billing_street || doc.billing_address || doc.street || "").trim(),
-    city: String(doc.billing_city || doc.city || "").trim(),
-    state: cleanStateCode(doc.billing_state || doc.state || "PA"),
-    zip: String(doc.billing_zip || doc.zip || "").trim()
+    street: String(doc.billing_street || legacy.street || legacy.address1 || streetFromString || doc.street || "").trim(),
+    city: String(doc.billing_city || legacy.city || doc.city || "").trim(),
+    state: cleanStateCode(doc.billing_state || legacy.state || doc.state || "PA"),
+    zip: String(doc.billing_zip || legacy.zip || legacy.postal_code || doc.zip || "").trim()
   };
 }
 
 function docShippingAddress(doc = {}) {
   const bill = docBillingAddress(doc);
   if (doc.shipping_same_as_billing) return { ...bill };
-  const hasExplicitShipping = !!(doc.shipping_street || doc.shipping_city || doc.shipping_state || doc.shipping_zip);
+  const legacy = doc.shipping_address && typeof doc.shipping_address === "object" ? doc.shipping_address : {};
+  const streetFromString = typeof doc.shipping_address === "string" ? doc.shipping_address : "";
+  const hasExplicitShipping = !!(doc.shipping_street || doc.shipping_city || doc.shipping_state || doc.shipping_zip || legacy.street || legacy.address1 || legacy.city || legacy.state || legacy.zip || streetFromString);
   const ship = {
-    street: String(doc.shipping_street || doc.street || "").trim(),
-    city: String(doc.shipping_city || doc.city || "").trim(),
-    state: cleanStateCode(doc.shipping_state || doc.state || bill.state || "PA"),
-    zip: String(doc.shipping_zip || doc.zip || "").trim()
+    street: String(doc.shipping_street || legacy.street || legacy.address1 || streetFromString || doc.street || "").trim(),
+    city: String(doc.shipping_city || legacy.city || doc.city || "").trim(),
+    state: cleanStateCode(doc.shipping_state || legacy.state || doc.state || bill.state || "PA"),
+    zip: String(doc.shipping_zip || legacy.zip || legacy.postal_code || doc.zip || "").trim()
   };
   if (!hasExplicitShipping && !ship.street && !ship.city && !ship.zip) return { ...bill };
   return ship;
@@ -19291,7 +19319,7 @@ html body main.admin-document-page #docForm .btn-row .btn{
 <section class="form-section"><div class="form-title">Shipping Address</div><div class="grid-2"><div class="field"><label>Shipping Street Address</label><input name="shipping_street" id="shipping_street" value="${escapeHtml(ship.street || "")}" autocomplete="shipping street-address"></div><div class="field"><label>Shipping ZIP <span class="hint">auto city/state + rate</span></label><input name="shipping_zip" id="shipping_zip" value="${escapeHtml(ship.zip || "")}" maxlength="10" autocomplete="shipping postal-code"></div></div><div class="grid-3"><div class="field"><label>Shipping City</label><input name="shipping_city" id="shipping_city" value="${escapeHtml(ship.city || "")}" autocomplete="shipping address-level2"></div><div class="field"><label>Shipping State</label><input name="shipping_state" id="shipping_state" value="${escapeHtml(ship.state || "")}" maxlength="2" autocomplete="shipping address-level1" placeholder="IL"></div><div class="field"><label>Destination Tax</label><button type="button" class="orange" onclick="lookupDestinationTax()">Refresh Destination Tax</button></div></div><div class="notice" id="taxNote">${doc.tax_source ? `Tax source: ${escapeHtml(doc.tax_source)}${doc.tax_lookup_address ? " • " + escapeHtml(doc.tax_lookup_address) : ""}` : "Default tax rate is 10.000%. Destination ZIP/city/state fills automatically from the shipping ZIP."}</div></section>
 <section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground / Home Delivery</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals();markManualShippingOverride()"></div><div class="field"><label>Auto Rate Status</label><div class="auto-rate-pill" id="autoRateStatus">Waiting for ZIP and carrier</div></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Auto shipping:</strong> choose UPS or FedEx and enter a 5-digit shipping ZIP. The rate calculates automatically when the carrier, ZIP, address, package weight, or line items change. Choose Manual Entry to type your own shipping cost.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
 <section class="form-section"><div class="form-title">Terms, Conditions & Payment Link</div><div class="grid-2"><div class="field"><label>Terms & Conditions</label><textarea name="terms_conditions" rows="5" placeholder="Example: Quote valid for 30 days. Hardware ships after approval and payment is received.">${escapeHtml(doc.terms_conditions || "")}</textarea></div><div class="field"><label>Invoice Payment Link <span class="hint">optional / future Authorize.Net</span></label><input name="payment_link" value="${escapeHtml(doc.payment_link || "")}" placeholder="https://..."><p class="hint">When Authorize.Net is ready, this field can display a Pay Invoice Online link on invoices.</p></div></div></section>
-<section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link / Print PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
+<section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link</a><a class="btn orange" target="_blank" href="/admin/document.pdf?id=${encodeURIComponent(doc.id)}">Download PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client PDF</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
 <script>
 const stateNames=${JSON.stringify(STATE_NAMES)};
 const stateRates=${JSON.stringify(STATE_RATES)};
@@ -19385,6 +19413,7 @@ function buildShippingCart(){let manualWeight=Number(valueOf('shipping_weight_lb
 let autoShippingTimer=null;
 let shippingRateSeq=0;
 let zipLookupSeq={billing:0,shipping:0};
+let lastZipLookup={billing:'',shipping:''};
 let shippingOverrideTouched=false;
 function markManualShippingOverride(){shippingOverrideTouched=true;renderTotals();}
 function scheduleShippingRate(delay=550){
@@ -19461,7 +19490,7 @@ async function lookupAddressZip(prefix, forceZipTax=false){
     let taxAddr=document.getElementById('tax_lookup_address');
     if(taxSource)taxSource.value=j.source||'';
     if(taxAddr)taxAddr.value=j.normalized_address||j.address||'';
-    let rate=Number(j.rate||0);
+    let rate=Number(j.rate||j.tax_rate||j.combined_rate||j.total_rate||0);
     if(j.needs_review){
       if(note)note.textContent=(j.message||j.error||label+' city/state filled. Destination tax lookup needs review. Configure ZipTax or keep the rate manually.');
     }else if(rate>0){
@@ -19491,18 +19520,34 @@ async function lookupAddressZip(prefix, forceZipTax=false){
 }
 function lookupZip(forceZipTax=false){return lookupAddressZip('shipping',forceZipTax)}
 function lookupBillingZip(){return lookupAddressZip('billing',true)}
-function lookupDestinationTax(){return lookupZip(true)}
+function lookupDestinationTax(){let bz=valueOf('billing_zip').replace(/\D/g,'');if(bz.length===5)return lookupAddressZip('billing',true);return lookupZip(true)}
 function makeClientNumber(t){let p=t==='Invoice'?'INV':'QUOTE';let d=new Date().toISOString().slice(0,10).replace(/-/g,'');let r=Math.random().toString(16).slice(2,6).toUpperCase();return p+'-HB-'+d+'-'+r}
 function updateLabels(){let t=document.getElementById('type').value;document.getElementById('numberLabel').textContent=t==='Invoice'?'Invoice No.':'Quote No.';document.getElementById('validLabel').textContent=t==='Invoice'?'Due Date':'Valid Until';document.getElementById('heading').value=document.getElementById('business').selectedOptions[0].text+' '+t;let n=document.getElementById('number');if(n&&(!n.value||/^(EST|QTE|QUOTE|INV)-HB-/i.test(n.value))){let target=t==='Invoice'?'INV':'QUOTE';if(!n.value.toUpperCase().startsWith(target+'-HB-'))n.value=makeClientNumber(t);}}
 function bindZipAutoLookup(prefix){
   let el=document.getElementById(prefix+'_zip');
   if(!el)return;
   let timer=null;
-  function run(){let d=el.value.replace(/\D/g,'').slice(0,5);el.value=d;if(d.length===5){clearTimeout(timer);lookupAddressZip(prefix,true)}}
-  el.addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,5);e.target.value=d;clearTimeout(timer);if(d.length===5){timer=setTimeout(()=>lookupAddressZip(prefix,true),250)}else if(prefix==='shipping'){scheduleShippingRate(400)}});
-  el.addEventListener('blur',run);
-  el.addEventListener('change',run);
-  el.addEventListener('keydown',e=>{if(e.key==='Tab'){setTimeout(run,0)}});
+  function noteText(msg){let note=document.getElementById(prefix==='billing'?'billingZipNote':'taxNote');if(note)note.textContent=msg;}
+  function run(force=false){
+    let d=el.value.replace(/\D/g,'').slice(0,5);
+    el.value=d;
+    clearTimeout(timer);
+    if(d.length===5){
+      if(force || lastZipLookup[prefix]!==d){
+        lastZipLookup[prefix]=d;
+        noteText((prefix==='billing'?'Billing':'Shipping')+' ZIP '+d+' detected. Looking up city, state, and live destination tax now...');
+        lookupAddressZip(prefix,true);
+      }
+    }else{
+      lastZipLookup[prefix]='';
+      if(prefix==='billing')noteText('Enter a 5-digit billing ZIP. City/state and destination sales tax update automatically as soon as the ZIP is complete.');
+      if(prefix==='shipping')scheduleShippingRate(400);
+    }
+  }
+  el.addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,5);e.target.value=d;clearTimeout(timer);if(d.length===5){timer=setTimeout(()=>run(false),80)}else run(false)});
+  el.addEventListener('blur',()=>run(true));
+  el.addEventListener('change',()=>run(true));
+  el.addEventListener('keyup',e=>{if(e.key==='Enter'||e.key==='Tab')setTimeout(()=>run(true),0)});
 }
 document.getElementById('tax_rate').addEventListener('input',renderTotals);
 document.getElementById('phone').addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,10);e.target.value=d.length>6?'('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6):d.length>3?'('+d.slice(0,3)+') '+d.slice(3):d});
@@ -19514,7 +19559,7 @@ bindZipAutoLookup('billing');
 bindZipAutoLookup('shipping');
 let carrierEl=document.getElementById('shipping_carrier');if(carrierEl)carrierEl.addEventListener('change',()=>{shippingOverrideTouched=false;scheduleShippingRate(120)});
 let weightEl=document.getElementById('shipping_weight_lbs');if(weightEl){weightEl.addEventListener('input',()=>scheduleShippingRate(650));weightEl.addEventListener('change',()=>scheduleShippingRate(120));}
-document.addEventListener('wheel',e=>{if(e.target&&e.target.matches&&e.target.matches('input[type=number]'))e.preventDefault()},{passive:false});renderStates();updateLabels();syncSameAddress();renderItems();loadAdminInventory();scheduleShippingRate(900);
+document.addEventListener('wheel',e=>{if(e.target&&e.target.matches&&e.target.matches('input[type=number]'))e.preventDefault()},{passive:false});renderStates();updateLabels();syncSameAddress();renderItems();loadAdminInventory();setTimeout(()=>{if(valueOf('billing_zip').replace(/\D/g,'').length===5)lookupAddressZip('billing',true);},350);scheduleShippingRate(900);
 </script>`;
 }
 
@@ -19652,6 +19697,23 @@ async function getDoc(env, id) {
 }
 
 
+async function adminDocumentPdf(request, env) {
+  const user = await requireAuth(request, env);
+  if (!user) return redirect("/admin/login");
+  const id = new URL(request.url).searchParams.get("id");
+  const doc = id ? await getDoc(env, id) : null;
+  if (!doc) return htmlPage("PDF Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found.</div></div></section>`), 404);
+  return documentPdfResponse(doc, env, "attachment");
+}
+
+async function publicReviewPdf(request, env, id, token) {
+  const doc = await getDoc(env, id);
+  if (!doc || doc.token !== token) return htmlPage("PDF Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found or link expired.</div></div></section>`), 404);
+  await attachOpenInvoiceBalance(env, doc);
+  return documentPdfResponse(doc, env, "inline");
+}
+
+
 function absoluteReviewUrl(env, doc) {
   const base = (env.PUBLIC_BASE_URL || env.WEBSITE_URL || "https://www.hbcommercesolution.com").replace(/\/$/,"");
   return `${base}/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}`;
@@ -19735,7 +19797,9 @@ async function sendReminderEmail(env, doc, kind, days = 0) {
     const pay = doc.payment_link ? `<p><a href="${escapeHtml(doc.payment_link)}">Pay securely online by card</a></p>` : "";
     html = `<p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>Invoice <strong>${escapeHtml(doc.number || "")}</strong> is past due by <strong>${days} day${days === 1 ? "" : "s"}</strong>.</p><p><strong>Amount Due:</strong> ${money(totals.total)}</p>${pay}<p>Please make payment as soon as possible or contact us if you have any questions.</p><p>Invoice link: <a href="${link}">${link}</a></p><p>Thank you,<br>HB Commerce Solutions</p>`;
   }
-  const ok = await sendEmail(env, { to: doc.email, subject, html });
+  html = `<div style="margin:0;padding:0;background:#eef4fb;font-family:Arial,Helvetica,sans-serif;color:#10233d"><div style="max-width:720px;margin:0 auto;padding:22px"><div style="background:#ffffff;border:1px solid #d9e2ef;border-radius:24px;overflow:hidden"><div style="background:#06101f;color:#ffffff;padding:24px 28px;border-bottom:6px solid #ff6a00"><div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div><h1 style="margin:8px 0 0;color:#ffffff;font-size:26px;line-height:1.15">${escapeHtml(subject)}</h1></div><div style="padding:24px 28px;color:#10233d;font-size:15px;line-height:1.6">${html}<div style="margin-top:18px;padding:14px;border-radius:16px;background:#06101f;color:#ffffff;border-left:6px solid #ff6a00"><strong style="color:#ffffff">PDF attached:</strong> <span style="color:#eaf2ff">${escapeHtml(documentPdfFileName(doc))}</span></div></div></div></div></div>`;
+  const attachments = documentEmailAttachments(doc, env);
+  const ok = await sendEmail(env, { to: doc.email, subject, html, attachments });
   if (ok) await addReminderEmailLog(env, { kind, doc_type: doc.type, doc_id: doc.id, number: doc.number, customer_name: doc.customer_name, email: doc.email, subject, amount: totals.total, days });
   return ok;
 }
@@ -19925,8 +19989,9 @@ async function adminSendPaymentLink(request, env) {
     return htmlPage("Payment Link Not Ready | HB Commerce", layout(env, "Dashboard", body));
   }
   const totals = calcTotals(doc);
-  const html = `<p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>Please use the secure payment link below to pay invoice <strong>${escapeHtml(doc.number || "")}</strong>.</p><p><strong>Amount Due:</strong> ${money(totals.total)}</p><p><a href="${escapeHtml(payUrl)}">Pay securely online by credit or debit card</a></p><p>Thank you,<br>HB Commerce Solutions</p>`;
-  const ok = await sendEmail(env, { to: doc.email, subject: `Secure payment link for invoice ${doc.number || ""}`, html }).catch(() => false);
+  const attachments = documentEmailAttachments(doc, env);
+  const html = documentEmailHtml(env, doc);
+  const ok = await sendEmail(env, { to: doc.email, subject: `Secure payment link for invoice ${doc.number || ""}`, html, attachments }).catch(() => false);
   doc.payment_link = payUrl;
   doc.payment_link_sent_at = ok ? now() : doc.payment_link_sent_at || "";
   if (ok) await addReminderEmailLog(env, { kind:"payment_link", doc_type:doc.type, doc_id:doc.id, number:doc.number, customer_name:doc.customer_name, email:doc.email, subject:`Secure payment link for invoice ${doc.number || ""}`, amount:totals.total });
@@ -19958,22 +20023,10 @@ async function adminEmail(request, env) {
 async function sendDocEmail(env, doc) {
   if (!env.RESEND_API_KEY) return false;
   if (!doc.email) return false;
-  const totals = calcTotals(doc);
   const subject = `HB Commerce Solutions ${doc.type} ${doc.number}`;
-  const isQuote = doc.type === "Quote";
-  const link = reviewUrl(env, doc);
-  const approveLink = isQuote ? `${link}#approve` : "";
-  const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
-  const payLink = doc.type === "Invoice" ? absoluteInvoicePayUrl(env, doc) : "";
-  const actionHtml = isQuote
-    ? `<p style="margin:18px 0"><a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Approve Quote</a> <a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Decline Quote</a></p>`
-    : `<p style="margin:18px 0"><a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">Pay Secure Online</a> <a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:800">View Invoice</a></p>`;
-  const intro = isQuote
-    ? "Your HB Commerce quote is ready. Please open the secure quote link below to review the full quote design and approve or decline it online."
-    : "Your HB Commerce invoice is ready. Please open the secure invoice link below to view the full invoice design and make payment online.";
-  const orderHtml = doc.payment_preference ? `<p><strong>Selected payment option:</strong> ${escapeHtml(doc.payment_preference)}<br><strong>Shipping notice:</strong> Hardware order ships only after approval and payment is received/cleared.</p>` : "";
-  const html = `<div style="font-family:Arial,sans-serif;color:#10233d;line-height:1.55"><p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>${intro}</p><p><strong>${escapeHtml(doc.type)}:</strong> ${escapeHtml(doc.number || "")}<br><strong>Total:</strong> ${money(totals.total)}</p>${orderHtml}${actionHtml}<p style="font-size:13px;color:#64748b">This secure link always shows the latest HB Commerce invoice/quote layout. If you need a PDF, open the link and use Print / Save PDF from that page.</p><p>Thank you,<br>HB Commerce Solutions</p></div>`;
-  return await sendEmail(env, { to: doc.email, subject, html });
+  const html = documentEmailHtml(env, doc);
+  const attachments = documentEmailAttachments(doc, env);
+  return await sendEmail(env, { to: doc.email, subject, html, attachments });
 }
 
 async function sendEmail(env, { to, subject, html, attachments = [], reply_to = "" }) {
@@ -20009,6 +20062,304 @@ function bytesToBase64(bytes) {
     binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
   }
   return btoa(binary);
+}
+
+
+function documentPdfFileName(doc = {}) {
+  const type = doc.type === "Invoice" ? "Invoice" : "Quote";
+  return `${safeFileName(`HB-Commerce-${type}-${doc.number || doc.id || "document"}`)}.pdf`;
+}
+
+function documentPdfResponse(doc, env = {}, disposition = "attachment") {
+  const bytes = buildDocumentPdf(doc, env);
+  const filename = documentPdfFileName(doc);
+  const disp = disposition === "inline" ? "inline" : "attachment";
+  return new Response(bytes, {
+    headers: {
+      "content-type": "application/pdf",
+      "cache-control": "no-store",
+      "content-disposition": `${disp}; filename="${filename.replaceAll('"', '')}"`
+    }
+  });
+}
+
+function documentPdfAttachment(doc, env = {}) {
+  try {
+    return { filename: documentPdfFileName(doc), content: bytesToBase64(buildDocumentPdf(doc, env)) };
+  } catch (err) {
+    console.error("quote/invoice PDF attachment failed", err);
+    return null;
+  }
+}
+
+function documentEmailAttachments(doc, env = {}) {
+  const attachment = documentPdfAttachment(doc, env);
+  return attachment ? [attachment] : [];
+}
+
+function documentEmailHtml(env, doc) {
+  const totals = calcTotals(doc);
+  const isQuote = doc.type === "Quote";
+  const title = isQuote ? "QUOTE" : "INVOICE";
+  const link = absoluteReviewUrl(env, doc);
+  const pdfLink = `${link}.pdf`;
+  const payLink = doc.type === "Invoice" ? absoluteInvoicePayUrl(env, doc) : "";
+  const approveLink = isQuote ? `${link}#approve` : "";
+  const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
+  const billTo = escapeHtml(addressToText(docBillingAddress(doc)) || "").replaceAll("\n", "<br>");
+  const shipTo = escapeHtml(addressToText(docShippingAddress(doc)) || "").replaceAll("\n", "<br>");
+  const rows = (doc.items || []).slice(0, 10).map(item => {
+    const qty = parseInt(item.qty || 0, 10) || 0;
+    const amount = qty * discountedUnit(item);
+    return `<tr><td style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d;font-weight:800;white-space:nowrap">${escapeHtml(item.qty || 0)}</td><td style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d"><strong>${escapeHtml(item.name || "Item")}</strong><br><span style="color:#526173;font-size:12px;line-height:1.4">${escapeHtml(String(item.desc || "").slice(0, 150))}</span></td><td align="right" style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d;font-weight:800;white-space:nowrap">${money(amount)}</td></tr>`;
+  }).join("") || `<tr><td colspan="3" style="padding:16px;color:#64748b;text-align:center">No line items.</td></tr>`;
+  const actionHtml = isQuote
+    ? `<a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Approve Quote</a><a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Decline Quote</a>`
+    : `<a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Pay Secure Online</a><a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Invoice</a>`;
+  const moreItems = (doc.items || []).length > 10 ? `<p style="margin:8px 0 0;color:#64748b;font-size:12px">Additional line items are included in the attached PDF.</p>` : "";
+  return `<div style="margin:0;padding:0;background:#eef4fb;font-family:Arial,Helvetica,sans-serif;color:#10233d">
+  <div style="max-width:760px;margin:0 auto;padding:22px">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;background:#ffffff;border-radius:24px;overflow:hidden;border:1px solid #d9e2ef;box-shadow:0 18px 44px rgba(6,40,77,.12)">
+      <tr><td style="background:#06101f;padding:26px 28px;color:#fff;border-bottom:6px solid #ff6a00">
+        <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div>
+        <div style="font-size:30px;line-height:1.1;font-weight:950;margin-top:6px;color:#fff">${escapeHtml(title)} ${escapeHtml(doc.number || "")}</div>
+        <div style="font-size:14px;color:#dbe7f5;margin-top:8px">Your updated-design PDF copy is attached to this email.</div>
+      </td></tr>
+      <tr><td style="padding:24px 28px">
+        <p style="margin:0 0 14px;font-size:16px;line-height:1.55;color:#10233d">Hello ${escapeHtml(doc.customer_name || "Customer")},</p>
+        <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#334155">Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. You can use the secure buttons below, view it online, or open the attached PDF copy.</p>
+        <div style="margin:0 0 18px">${actionHtml}<a href="${pdfLink}" style="display:inline-block;background:#ff6a00;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Download PDF</a></div>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:10px;margin:0 0 14px"><tr>
+          <td style="background:#f8fafc;border:1px solid #d9e2ef;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#06284d;font-weight:950;margin-bottom:8px">Bill To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${billTo}</span></td>
+          <td style="background:#fff7ed;border:1px solid #ffd6ad;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b45309;font-weight:950;margin-bottom:8px">Ship To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${shipTo}</span></td>
+        </tr></table>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#fff;border:1px solid #d9e2ef;border-radius:16px;overflow:hidden;margin-bottom:16px">
+          <thead><tr><th align="left" style="background:#06284d;color:#fff;padding:10px 8px;font-size:12px">Qty</th><th align="left" style="background:#06284d;color:#fff;padding:10px 8px;font-size:12px">Item / Description</th><th align="right" style="background:#06284d;color:#fff;padding:10px 8px;font-size:12px">Amount</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>${moreItems}
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-top:14px">
+          <tr><td style="padding:6px 0;color:#475569">Subtotal after discounts</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.subtotal)}</td></tr>
+          <tr><td style="padding:6px 0;color:#475569">Shipping</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.shipping)}</td></tr>
+          <tr><td style="padding:6px 0;color:#475569">Tax (${Number(totals.rate).toFixed(3)}%)</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.tax)}</td></tr>
+          <tr><td style="padding:14px 0 0;color:#06284d;font-size:18px;font-weight:950;border-top:3px solid #06284d">${isQuote ? "Quote Total" : "Total Due"}</td><td align="right" style="padding:14px 0 0;color:#06284d;font-size:22px;font-weight:950;border-top:3px solid #06284d">${money(totals.total)}</td></tr>
+        </table>
+        <div style="margin-top:20px;padding:14px;border-radius:16px;background:#06101f;color:#fff;border-left:6px solid #ff6a00"><strong style="color:#fff">Other payment methods</strong><br><span style="color:#eaf2ff">Check payable to HANSABIJAL LLC. Zelle: PAULCAMERASYSTEMS@GMAIL.COM.</span></div>
+        <p style="margin:20px 0 0;color:#64748b;font-size:12px;line-height:1.5">Thank you,<br>HB Commerce Solutions</p>
+      </td></tr>
+    </table>
+  </div>
+</div>`;
+}
+
+
+function pdfTextWidthApprox(s, size = 10) {
+  return pdfSanitize(s).length * size * 0.52;
+}
+
+function buildDocumentPdf(doc = {}, env = {}) {
+  const type = doc.type === "Invoice" ? "Invoice" : "Quote";
+  const title = type.toUpperCase();
+  const totals = calcTotals(doc);
+  const billing = docBillingAddress(doc);
+  const shipping = docShippingAddress(doc);
+  const contact = hbCompanyContactInfo(doc);
+  const terms = String(doc.terms_conditions || defaultDocumentTerms(doc)).split(/\n+/).map(x => x.trim()).filter(Boolean);
+  const pages = [];
+  let ops = [];
+  let y = 0;
+  let pageNo = 0;
+  const navy = "0.024 0.157 0.302";
+  const deep = "0.018 0.075 0.145";
+  const orange = "1 0.416 0";
+  const green = "0.075 0.541 0.239";
+  const ink = "0.07 0.12 0.22";
+  const muted = "0.38 0.45 0.55";
+  const white = "1 1 1";
+  const soft = "0.945 0.965 0.99";
+  const lightLine = "0.82 0.86 0.92";
+  function fmt(n) { return (Math.round(Number(n || 0) * 100) / 100).toFixed(2); }
+  function op(s) { ops.push(s); }
+  function rect(x, yy, w, h, fill) { op(`q ${fill} rg ${fmt(x)} ${fmt(yy)} ${fmt(w)} ${fmt(h)} re f Q`); }
+  function strokeRect(x, yy, w, h, color = lightLine, width = 1) { op(`q ${color} RG ${fmt(width)} w ${fmt(x)} ${fmt(yy)} ${fmt(w)} ${fmt(h)} re S Q`); }
+  function line(x1, y1, x2, y2, color = orange, width = 1) { op(`q ${color} RG ${fmt(width)} w ${fmt(x1)} ${fmt(y1)} m ${fmt(x2)} ${fmt(y2)} l S Q`); }
+  function text(x, yy, s, size = 10, font = "F1", color = ink) { op(`BT /${font} ${fmt(size)} Tf ${color} rg 1 0 0 1 ${fmt(x)} ${fmt(yy)} Tm (${pdfEscape(s)}) Tj ET`); }
+  function textRight(right, yy, s, size = 10, font = "F1", color = ink) { text(right - pdfTextWidthApprox(s, size), yy, s, size, font, color); }
+  function wrapped(x, yy, s, maxChars, size = 9, leading = 11, font = "F1", color = ink, maxLines = 10) {
+    const all = wrapPdfText(s || "", maxChars);
+    const lines = all.slice(0, maxLines);
+    if (all.length > maxLines && lines.length) lines[lines.length - 1] = lines[lines.length - 1].replace(/\s+$/g, "") + " ...";
+    for (let i = 0; i < lines.length; i++) text(x, yy - i * leading, lines[i], size, font, color);
+    return lines.length * leading;
+  }
+  function addressLines(addr) {
+    const lines = [];
+    if (addr.street) lines.push(addr.street);
+    const cityLine = `${addr.city || ""}${addr.state ? (addr.city ? ", " : "") + addr.state : ""}${addr.zip ? " " + addr.zip : ""}`.trim();
+    if (cityLine) lines.push(cityLine);
+    return lines;
+  }
+  function drawSidebar() {
+    rect(0, 0, 132, 792, navy);
+    rect(0, 770, 612, 22, orange);
+    text(22, 720, "HB", 34, "F2", white);
+    text(22, 692, "COMMERCE", 17, "F2", white);
+    text(23, 673, "SOLUTIONS", 10, "F2", "0.20 0.95 0.36");
+    line(22, 660, 108, 660, orange, 2);
+    text(22, 620, "FROM", 8, "F2", "0.72 0.82 0.94");
+    wrapped(22, 604, "HB Commerce Solutions", 18, 9, 11, "F2", white, 2);
+    wrapped(22, 576, `${contact.address1}\n${contact.address2}`.replace(/\n/g, " "), 18, 8, 10, "F1", "0.88 0.93 1", 4);
+    text(22, 526, contact.phone, 8, "F1", "0.88 0.93 1");
+    wrapped(22, 512, contact.email, 22, 7, 9, "F1", "0.88 0.93 1", 3);
+    text(22, 460, "PAYMENT METHODS", 8, "F2", "0.72 0.82 0.94");
+    rect(18, 382, 96, 64, deep);
+    text(25, 424, "CHECK", 8, "F2", white);
+    wrapped(25, 411, "Hansabijal LLC", 17, 8, 9, "F1", "0.88 0.93 1", 2);
+    text(25, 394, "ZELLE", 8, "F2", white);
+    wrapped(25, 381, "paulcamerasystems@gmail.com", 21, 7, 8, "F1", "0.88 0.93 1", 3);
+    text(22, 70, "Thank you", 12, "F2", white);
+    text(22, 54, "for your business", 8, "F1", "0.88 0.93 1");
+  }
+  function drawHeader() {
+    text(152, 728, businessLabel(doc.business || "camera").toUpperCase(), 9, "F2", green);
+    textRight(578, 725, title, 30, "F2", navy);
+    line(378, 713, 578, 713, orange, 2);
+    const metaX = 392;
+    const metaY = 690;
+    text(metaX, metaY, `${type} #`, 8, "F2", muted); textRight(578, metaY, doc.number || "", 9, "F2", ink);
+    text(metaX, metaY - 16, type === "Invoice" ? "INVOICE DATE" : "QUOTE DATE", 8, "F2", muted); textRight(578, metaY - 16, formatDate(doc.doc_date), 9, "F1", ink);
+    text(metaX, metaY - 32, type === "Invoice" ? "DUE DATE" : "VALID UNTIL", 8, "F2", muted); textRight(578, metaY - 32, formatDate(doc.valid_until), 9, "F1", ink);
+    const status = doc.paid ? "PAID" : String(doc.status || (type === "Invoice" ? "OPEN" : "DRAFT")).toUpperCase();
+    text(metaX, metaY - 48, "STATUS", 8, "F2", muted); textRight(578, metaY - 48, status, 9, "F2", doc.paid ? green : orange);
+  }
+  function drawPartyCard(x, yy, w, h, label, addr, accent) {
+    rect(x, yy, w, h, soft);
+    strokeRect(x, yy, w, h, lightLine, 1);
+    rect(x, yy + h - 22, w, 22, accent);
+    text(x + 12, yy + h - 15, label, 8, "F2", white);
+    text(x + 12, yy + h - 42, doc.customer_name || "Customer", 12, "F2", navy);
+    const lines = addressLines(addr);
+    let ty = yy + h - 58;
+    for (const l of lines.slice(0, 3)) { text(x + 12, ty, l, 9, "F1", ink); ty -= 12; }
+    if (label === "BILL TO") {
+      if (doc.phone) { text(x + 12, ty, doc.phone, 8, "F1", muted); ty -= 11; }
+      if (doc.email) wrapped(x + 12, ty, doc.email, 28, 8, 9, "F1", muted, 2);
+    }
+  }
+  function startPage(first = false) {
+    ops = [];
+    pages.push(ops);
+    pageNo += 1;
+    rect(0, 0, 612, 792, white);
+    drawSidebar();
+    drawHeader();
+    textRight(578, 28, `Page ${pageNo}`, 8, "F1", muted);
+    if (first) {
+      drawPartyCard(152, 518, 194, 106, "BILL TO", billing, navy);
+      drawPartyCard(366, 518, 212, 106, "SHIP TO", shipping, orange);
+      y = 480;
+    } else {
+      text(152, 648, "LINE ITEMS CONTINUED", 12, "F2", navy);
+      line(152, 638, 578, 638, orange, 1.5);
+      y = 610;
+    }
+  }
+  function drawTableHeader() {
+    rect(152, y - 20, 426, 22, navy);
+    text(158, y - 13, "QTY", 7, "F2", white);
+    text(186, y - 13, "ITEM", 7, "F2", white);
+    text(270, y - 13, "DESCRIPTION", 7, "F2", white);
+    text(414, y - 13, "UNIT", 7, "F2", white);
+    text(472, y - 13, "DISC", 7, "F2", white);
+    text(528, y - 13, "AMOUNT", 7, "F2", white);
+    y -= 30;
+  }
+  function newContinuationPage() { startPage(false); drawTableHeader(); }
+  function ensureSpace(h) { if (y - h < 154) newContinuationPage(); }
+  startPage(true);
+  drawTableHeader();
+  const items = Array.isArray(doc.items) ? doc.items : [];
+  if (!items.length) {
+    text(158, y - 8, "No line items were added.", 9, "F1", muted);
+    y -= 32;
+  }
+  for (const item of items) {
+    const qty = parseInt(item.qty || 0, 10) || 0;
+    const descLines = wrapPdfText(item.desc || "", 38);
+    const nameLines = wrapPdfText(item.name || "Item", 16);
+    const rowLines = Math.max(1, Math.min(5, descLines.length), Math.min(3, nameLines.length));
+    const rowH = Math.max(30, rowLines * 10 + 16);
+    ensureSpace(rowH);
+    const top = y;
+    text(160, top - 11, String(qty), 8, "F2", ink);
+    wrapped(186, top - 11, item.name || "Item", 16, 7.6, 9.5, "F2", ink, 3);
+    wrapped(270, top - 11, item.desc || "", 38, 7.4, 9.5, "F1", ink, 5);
+    textRight(468, top - 11, money(regularUnit(item)), 7.4, "F1", ink);
+    textRight(522, top - 11, money(lineDiscountTotal(item)), 7.4, "F1", orange);
+    textRight(574, top - 11, money(lineTotal(item)), 7.6, "F2", ink);
+    line(152, top - rowH, 578, top - rowH, lightLine, 0.6);
+    y -= rowH;
+  }
+  ensureSpace(168);
+  const termsTop = y - 10;
+  rect(152, termsTop - 128, 226, 128, soft);
+  strokeRect(152, termsTop - 128, 226, 128, lightLine, 1);
+  text(164, termsTop - 20, "TERMS & CONDITIONS", 9, "F2", navy);
+  let ty = termsTop - 38;
+  for (const t of terms.slice(0, 5)) {
+    text(164, ty, "-", 8, "F2", orange);
+    const used = wrapped(176, ty, t, 34, 7.4, 8.6, "F1", ink, 2);
+    ty -= Math.max(12, used) + 2;
+    if (ty < termsTop - 120) break;
+  }
+  const tx = 396, tw = 182, th = 150;
+  rect(tx, termsTop - th, tw, th, deep);
+  rect(tx, termsTop - 26, tw, 26, orange);
+  text(tx + 14, termsTop - 17, type === "Invoice" ? "TOTAL DUE" : "QUOTE TOTAL", 9, "F2", white);
+  let ry = termsTop - 44;
+  function totalLine(label, val, bold = false, color = white) {
+    text(tx + 14, ry, label, bold ? 9 : 8, bold ? "F2" : "F1", color);
+    textRight(tx + tw - 14, ry, val, bold ? 10 : 8, bold ? "F2" : "F1", color);
+    ry -= bold ? 18 : 15;
+  }
+  totalLine("Subtotal", money(totals.regular));
+  totalLine("Discount", "-" + money(totals.discounts), false, "1 0.72 0.42");
+  totalLine("Shipping", money(totals.shipping));
+  totalLine(`Tax (${Number(totals.rate || 0).toFixed(3)}%)`, money(totals.tax));
+  totalLine(type === "Invoice" ? "TOTAL DUE" : "TOTAL", money(totals.total), true, white);
+  if (doc.paid) totalLine("PAID", money(totals.total), true, "0.33 1 0.55");
+  const payLink = type === "Invoice" ? absoluteInvoicePayUrl(env, doc) : "";
+  if (payLink && !doc.paid) {
+    text(152, 96, "Secure payment link:", 8, "F2", navy);
+    wrapped(152, 82, payLink, 82, 7, 8, "F1", muted, 2);
+  }
+  text(152, 42, "This PDF was generated by the HB Commerce Solutions portal using the current quote/invoice layout.", 7.5, "F1", muted);
+
+  const objects = [];
+  function addObj(body) { objects.push(body); return objects.length; }
+  const f1 = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  const f2 = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+  const pageIds = [];
+  for (const pageOps of pages) {
+    const content = pageOps.join("\n");
+    const bytes = new TextEncoder().encode(content);
+    const cid = addObj(`<< /Length ${bytes.length} >>\nstream\n${content}\nendstream`);
+    const page = addObj(`<< /Type /Page /Parent PAGES 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${f1} 0 R /F2 ${f2} 0 R >> >> /Contents ${cid} 0 R >>`);
+    pageIds.push(page);
+  }
+  const pagesId = addObj(`<< /Type /Pages /Kids [${pageIds.map(id => id + " 0 R").join(" ")}] /Count ${pageIds.length} >>`);
+  const catalog = addObj(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
+  for (let i = 0; i < objects.length; i++) objects[i] = objects[i].replaceAll("PAGES", String(pagesId));
+  let pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+  const offsets = [0];
+  for (let i = 0; i < objects.length; i++) {
+    offsets.push(new TextEncoder().encode(pdf).length);
+    pdf += `${i + 1} 0 obj\n${objects[i]}\nendobj\n`;
+  }
+  const xref = new TextEncoder().encode(pdf).length;
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (let i = 1; i < offsets.length; i++) pdf += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root ${catalog} 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new TextEncoder().encode(pdf);
 }
 
 
@@ -20197,7 +20548,7 @@ async function reviewPage(request, env, id, token, message = "") {
   await attachOpenInvoiceBalance(env, doc);
   const wantsDecline = new URL(request.url).searchParams.get("action") === "decline";
   const action = doc.type === "Quote" ? (wantsDecline ? declineBlock(doc) : approvalBlock(doc)) : `<div class="notice no-print" style="margin-top:18px">Invoices are view-only and do not require customer approval.</div>`;
-  const body = `<main class="section"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
+  const body = `<main class="section"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button><a class="btn orange" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}.pdf">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
   return htmlPage(`${doc.type} ${doc.number}`, layout(env, "Review", body));
 }
 
