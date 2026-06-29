@@ -10537,6 +10537,124 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .doc .pay-online-link{
   margin-top:8px!important;
 }
+
+
+/* v203 create quote/invoice checkout-style theme */
+.admin-document-page{
+  background:linear-gradient(135deg,#081126 0%,#0b1730 58%,#063d3d 100%)!important;
+  color:#eaf3ff!important;
+  min-height:100vh!important;
+}
+.admin-document-page .section-title h2{
+  color:#ffffff!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.32)!important;
+}
+.admin-document-page .form-section{
+  background:radial-gradient(circle at 88% 4%,rgba(0,185,102,.15),transparent 30%),linear-gradient(135deg,rgba(14,39,67,.97),rgba(4,13,26,.98))!important;
+  border:1.6px solid rgba(255,106,0,.38)!important;
+  box-shadow:0 16px 44px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.11)!important;
+  color:#eaf3ff!important;
+}
+.admin-document-page .form-title,
+.admin-document-page .item-head{
+  color:#ffffff!important;
+}
+.admin-document-page .field label,
+.admin-document-page .check,
+.admin-document-page .same-address-check{
+  color:#dbeafe!important;
+  font-weight:950!important;
+}
+.admin-document-page .hint{
+  color:#c9d7e8!important;
+}
+.admin-document-page .notice,
+.admin-document-page .zip-lookup-note{
+  background:rgba(255,255,255,.075)!important;
+  color:#eaf3ff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+}
+.admin-document-page .notice.success{background:rgba(16,185,129,.14)!important;border-color:rgba(16,185,129,.36)!important;color:#dcfce7!important;}
+.admin-document-page .notice.error{background:rgba(239,68,68,.13)!important;border-color:rgba(248,113,113,.38)!important;color:#fee2e2!important;}
+.admin-document-page input,
+.admin-document-page select,
+.admin-document-page textarea{
+  background:#f8fafc!important;
+  color:#10233d!important;
+  -webkit-text-fill-color:#10233d!important;
+  border:1.6px solid rgba(203,215,232,.95)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 10px 22px rgba(0,0,0,.12)!important;
+  color-scheme:light!important;
+}
+.admin-document-page input:focus,
+.admin-document-page select:focus,
+.admin-document-page textarea:focus{
+  border-color:#ff8c21!important;
+  outline:3px solid rgba(255,106,0,.26)!important;
+  box-shadow:0 0 0 3px rgba(255,106,0,.12),0 12px 28px rgba(0,0,0,.16)!important;
+}
+.admin-document-page input[readonly]{
+  background:#dbe7f5!important;
+  color:#334155!important;
+  -webkit-text-fill-color:#334155!important;
+}
+.admin-document-page .same-address-section{
+  background:linear-gradient(135deg,rgba(7,22,43,.98),rgba(9,57,70,.94))!important;
+}
+.admin-document-page .same-address-check{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  font-size:15px!important;
+}
+.admin-document-page .same-address-check input,
+.admin-document-page input[type="checkbox"]{
+  width:20px!important;
+  height:20px!important;
+  min-width:20px!important;
+  accent-color:#00b970!important;
+  box-shadow:none!important;
+}
+.admin-document-page .auto-rate-pill{
+  min-height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:14px!important;
+  padding:10px 12px!important;
+  background:rgba(255,255,255,.10)!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  color:#eaf3ff!important;
+  font-weight:950!important;
+  text-align:center!important;
+}
+.admin-document-page .auto-rate-pill.ok{background:rgba(16,185,129,.18)!important;border-color:rgba(16,185,129,.42)!important;color:#dcfce7!important;}
+.admin-document-page .auto-rate-pill.loading{background:rgba(59,130,246,.16)!important;border-color:rgba(96,165,250,.36)!important;color:#dbeafe!important;}
+.admin-document-page .auto-rate-pill.error{background:rgba(239,68,68,.16)!important;border-color:rgba(248,113,113,.40)!important;color:#fee2e2!important;}
+.admin-document-page .auto-rate-pill.manual,
+.admin-document-page .auto-rate-pill.wait{background:rgba(255,255,255,.08)!important;color:#eaf3ff!important;}
+html body .admin-document-page #items .line-item-card input,
+html body .admin-document-page #items .line-item-card textarea,
+html body .admin-document-page #items .line-item-card select{
+  background:#06111f!important;
+  background-color:#06111f!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  border:1.7px solid rgba(255,106,0,.62)!important;
+  box-shadow:0 0 0 1000px #06111f inset, inset 0 1px 0 rgba(255,255,255,.10),0 0 18px rgba(255,106,0,.10)!important;
+  color-scheme:dark!important;
+}
+html body .admin-document-page #items .line-item-card input[type="checkbox"]{
+  box-shadow:none!important;
+}
+.admin-document-page #builderTotals .total-row span,
+.admin-document-page .summary-grid .notice{
+  color:#eaf3ff!important;
+}
+.admin-document-page #builderTotals .grand span{
+  color:#ffffff!important;
+}
+
 .admin-template-page .invoice-template-grid{
   display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -17640,7 +17758,7 @@ async function publicShippingRate(request, env) {
       const fx = await fedExGroundRate(env, ship, body.cart || []).catch(err => ({ ok:false, error:String(err && err.message || err) }));
       if (fx && fx.ok) return jsonResponse({ ok:true, rates:[fx.rate], source:"FedEx" });
       console.error("FedEx rating unavailable", fx && fx.error);
-      return jsonResponse({ ok:false, carrier_required:true, message:"FedEx rate is unavailable. Check FedEx API credentials or choose UPS/Pickup." }, 503);
+      return jsonResponse({ ok:false, carrier_required:true, message:"FedEx rate is unavailable: " + String(fx && fx.error || "Check FedEx API credentials, environment, and account/project Rate API access.") }, 503);
     }
     const ups = await upsGroundRate(env, ship, body.cart || []).catch(err => ({ ok:false, error:String(err && err.message || err) }));
     if (ups && ups.ok) return jsonResponse({ ok:true, rates:[ups.rate], source:"UPS" });
@@ -17694,6 +17812,108 @@ async function upsGroundRate(env, ship = {}, cart = []) {
   return {ok:true, rate:{code:"ups_ground", label:"UPS Ground", amount:val, carrier:"UPS"}};
 }
 
+function fedExAddressFromEnv(env, fallbackZip = "60193") {
+  return {
+    postalCode: String(env.FEDEX_ORIGIN_ZIP || env.UPS_ORIGIN_ZIP || env.TAX_ORIGIN_ZIP || fallbackZip).trim(),
+    countryCode: String(env.FEDEX_ORIGIN_COUNTRY || env.TAX_ORIGIN_COUNTRY || "US").trim() || "US",
+    stateOrProvinceCode: cleanStateCode(env.FEDEX_ORIGIN_STATE || env.TAX_ORIGIN_STATE || "IL"),
+    city: String(env.FEDEX_ORIGIN_CITY || env.TAX_ORIGIN_CITY || "").trim()
+  };
+}
+
+function fedExRecipientAddress(ship = {}) {
+  return {
+    postalCode: normalizeTaxZip(ship.zip || ""),
+    countryCode: String(ship.country || "US").trim() || "US",
+    stateOrProvinceCode: cleanStateCode(ship.state || ""),
+    city: String(ship.city || "").trim(),
+    residential: ship.residential === false ? false : true
+  };
+}
+
+function fedExCleanAddress(addr = {}) {
+  const out = { postalCode: String(addr.postalCode || "").trim(), countryCode: String(addr.countryCode || "US").trim() || "US" };
+  if (addr.stateOrProvinceCode) out.stateOrProvinceCode = cleanStateCode(addr.stateOrProvinceCode);
+  if (addr.city) out.city = String(addr.city || "").trim();
+  if (addr.residential !== undefined) out.residential = !!addr.residential;
+  return out;
+}
+
+function fedExChargeAmount(obj) {
+  if (!obj || typeof obj !== "object") return 0;
+  const candidates = [
+    obj.totalNetFedExCharge,
+    obj.totalNetCharge,
+    obj.totalBaseCharge,
+    obj.totalNetChargeWithDutiesAndTaxes,
+    obj.shipmentRateDetail && obj.shipmentRateDetail.totalNetFedExCharge,
+    obj.shipmentRateDetail && obj.shipmentRateDetail.totalNetCharge,
+    obj.shipmentRateDetail && obj.shipmentRateDetail.totalBaseCharge,
+    obj.shipmentRateDetail && obj.shipmentRateDetail.totalNetChargeWithDutiesAndTaxes,
+    obj.ratedPackages && obj.ratedPackages[0] && obj.ratedPackages[0].packageRateDetail && obj.ratedPackages[0].packageRateDetail.netCharge,
+    obj.ratedPackages && obj.ratedPackages[0] && obj.ratedPackages[0].packageRateDetail && obj.ratedPackages[0].packageRateDetail.totalNetCharge
+  ];
+  for (const c of candidates) {
+    const n = Number(c && (c.amount ?? c.value ?? c));
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  return 0;
+}
+
+function fedExRateErrorText(data = {}, raw = "") {
+  const errs = Array.isArray(data.errors) ? data.errors : [];
+  if (errs.length) return errs.map(e => [e.code, e.message].filter(Boolean).join(": ")).join(" | ");
+  const alerts = data.output && Array.isArray(data.output.alerts) ? data.output.alerts : [];
+  if (alerts.length) return alerts.map(e => [e.code, e.message].filter(Boolean).join(": ")).join(" | ");
+  return data.error_description || data.error || raw || "rate failed";
+}
+
+async function fedExRateQuote(env, base, token, acct, ship = {}, cart = [], serviceType = "") {
+  const from = fedExCleanAddress(fedExAddressFromEnv(env));
+  const to = fedExCleanAddress(fedExRecipientAddress(ship));
+  const weight = cartPackageWeightLbs(cart, Number(env.FEDEX_PACKAGE_WEIGHT_LB || env.EUFY_PACKAGE_WEIGHT_LB || 18));
+  const service = String(serviceType || "").trim().toUpperCase();
+  const payload = {
+    accountNumber: { value: acct },
+    carrierCodes: ["FDXG"],
+    requestedShipment: {
+      shipper: { address: from },
+      recipient: { address: to },
+      pickupType: String(env.FEDEX_PICKUP_TYPE || "DROPOFF_AT_FEDEX_LOCATION"),
+      packagingType: "YOUR_PACKAGING",
+      rateRequestType: ["ACCOUNT", "LIST"],
+      shipDateStamp: today(),
+      shippingChargesPayment: { paymentType: "SENDER", payor: { responsibleParty: { accountNumber: { value: acct }, address: { countryCode: "US" } } } },
+      requestedPackageLineItems: [{
+        groupPackageCount: 1,
+        weight: { units: "LB", value: Math.ceil(weight) },
+        dimensions: { length: Number(env.FEDEX_PACKAGE_LENGTH_IN || 24), width: Number(env.FEDEX_PACKAGE_WIDTH_IN || 18), height: Number(env.FEDEX_PACKAGE_HEIGHT_IN || 12), units: "IN" }
+      }]
+    },
+    rateRequestControlParameters: { returnTransitTimes: true, servicesNeededOnRateFailure: true }
+  };
+  if (service) payload.requestedShipment.serviceType = service;
+  const rr = await fetch(base + "/rate/v1/rates/quotes", { method:"POST", headers:{ "authorization":"Bearer " + token, "content-type":"application/json", "x-locale":"en_US", "x-customer-transaction-id":"hb-fedex-" + Date.now() }, body:JSON.stringify(payload) });
+  const rt = await rr.text();
+  let data = {}; try { data = rt ? JSON.parse(rt) : {}; } catch {}
+  if (!rr.ok) throw new Error(fedExRateErrorText(data, rt));
+  const details = data.output && Array.isArray(data.output.rateReplyDetails) ? data.output.rateReplyDetails : [];
+  const preferred = details.find(d => service && String(d.serviceType || "").toUpperCase() === service) || details.find(d => ["GROUND_HOME_DELIVERY","FEDEX_GROUND"].includes(String(d.serviceType || "").toUpperCase())) || details[0] || {};
+  let amount = 0;
+  for (const detail of [preferred, ...details]) {
+    const ratedRows = Array.isArray(detail.ratedShipmentDetails) ? detail.ratedShipmentDetails : [];
+    for (const rated of ratedRows) {
+      amount = fedExChargeAmount(rated);
+      if (amount > 0) {
+        const svc = String(detail.serviceType || service || "FEDEX_GROUND").toUpperCase();
+        const label = svc === "GROUND_HOME_DELIVERY" ? "FedEx Ground Home Delivery" : "FedEx Ground";
+        return { ok:true, rate:{ code:svc.toLowerCase(), label, amount, carrier:"FedEx" } };
+      }
+    }
+  }
+  throw new Error("FedEx OAuth and rating succeeded but no usable charge amount was returned. Check account rating permissions, package dimensions, origin ZIP, and destination ZIP.");
+}
+
 async function fedExGroundRate(env, ship = {}, cart = []) {
   const id = String(env.FEDEX_CLIENT_ID || env.FEDEX_API_KEY || "").trim();
   const sec = String(env.FEDEX_CLIENT_SECRET || env.FEDEX_SECRET_KEY || "").trim();
@@ -17704,23 +17924,20 @@ async function fedExGroundRate(env, ship = {}, cart = []) {
   const auth = await fetch(base + "/oauth/token", { method:"POST", headers:{ "content-type":"application/x-www-form-urlencoded" }, body:"grant_type=client_credentials&client_id=" + encodeURIComponent(id) + "&client_secret=" + encodeURIComponent(sec) });
   const authText = await auth.text();
   let aj = {}; try { aj = authText ? JSON.parse(authText) : {}; } catch {}
-  if (!auth.ok || !aj.access_token) throw new Error("FedEx OAuth failed: " + (aj.errors?.[0]?.message || aj.error_description || aj.error || authText || "authentication failed"));
-  const fromZip = String(env.FEDEX_ORIGIN_ZIP || env.UPS_ORIGIN_ZIP || env.TAX_ORIGIN_ZIP || "60193");
-  const toZip = normalizeTaxZip(ship.zip || "");
-  const weight = cartPackageWeightLbs(cart, Number(env.FEDEX_PACKAGE_WEIGHT_LB || env.EUFY_PACKAGE_WEIGHT_LB || 18));
-  const payload = { accountNumber:{ value:acct }, requestedShipment:{ shipper:{ address:{ postalCode:fromZip, countryCode:"US" } }, recipient:{ address:{ postalCode:toZip, countryCode:"US", residential:true } }, pickupType:"DROPOFF_AT_FEDEX_LOCATION", serviceType:"FEDEX_GROUND", rateRequestType:["ACCOUNT","LIST"], requestedPackageLineItems:[{ weight:{ units:"LB", value:Math.ceil(weight) }, dimensions:{ length:Number(env.FEDEX_PACKAGE_LENGTH_IN || 24), width:Number(env.FEDEX_PACKAGE_WIDTH_IN || 18), height:Number(env.FEDEX_PACKAGE_HEIGHT_IN || 12), units:"IN" } }] } };
-  const rr = await fetch(base + "/rate/v1/rates/quotes", { method:"POST", headers:{ "authorization":"Bearer " + aj.access_token, "content-type":"application/json" }, body:JSON.stringify(payload) });
-  const rt = await rr.text();
-  let data = {}; try { data = rt ? JSON.parse(rt) : {}; } catch {}
-  if (!rr.ok) throw new Error("FedEx Rating failed: " + (data.errors?.[0]?.message || data.error_description || rt || "rate failed"));
-  const details = data.output?.rateReplyDetails || [];
-  const first = details[0] || {};
-  const rated = (first.ratedShipmentDetails || [])[0] || {};
-  const charge = rated.totalNetFedExCharge || rated.totalNetCharge || rated.shipmentRateDetail?.totalNetCharge || {};
-  const val = Number(charge.amount || 0);
-  if (!val) throw new Error("FedEx OAuth succeeded but no rate was returned.");
-  return { ok:true, rate:{ code:"fedex_ground", label:"FedEx Ground", amount:val, carrier:"FedEx" } };
+  if (!auth.ok || !aj.access_token) throw new Error("FedEx OAuth failed before rating request: " + (aj.errors?.[0]?.message || aj.error_description || aj.error || authText || "authentication failed") + ". This means FEDEX_CLIENT_ID/FEDEX_CLIENT_SECRET do not match the selected environment or the FedEx project is not active.");
+  const forcedService = String(env.FEDEX_SERVICE_TYPE || "").trim().toUpperCase();
+  const services = forcedService ? [forcedService] : ["GROUND_HOME_DELIVERY", "FEDEX_GROUND"];
+  const errors = [];
+  for (const svc of services) {
+    try {
+      return await fedExRateQuote(env, base, aj.access_token, acct, ship, cart, svc);
+    } catch (err) {
+      errors.push(svc + ": " + String(err && err.message || err));
+    }
+  }
+  throw new Error("FedEx rating failed after OAuth succeeded. " + errors.join(" | ") + ". Confirm the FedEx project has Rates and Transit Times API access, the account number is linked to that project, FEDEX_FORCE_SANDBOX matches the credential environment, and the destination/origin ZIPs are valid.");
 }
+
 
 
 async function publicTaxCalculate(request, env) {
@@ -17819,17 +18036,30 @@ async function adminAuthNetTest(request, env){const user=await requireAuth(reque
 async function adminFedExTest(request, env) {
   const user = await requireAuth(request, env);
   if (!user) return redirect('/admin-app');
-  const zip = normalizeTaxZip(new URL(request.url).searchParams.get('zip') || '60123');
+  const url = new URL(request.url);
+  const zip = normalizeTaxZip(url.searchParams.get('zip') || '60123');
+  const forcedSandbox = String(env.FEDEX_FORCE_SANDBOX || '').trim() === '1';
+  const envMode = forcedSandbox ? 'sandbox' : 'production';
+  const secrets = [
+    ['FEDEX_CLIENT_ID', !!String(env.FEDEX_CLIENT_ID||env.FEDEX_API_KEY||'').trim()],
+    ['FEDEX_CLIENT_SECRET', !!String(env.FEDEX_CLIENT_SECRET||env.FEDEX_SECRET_KEY||'').trim()],
+    ['FEDEX_ACCOUNT_NUMBER', !!String(env.FEDEX_ACCOUNT_NUMBER||'').trim()],
+    ['FEDEX_ORIGIN_ZIP', !!String(env.FEDEX_ORIGIN_ZIP||'').trim()]
+  ];
+  const secretRows = secrets.map(([k,v])=>`<div><span>${k}</span><strong class="${v?'ok':'bad'}">${v?'saved':'missing'}</strong></div>`).join('');
+  const envNote = forcedSandbox ? `<div class="notice warning"><strong>Sandbox mode:</strong> FEDEX_FORCE_SANDBOX=1 is active. Use only sandbox FedEx credentials in this mode.</div>` : `<div class="notice success"><strong>Production mode:</strong> no sandbox override is active. Use production FedEx credentials.</div>`;
   let result = '';
   try {
     const r = await fedExGroundRate(env, { zip }, [{ qty:1 }]);
-    result = `<div class="notice success"><strong>FedEx test succeeded.</strong><br>${escapeHtml(r.rate.label)}: ${money(r.rate.amount)}</div>`;
+    result = `<div class="notice success"><strong>FedEx rating connected.</strong><br>${escapeHtml(r.rate.label)} to ZIP ${escapeHtml(zip)}: ${money(r.rate.amount)}</div>`;
   } catch (err) {
-    result = `<div class="notice error"><strong>FedEx test failed.</strong><br>${escapeHtml(err.message || String(err))}</div>`;
+    const msg = String(err.message || err);
+    result = `<div class="notice error"><strong>FedEx test failed.</strong><br>${escapeHtml(msg)}</div><div class="notice"><strong>Most common FedEx fixes:</strong><br>1) For live rates, delete FEDEX_FORCE_SANDBOX or leave it unset. For sandbox-only credentials, set FEDEX_FORCE_SANDBOX=1.<br>2) Confirm the same FedEx Developer Project has the <strong>Rates and Transit Times API</strong> enabled.<br>3) Confirm the FedEx account number ending <strong>${escapeHtml(String(env.FEDEX_ACCOUNT_NUMBER||'').slice(-6) || 'not saved')}</strong> is linked to that project.<br>4) This version tries <strong>GROUND_HOME_DELIVERY</strong> first for residential destinations and then falls back to <strong>FEDEX_GROUND</strong>.</div>`;
   }
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><h2>FedEx Rating API Test</h2><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/ups-test?zip=${encodeURIComponent(zip)}">UPS Test</a></div></div><section class="form-section"><div class="form-title">FedEx Connection Test</div><p>Destination ZIP: <strong>${escapeHtml(zip)}</strong></p>${result}<div class="notice">Cloudflare secrets used: FEDEX_CLIENT_ID, FEDEX_CLIENT_SECRET, FEDEX_ACCOUNT_NUMBER, FEDEX_ORIGIN_ZIP. Use FEDEX_FORCE_SANDBOX=1 only for sandbox credentials.</div></section></div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><h2>FedEx Rating API Test</h2><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/ups-test?zip=${encodeURIComponent(zip)}">UPS Test</a></div></div><section class="form-section"><div class="form-title">FedEx Connection Test</div><p>Environment used by Worker: <strong>${escapeHtml(envMode)}</strong></p>${envNote}<div class="ups-secret-grid">${secretRows}</div><form method="get"><div class="field"><label>Destination ZIP for test</label><input name="zip" value="${escapeHtml(zip)}"></div><button class="orange">Run FedEx Test</button></form>${result}<div class="notice">Cloudflare secrets used: FEDEX_CLIENT_ID, FEDEX_CLIENT_SECRET, FEDEX_ACCOUNT_NUMBER, FEDEX_ORIGIN_ZIP. Optional: FEDEX_ORIGIN_CITY, FEDEX_ORIGIN_STATE, FEDEX_SERVICE_TYPE. Use FEDEX_FORCE_SANDBOX=1 only for sandbox credentials.</div></section></div></main>`;
   return htmlPage("FedEx Rating API Test | HB Commerce", layout(env, "Dashboard", body));
 }
+
 
 async function adminUpsTest(request, env) {
   const user = await requireAuth(request, env);
@@ -18535,7 +18765,7 @@ async function adminCloneDocument(request, env) {
   doc.billing_city = "";
   doc.billing_state = "IL";
   doc.billing_zip = "";
-  doc.shipping_same_as_billing = 1;
+  doc.shipping_same_as_billing = 0;
   doc.shipping_street = "";
   doc.shipping_city = "";
   doc.shipping_state = "IL";
@@ -18686,7 +18916,7 @@ function newDocDefaults() {
     billing_city: "",
     billing_state: "PA",
     billing_zip: "",
-    shipping_same_as_billing: 1,
+    shipping_same_as_billing: 0,
     shipping_street: "",
     shipping_city: "",
     shipping_state: "PA",
@@ -18760,15 +18990,15 @@ function documentFormHtml(doc, error = "") {
   const itemsJson = JSON.stringify(doc.items || []);
   const bill = docBillingAddress(doc);
   const ship = docShippingAddress(doc);
-  const shippingSame = doc.shipping_same_as_billing === undefined ? addressObjectsEqual(bill, ship) : !!doc.shipping_same_as_billing;
+  const shippingSame = !!doc.shipping_same_as_billing;
   const selectedState = ship.state || bill.state || "PA";
   const shippingCarrier = String(doc.shipping_carrier || "manual").toLowerCase();
   return `<main class="section admin-dashboard admin-document-page"><div class="container"><div class="section-title"><h2>${doc.id ? "Edit " + doc.type : "New " + doc.type}</h2><a class="btn" href="/admin/dashboard">Back to Dashboard</a></div>${error ? `<div class="notice error">${escapeHtml(error)}</div>` : ""}<form method="post" action="/admin/document" id="docForm"><input type="hidden" name="id" value="${escapeHtml(doc.id || "")}"><input type="hidden" name="token" value="${escapeHtml(doc.token || "")}"><input type="hidden" name="tax_source" id="tax_source" value="${escapeHtml(doc.tax_source || "")}"><input type="hidden" name="tax_lookup_address" id="tax_lookup_address" value="${escapeHtml(doc.tax_lookup_address || "")}">
 <datalist id="adminInventoryList"></datalist><section class="form-section"><div class="form-title">Document & Business</div><div class="grid-4"><div class="field"><label>Document Type</label><select name="type" id="type" onchange="updateLabels()">${option("Quote", doc.type)}${option("Invoice", doc.type)}</select></div><div class="field"><label>Business</label><select name="business" id="business" onchange="updateLabels()"><option value="processing" ${doc.business==="processing"?"selected":""}>Merchant Services</option><option value="pos" ${doc.business==="pos"?"selected":""}>POS Software for Retail</option><option value="camera" ${doc.business==="camera"?"selected":""}>Security Camera Systems</option></select></div><div class="field"><label id="numberLabel">${docNumberLabel(doc.type)}</label><input name="number" id="number" value="${escapeHtml(doc.number)}"></div><div class="field"><label>Prepared By</label><input name="prepared_by" value="${escapeHtml(doc.prepared_by || "")}"></div></div><div class="grid-3"><div class="field"><label>Date</label><input type="date" name="doc_date" value="${escapeHtml(doc.doc_date)}"></div><div class="field"><label id="validLabel">${validLabel(doc.type)}</label><input type="date" name="valid_until" value="${escapeHtml(doc.valid_until)}"></div><div class="field"><label>Customer-Facing Heading</label><input id="heading" readonly value="${escapeHtml(businessLabel(doc.business) + " " + doc.type)}"></div></div></section>
-<section class="form-section"><div class="form-title">Customer & Billing Address</div><div class="grid-2"><div class="field"><label>Customer Name</label><input name="customer_name" value="${escapeHtml(doc.customer_name || "")}" required></div><div class="field"><label>Client Email</label><input name="email" type="email" value="${escapeHtml(doc.email || "")}"></div></div><div class="grid-2"><div class="field"><label>Client Mobile / WhatsApp</label><input name="phone" id="phone" type="tel" value="${escapeHtml(doc.phone || "")}"></div><div class="field"><label>Billing Street Address</label><input name="billing_street" id="billing_street" value="${escapeHtml(bill.street || "")}" autocomplete="billing street-address"></div></div><div class="grid-4"><div class="field"><label>Billing ZIP</label><input name="billing_zip" id="billing_zip" value="${escapeHtml(bill.zip || "")}" maxlength="10" autocomplete="billing postal-code"></div><div class="field"><label>Billing City</label><input name="billing_city" id="billing_city" value="${escapeHtml(bill.city || "")}" autocomplete="billing address-level2"></div><div class="field"><label>Billing State</label><input name="billing_state" id="billing_state" value="${escapeHtml(bill.state || "")}" maxlength="2" autocomplete="billing address-level1" placeholder="IL"></div><div class="field tax-rate-field"><label>Tax Rate (%)</label><input name="tax_rate" id="tax_rate" type="number" min="0" step="0.001" value="${Number(doc.tax_rate || 10).toFixed(3)}"><button type="button" class="small orange" onclick="lookupDestinationTax()">Lookup Destination Tax</button></div></div></section>
-<section class="form-section same-address-section"><label class="check same-address-check"><input name="shipping_same_as_billing" id="shipping_same_as_billing" value="1" type="checkbox" ${shippingSame ? "checked" : ""}> Shipping address same as billing address</label><p class="hint">When checked, the shipping address below is automatically filled from the billing address.</p></section>
-<section class="form-section"><div class="form-title">Shipping Address</div><div class="grid-2"><div class="field"><label>Shipping Street Address</label><input name="shipping_street" id="shipping_street" value="${escapeHtml(ship.street || "")}" autocomplete="shipping street-address"></div><div class="field"><label>Shipping ZIP</label><input name="shipping_zip" id="shipping_zip" value="${escapeHtml(ship.zip || "")}" maxlength="10" autocomplete="shipping postal-code"><button type="button" onclick="lookupZip()">Lookup Shipping ZIP</button></div></div><div class="grid-3"><div class="field"><label>Shipping City</label><input name="shipping_city" id="shipping_city" value="${escapeHtml(ship.city || "")}" autocomplete="shipping address-level2"></div><div class="field"><label>Shipping State</label><input name="shipping_state" id="shipping_state" value="${escapeHtml(ship.state || "")}" maxlength="2" autocomplete="shipping address-level1" placeholder="IL"></div><div class="field"><label>Destination Tax</label><button type="button" class="orange" onclick="lookupDestinationTax()">Lookup Destination Tax</button></div></div><div class="notice" id="taxNote">${doc.tax_source ? `Tax source: ${escapeHtml(doc.tax_source)}${doc.tax_lookup_address ? " • " + escapeHtml(doc.tax_lookup_address) : ""}` : "Default tax rate is 10.000%. Destination tax lookup uses the shipping address."}</div></section>
-<section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals()"></div><div class="field"><label>Calculate Shipping</label><button class="orange" type="button" onclick="calculateShippingRate()">Calculate Shipping</button></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Shipping:</strong> choose UPS or FedEx, enter package weight when known, and click Calculate Shipping. The amount is added to the quote/invoice total as non-taxable shipping. You can still type the shipping cost manually.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
+<section class="form-section"><div class="form-title">Customer & Billing Address</div><div class="grid-2"><div class="field"><label>Customer Name</label><input name="customer_name" value="${escapeHtml(doc.customer_name || "")}" required></div><div class="field"><label>Client Email</label><input name="email" type="email" value="${escapeHtml(doc.email || "")}"></div></div><div class="grid-2"><div class="field"><label>Client Mobile / WhatsApp</label><input name="phone" id="phone" type="tel" value="${escapeHtml(doc.phone || "")}"></div><div class="field"><label>Billing Street Address</label><input name="billing_street" id="billing_street" value="${escapeHtml(bill.street || "")}" autocomplete="billing street-address"></div></div><div class="grid-4"><div class="field"><label>Billing ZIP <span class="hint">auto city/state</span></label><input name="billing_zip" id="billing_zip" value="${escapeHtml(bill.zip || "")}" maxlength="10" autocomplete="billing postal-code"></div><div class="field"><label>Billing City</label><input name="billing_city" id="billing_city" value="${escapeHtml(bill.city || "")}" autocomplete="billing address-level2"></div><div class="field"><label>Billing State</label><input name="billing_state" id="billing_state" value="${escapeHtml(bill.state || "")}" maxlength="2" autocomplete="billing address-level1" placeholder="IL"></div><div class="field tax-rate-field"><label>Tax Rate (%)</label><input name="tax_rate" id="tax_rate" type="number" min="0" step="0.001" value="${Number(doc.tax_rate || 10).toFixed(3)}"><button type="button" class="small orange" onclick="lookupDestinationTax()">Lookup Destination Tax</button></div></div><div class="notice zip-lookup-note" id="billingZipNote">Enter a 5-digit billing ZIP and the city/state will fill automatically.</div></section>
+<section class="form-section same-address-section"><label class="check same-address-check"><input name="shipping_same_as_billing" id="shipping_same_as_billing" value="1" type="checkbox" ${shippingSame ? "checked" : ""}> Shipping address same as billing address</label><p class="hint">This is intentionally unchecked by default. Check it only when the shipping destination is the same as the billing address.</p></section>
+<section class="form-section"><div class="form-title">Shipping Address</div><div class="grid-2"><div class="field"><label>Shipping Street Address</label><input name="shipping_street" id="shipping_street" value="${escapeHtml(ship.street || "")}" autocomplete="shipping street-address"></div><div class="field"><label>Shipping ZIP <span class="hint">auto city/state + rate</span></label><input name="shipping_zip" id="shipping_zip" value="${escapeHtml(ship.zip || "")}" maxlength="10" autocomplete="shipping postal-code"></div></div><div class="grid-3"><div class="field"><label>Shipping City</label><input name="shipping_city" id="shipping_city" value="${escapeHtml(ship.city || "")}" autocomplete="shipping address-level2"></div><div class="field"><label>Shipping State</label><input name="shipping_state" id="shipping_state" value="${escapeHtml(ship.state || "")}" maxlength="2" autocomplete="shipping address-level1" placeholder="IL"></div><div class="field"><label>Destination Tax</label><button type="button" class="orange" onclick="lookupDestinationTax()">Refresh Destination Tax</button></div></div><div class="notice" id="taxNote">${doc.tax_source ? `Tax source: ${escapeHtml(doc.tax_source)}${doc.tax_lookup_address ? " • " + escapeHtml(doc.tax_lookup_address) : ""}` : "Default tax rate is 10.000%. Destination ZIP/city/state fills automatically from the shipping ZIP."}</div></section>
+<section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground / Home Delivery</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals();markManualShippingOverride()"></div><div class="field"><label>Auto Rate Status</label><div class="auto-rate-pill" id="autoRateStatus">Waiting for ZIP and carrier</div></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Auto shipping:</strong> choose UPS or FedEx and enter a 5-digit shipping ZIP. The rate calculates automatically when the carrier, ZIP, address, package weight, or line items change. Choose Manual Entry to type your own shipping cost.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
 <section class="form-section"><div class="form-title">Terms, Conditions & Payment Link</div><div class="grid-2"><div class="field"><label>Terms & Conditions</label><textarea name="terms_conditions" rows="5" placeholder="Example: Quote valid for 30 days. Hardware ships after approval and payment is received.">${escapeHtml(doc.terms_conditions || "")}</textarea></div><div class="field"><label>Invoice Payment Link <span class="hint">optional / future Authorize.Net</span></label><input name="payment_link" value="${escapeHtml(doc.payment_link || "")}" placeholder="https://..."><p class="hint">When Authorize.Net is ready, this field can display a Pay Invoice Online link on invoices.</p></div></div></section>
 <section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link / Print PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
 <script>
@@ -18790,9 +19020,9 @@ function displayNumber(n){n=cleanNumber(n);return Number.isInteger(n)?String(n):
 function syncSaleMarkup(i,source){let it=items[i];let cost=Number(it.cost)||0;let sale=Number(it.sale_price)||0;if((source==='sale_price'||source==='cost')&&sale>0&&cost>0){it.markup=cleanNumber(((sale-cost)/cost)*100)}else if(source==='markup'){it.sale_price=cleanNumber(markedUp(it))}else if(source==='cost'&&sale<=0){it.sale_price=cleanNumber(markedUp(it))}}
 function calc(){let reg=0,disc=0,sub=0,taxable=0;items.forEach(it=>{let qty=parseInt(it.qty)||0;let r=qty*regular(it);let l=qty*discounted(it);reg+=r;disc+=Math.max(r-l,0);sub+=l;if(it.taxable)taxable+=l});let rate=Number(document.getElementById('tax_rate').value)||0;let shipping=Math.max(0,Number(document.getElementById('shipping_cost')?.value)||0);let tax=taxable*rate/100;return{reg,disc,sub,taxable,shipping,rate,tax,total:sub+tax+shipping}}
 function renderStates(){let s=document.getElementById('state');if(!s)return;s.innerHTML=Object.keys(stateNames).map(k=>\`<option value="\${k}" \${k===selectedState?'selected':''}>\${stateNames[k]}</option>\`).join('')}
-function renderItems(){document.getElementById('items').innerHTML=items.map((it,i)=>\`<div class="item-card line-item-card"><div class="item-head"><span>Line Item \${i+1}</span><button class="danger small" type="button" onclick="removeItem(\${i})">Remove</button></div><div class="line-item-row line-item-row-v36"><div class="field qty-field"><label>Qty</label><input name="item_qty[\${i}]" type="number" min="1" step="1" inputmode="numeric" value="\${esc(it.qty)}" oninput="updateItem(\${i},'qty',this.value)"></div><div class="field item-name-field"><label>Item Name</label><input name="item_name[\${i}]" value="\${esc(it.name)}" list="adminInventoryList" autocomplete="off" data-item-name-index="\${i}" oninput="updateItem(\${i},'name',this.value);matchInventoryItem(\${i},this.value)"></div><div class="field desc-field"><label>Description</label><input name="item_desc[\${i}]" value="\${esc(it.desc)}" oninput="updateItem(\${i},'desc',this.value)"></div><div class="field private cost-field"><label>Cost $</label><input name="item_cost[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${esc(it.cost)}" oninput="updateItem(\${i},'cost',this.value)"></div><div class="field sale-field"><label>Sale Price $</label><input name="item_sale_price[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${displayNumber(regular(it))}" oninput="updateItem(\${i},'sale_price',this.value)"></div><div class="field private markup-field"><label>Markup %</label><input name="item_markup[\${i}]" type="number" step="0.01" inputmode="decimal" value="\${esc(it.markup)}" oninput="updateItem(\${i},'markup',this.value)"></div><div class="field discount-field"><label>Discount $</label><input name="item_discount[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${esc(it.discount)}" oninput="updateItem(\${i},'discount',this.value)"></div><div class="field taxable-field"><label>Taxable</label><label class="check inline-check"><input name="item_taxable[\${i}]" value="1" type="checkbox" \${it.taxable?'checked':''} onchange="updateItem(\${i},'taxable',this.checked)"> Taxable</label></div></div><div class="calc-strip"><div class="calc-box"><b>Regular Unit Price</b><span>\${money(regular(it))}</span></div><div class="calc-box"><b>Discounted Unit Price</b><span>\${money(discounted(it))}</span></div><div class="calc-box"><b>Markup %</b><span>\${displayNumber(it.markup)}%</span></div><div class="calc-box"><b>Margin %</b><span>\${displayNumber(marginPercent(it))}%</span></div><div class="calc-box"><b>Line Discount Total</b><span>\${money(lineDiscount(it))}</span></div><div class="calc-box"><b>Line Total</b><span>\${money(lineTotal(it))}</span></div></div></div>\`).join('');renderTotals()}
+function renderItems(){document.getElementById('items').innerHTML=items.map((it,i)=>\`<div class="item-card line-item-card"><div class="item-head"><span>Line Item \${i+1}</span><button class="danger small" type="button" onclick="removeItem(\${i})">Remove</button></div><div class="line-item-row line-item-row-v36"><div class="field qty-field"><label>Qty</label><input name="item_qty[\${i}]" type="number" min="1" step="1" inputmode="numeric" value="\${esc(it.qty)}" oninput="updateItem(\${i},'qty',this.value)"></div><div class="field item-name-field"><label>Item Name</label><input name="item_name[\${i}]" value="\${esc(it.name)}" list="adminInventoryList" autocomplete="off" data-item-name-index="\${i}" oninput="updateItem(\${i},'name',this.value);matchInventoryItem(\${i},this.value)"></div><div class="field desc-field"><label>Description</label><input name="item_desc[\${i}]" value="\${esc(it.desc)}" oninput="updateItem(\${i},'desc',this.value)"></div><div class="field private cost-field"><label>Cost $</label><input name="item_cost[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${esc(it.cost)}" oninput="updateItem(\${i},'cost',this.value)"></div><div class="field sale-field"><label>Sale Price $</label><input name="item_sale_price[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${displayNumber(regular(it))}" oninput="updateItem(\${i},'sale_price',this.value)"></div><div class="field private markup-field"><label>Markup %</label><input name="item_markup[\${i}]" type="number" step="0.01" inputmode="decimal" value="\${esc(it.markup)}" oninput="updateItem(\${i},'markup',this.value)"></div><div class="field discount-field"><label>Discount $</label><input name="item_discount[\${i}]" type="number" min="0" step="0.01" inputmode="decimal" value="\${esc(it.discount)}" oninput="updateItem(\${i},'discount',this.value)"></div><div class="field taxable-field"><label>Taxable</label><label class="check inline-check"><input name="item_taxable[\${i}]" value="1" type="checkbox" \${it.taxable?'checked':''} onchange="updateItem(\${i},'taxable',this.checked)"> Taxable</label></div></div><div class="calc-strip"><div class="calc-box"><b>Regular Unit Price</b><span>\${money(regular(it))}</span></div><div class="calc-box"><b>Discounted Unit Price</b><span>\${money(discounted(it))}</span></div><div class="calc-box"><b>Markup %</b><span>\${displayNumber(it.markup)}%</span></div><div class="calc-box"><b>Margin %</b><span>\${displayNumber(marginPercent(it))}%</span></div><div class="calc-box"><b>Line Discount Total</b><span>\${money(lineDiscount(it))}</span></div><div class="calc-box"><b>Line Total</b><span>\${money(lineTotal(it))}</span></div></div></div>\`).join('');renderTotals();if(typeof scheduleShippingRate==='function')scheduleShippingRate(900)}
 function renderTotals(){let c=calc();document.getElementById('builderTotals').innerHTML=\`<div class="total-row"><span>Regular Subtotal</span><span>\${money(c.reg)}</span></div><div class="total-row discount-row"><span>Accumulated Line Discounts</span><span>-\${money(c.disc)}</span></div><div class="total-row"><span>Subtotal After Line Discounts</span><span>\${money(c.sub)}</span></div><div class="total-row"><span>Shipping Cost (Non-Taxable)</span><span>\${money(c.shipping)}</span></div><div class="total-row"><span>Taxable Subtotal</span><span>\${money(c.taxable)}</span></div><div class="total-row"><span>Sales Tax (\${c.rate.toFixed(3)}%)</span><span>\${money(c.tax)}</span></div><div class="total-row grand"><span>TOTAL</span><span>\${money(c.total)}</span></div>\`}
-function updateItem(i,k,v){if(k==='qty')items[i][k]=parseInt(v)||0;else if(['cost','markup','discount','sale_price'].includes(k))items[i][k]=Number(v)||0;else if(k==='taxable')items[i][k]=!!v;else items[i][k]=v;if(['cost','markup','sale_price'].includes(k))syncSaleMarkup(i,k);refreshItemCalc(i,k);renderTotals()}
+function updateItem(i,k,v){if(k==='qty')items[i][k]=parseInt(v)||0;else if(['cost','markup','discount','sale_price'].includes(k))items[i][k]=Number(v)||0;else if(k==='taxable')items[i][k]=!!v;else items[i][k]=v;if(['cost','markup','sale_price'].includes(k))syncSaleMarkup(i,k);refreshItemCalc(i,k);renderTotals();if(typeof scheduleShippingRate==='function')scheduleShippingRate(700)}
 function refreshItemCalc(i,source){let card=document.getElementById('items').children[i];if(!card)return;let it=items[i];let saleInput=card.querySelector('input[name^="item_sale_price"]');let markupInput=card.querySelector('input[name^="item_markup"]');if(saleInput&&source!=='sale_price')saleInput.value=displayNumber(regular(it));if(markupInput&&source!=='markup')markupInput.value=displayNumber(it.markup);let spans=card.querySelectorAll('.calc-box span');if(spans.length>=6){spans[0].textContent=money(regular(it));spans[1].textContent=money(discounted(it));spans[2].textContent=displayNumber(it.markup)+'%';spans[3].textContent=displayNumber(marginPercent(it))+'%';spans[4].textContent=money(lineDiscount(it));spans[5].textContent=money(lineTotal(it));}}
 async function loadAdminInventory(){
   try{
@@ -18857,73 +19087,134 @@ function normalizeStateInput(id){let el=document.getElementById(id);if(el)el.val
 function billingAddress(){return{street:valueOf('billing_street').trim(),city:valueOf('billing_city').trim(),state:valueOf('billing_state').trim().toUpperCase().slice(0,2),zip:valueOf('billing_zip').replace(/[^0-9-]/g,'').slice(0,10)}}
 function shippingAddress(){return{street:valueOf('shipping_street').trim(),city:valueOf('shipping_city').trim(),state:valueOf('shipping_state').trim().toUpperCase().slice(0,2),zip:valueOf('shipping_zip').replace(/[^0-9-]/g,'').slice(0,10)}}
 function copyBillingToShipping(){let b=billingAddress();setValue('shipping_street',b.street);setValue('shipping_city',b.city);setValue('shipping_state',b.state);setValue('shipping_zip',b.zip)}
-function syncSameAddress(){let same=document.getElementById('shipping_same_as_billing');let checked=!!(same&&same.checked);if(checked)copyBillingToShipping();['shipping_street','shipping_city','shipping_state','shipping_zip'].forEach(id=>{let el=document.getElementById(id);if(el)el.readOnly=checked});}
+function syncSameAddress(){let same=document.getElementById('shipping_same_as_billing');let checked=!!(same&&same.checked);if(checked)copyBillingToShipping();['shipping_street','shipping_city','shipping_state','shipping_zip'].forEach(id=>{let el=document.getElementById(id);if(el)el.readOnly=checked});if(checked){scheduleShippingRate(350);}}
+function setAutoRateStatus(text,kind){let el=document.getElementById('autoRateStatus');if(!el)return;el.textContent=text||'';el.className='auto-rate-pill '+(kind||'');}
+function activeCarrier(){return (valueOf('shipping_carrier')||'manual').toLowerCase()}
 function buildShippingCart(){let manualWeight=Number(valueOf('shipping_weight_lbs')||0);if(manualWeight>0)return[{qty:1,name:'Manual quote shipment',weight:manualWeight}];return items.map(function(it){return{qty:parseInt(it.qty)||1,name:String(it.name||''),weight:Math.max(1,Number(it.weight||0)||Number(window.HB_DEFAULT_PACKAGE_WEIGHT||18))}})}
-async function calculateShippingRate(){
-  let note=document.getElementById('shippingRateNote');
-  let carrier=valueOf('shipping_carrier')||'manual';
-  if(carrier==='manual'){if(note)note.innerHTML='<strong>Manual shipping:</strong> type the shipping cost amount. It is added to the total as non-taxable shipping.';renderTotals();return}
-  if(carrier==='pickup'){setValue('shipping_cost','0');setValue('shipping_service','pickup');setValue('shipping_rate_label','Pickup / No Shipping');setValue('shipping_rate_source','Pickup');if(note)note.innerHTML='<strong>Pickup selected:</strong> shipping cost set to $0.00.';renderTotals();return}
+let autoShippingTimer=null;
+let shippingRateSeq=0;
+let shippingOverrideTouched=false;
+function markManualShippingOverride(){shippingOverrideTouched=true;renderTotals();}
+function scheduleShippingRate(delay=550){
+  let carrier=activeCarrier();
+  clearTimeout(autoShippingTimer);
+  if(carrier==='pickup'){
+    setValue('shipping_cost','0');setValue('shipping_service','pickup');setValue('shipping_rate_label','Pickup / No Shipping');setValue('shipping_rate_source','Pickup');
+    setAutoRateStatus('Pickup: $0.00','ok');let note=document.getElementById('shippingRateNote');if(note)note.innerHTML='<strong>Pickup selected:</strong> shipping cost set to $0.00.';renderTotals();return;
+  }
+  if(carrier==='manual'){
+    setAutoRateStatus('Manual entry','manual');let note=document.getElementById('shippingRateNote');if(note)note.innerHTML='<strong>Manual shipping:</strong> type the shipping cost amount. It is added to the total as non-taxable shipping.';return;
+  }
   let ship=shippingAddress();
-  if(!ship.zip||ship.zip.replace(/\D/g,'').length!==5){if(note)note.textContent='Enter a 5-digit shipping ZIP before calculating shipping.';return}
-  if(note)note.textContent='Calculating '+(carrier==='fedex'?'FedEx Ground':'UPS Ground')+' shipping rate...';
+  if(!ship.zip||ship.zip.replace(/\D/g,'').length!==5){setAutoRateStatus('Waiting for 5-digit ZIP','wait');return;}
+  setAutoRateStatus('Auto-calculating...','loading');
+  autoShippingTimer=setTimeout(()=>calculateShippingRate({auto:true}),delay);
+}
+async function calculateShippingRate(opts={}){
+  let note=document.getElementById('shippingRateNote');
+  let carrier=activeCarrier();
+  clearTimeout(autoShippingTimer);
+  if(carrier==='manual'){setAutoRateStatus('Manual entry','manual');if(note)note.innerHTML='<strong>Manual shipping:</strong> type the shipping cost amount. It is added to the total as non-taxable shipping.';renderTotals();return}
+  if(carrier==='pickup'){setValue('shipping_cost','0');setValue('shipping_service','pickup');setValue('shipping_rate_label','Pickup / No Shipping');setValue('shipping_rate_source','Pickup');setAutoRateStatus('Pickup: $0.00','ok');if(note)note.innerHTML='<strong>Pickup selected:</strong> shipping cost set to $0.00.';renderTotals();return}
+  let ship=shippingAddress();
+  if(!ship.zip||ship.zip.replace(/\D/g,'').length!==5){setAutoRateStatus('Waiting for 5-digit ZIP','wait');if(!opts.auto&&note)note.textContent='Enter a 5-digit shipping ZIP before calculating shipping.';return}
+  let seq=++shippingRateSeq;
+  setAutoRateStatus('Calculating '+(carrier==='fedex'?'FedEx':'UPS')+'...','loading');
+  if(note)note.textContent='Calculating '+(carrier==='fedex'?'FedEx Ground/Home Delivery':'UPS Ground')+' shipping rate automatically...';
   try{
     let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({fulfillment_type:carrier,shipping:ship,cart:buildShippingCart()})});
     let j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.ok)throw new Error(j.message||'Shipping rate unavailable.');
+    if(seq!==shippingRateSeq)return;
+    if(!r.ok||!j.ok)throw new Error(j.message||j.detail||'Shipping rate unavailable.');
     let rate=(j.rates&&j.rates[0])||{};
     let amount=Math.max(0,Number(rate.amount||0));
     setValue('shipping_cost',amount.toFixed(2));
     setValue('shipping_service',rate.code||carrier);
     setValue('shipping_rate_label',rate.label||rate.carrier||carrier);
     setValue('shipping_rate_source',j.source||rate.carrier||carrier);
-    if(note)note.innerHTML='<strong>'+esc(rate.label||rate.carrier||carrier)+' calculated:</strong> '+money(amount)+(j.needs_review?' <span class="hint">Fallback rate needs review.</span>':'');
+    shippingOverrideTouched=false;
+    setAutoRateStatus('Updated: '+money(amount),'ok');
+    if(note)note.innerHTML='<strong>'+esc(rate.label||rate.carrier||carrier)+' calculated automatically:</strong> '+money(amount)+(j.needs_review?' <span class="hint">Fallback rate needs review.</span>':'');
     renderTotals();
   }catch(e){
+    if(seq!==shippingRateSeq)return;
+    setAutoRateStatus('Rate failed','error');
     if(note)note.innerHTML='<strong>Shipping rate failed:</strong> '+esc(e.message||'Check carrier API credentials or enter shipping manually.');
   }
 }
-async function lookupZip(forceZipTax=false){
-  let zip=valueOf('shipping_zip').replace(/\D/g,'').slice(0,5);
-  setValue('shipping_zip',zip);
-  if(zip.length!==5){document.getElementById('taxNote').textContent='Enter a 5-digit shipping ZIP.';return}
-  let street=valueOf('shipping_street');
-  let c=valueOf('shipping_city');
-  let st=valueOf('shipping_state');
-  document.getElementById('taxNote').textContent=forceZipTax?'Looking up destination tax from the shipping address with ZipTax...':'Looking up shipping ZIP/city/state and destination tax when applicable...';
+async function lookupAddressZip(prefix, forceZipTax=false){
+  let zip=valueOf(prefix+'_zip').replace(/\D/g,'').slice(0,5);
+  setValue(prefix+'_zip',zip);
+  let isShip=prefix==='shipping';
+  let note=document.getElementById(isShip?'taxNote':'billingZipNote');
+  if(zip.length!==5){if(note)note.textContent='Enter a 5-digit '+(isShip?'shipping':'billing')+' ZIP.';return null}
+  let street=valueOf(prefix+'_street');
+  let c=valueOf(prefix+'_city');
+  let st=valueOf(prefix+'_state');
+  if(note)note.textContent=(isShip?(forceZipTax?'Looking up destination tax and city/state...':'Looking up shipping city/state...'):'Looking up billing city/state...');
   try{
-    let r=await fetch(\`/admin/tax-lookup?zip=\${encodeURIComponent(zip)}&street=\${encodeURIComponent(street)}&city=\${encodeURIComponent(c)}&state=\${encodeURIComponent(st)}&force_ziptax=\${forceZipTax?'1':'0'}\`,{credentials:'same-origin'});
+    let url='/admin/tax-lookup?zip='+encodeURIComponent(zip)+'&street='+encodeURIComponent(street)+'&city='+encodeURIComponent(c)+'&state='+encodeURIComponent(st)+'&force_ziptax='+(forceZipTax?'1':'0');
+    let r=await fetch(url,{credentials:'same-origin'});
     let j=await r.json();
     if(!j.ok && !j.needs_review)throw new Error(j.error||'lookup failed');
-    setValue('shipping_city',j.city||c||'');
-    setValue('shipping_state',String(j.state||st||'').toUpperCase().slice(0,2));
-    let rate=Number(j.rate||0);
-    let taxSource=document.getElementById('tax_source');
-    let taxAddr=document.getElementById('tax_lookup_address');
-    if(taxSource)taxSource.value=j.source||'';
-    if(taxAddr)taxAddr.value=j.normalized_address||j.address||'';
-    if(j.needs_review){
-      document.getElementById('taxNote').textContent=j.message||j.error||'Destination tax lookup needs review. Configure ZipTax or enter the rate manually.';
-      return;
-    }
-    if(rate>0){
-      document.getElementById('tax_rate').value=rate.toFixed(3);
-      let addressMsg=j.normalized_address?\` Address: \${j.normalized_address}.\`:'';
-      let src=j.source?\` Source: \${j.source}.\`:'';
-      let sourcing=j.sourcing_description?\` Sourcing: \${j.sourcing_description}.\`:'';
-      document.getElementById('taxNote').textContent=\`Shipping destination \${j.city||zip}, \${j.state||''}: tax rate set to \${rate.toFixed(3)}%.\${addressMsg} \${src} \${sourcing}\`;
-      renderTotals();
+    setValue(prefix+'_city',j.city||c||'');
+    setValue(prefix+'_state',String(j.state||st||'').toUpperCase().slice(0,2));
+    if(isShip){
+      let rate=Number(j.rate||0);
+      let taxSource=document.getElementById('tax_source');
+      let taxAddr=document.getElementById('tax_lookup_address');
+      if(taxSource)taxSource.value=j.source||'';
+      if(taxAddr)taxAddr.value=j.normalized_address||j.address||'';
+      if(j.needs_review){
+        if(note)note.textContent=(j.message||j.error||'City/state filled. Destination tax lookup needs review. Configure ZipTax or keep the rate manually.')+' Auto shipping will still calculate when carrier credentials are valid.';
+      }else if(rate>0){
+        document.getElementById('tax_rate').value=rate.toFixed(3);
+        let addressMsg=j.normalized_address?' Address: '+j.normalized_address+'.':'';
+        let src=j.source?' Source: '+j.source+'.':'';
+        let sourcing=j.sourcing_description?' Sourcing: '+j.sourcing_description+'.':'';
+        if(note)note.textContent='Shipping destination '+(j.city||zip)+', '+(j.state||'')+': tax rate set to '+rate.toFixed(3)+'%.'+addressMsg+' '+src+' '+sourcing;
+        renderTotals();
+      }else if(note){
+        note.textContent='Shipping city/state filled. No destination tax rate was returned, so keep the current tax rate or check the address.';
+      }
+      scheduleShippingRate(250);
     }else{
-      document.getElementById('taxNote').textContent='Lookup completed but no usable tax rate was returned. Enter the rate manually or check the shipping address.';
+      if(note)note.textContent='Billing city/state filled from ZIP: '+(j.city||'')+(j.state?', '+j.state:'')+'.';
+      if(document.getElementById('shipping_same_as_billing')?.checked){syncSameAddress();lookupAddressZip('shipping',true);}
     }
+    return j;
   }catch(e){
-    document.getElementById('taxNote').textContent='Tax lookup failed. Enter shipping city/state and tax rate manually, or confirm ZipTax API key setup.';
+    if(note)note.textContent=(isShip?'Shipping':'Billing')+' ZIP lookup failed. Enter city/state manually.';
+    if(isShip)scheduleShippingRate(400);
+    return null;
   }
 }
+function lookupZip(forceZipTax=false){return lookupAddressZip('shipping',forceZipTax)}
+function lookupBillingZip(){return lookupAddressZip('billing',false)}
 function lookupDestinationTax(){return lookupZip(true)}
 function makeClientNumber(t){let p=t==='Invoice'?'INV':'QUOTE';let d=new Date().toISOString().slice(0,10).replace(/-/g,'');let r=Math.random().toString(16).slice(2,6).toUpperCase();return p+'-HB-'+d+'-'+r}
 function updateLabels(){let t=document.getElementById('type').value;document.getElementById('numberLabel').textContent=t==='Invoice'?'Invoice No.':'Quote No.';document.getElementById('validLabel').textContent=t==='Invoice'?'Due Date':'Valid Until';document.getElementById('heading').value=document.getElementById('business').selectedOptions[0].text+' '+t;let n=document.getElementById('number');if(n&&(!n.value||/^(EST|QTE|QUOTE|INV)-HB-/i.test(n.value))){let target=t==='Invoice'?'INV':'QUOTE';if(!n.value.toUpperCase().startsWith(target+'-HB-'))n.value=makeClientNumber(t);}}
-document.getElementById('tax_rate').addEventListener('input',renderTotals);document.getElementById('phone').addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,10);e.target.value=d.length>6?\`(\${d.slice(0,3)}) \${d.slice(3,6)}-\${d.slice(6)}\`:d.length>3?\`(\${d.slice(0,3)}) \${d.slice(3)}\`:d});['billing_state','shipping_state'].forEach(id=>{let el=document.getElementById(id);if(el)el.addEventListener('input',()=>normalizeStateInput(id))});['billing_street','billing_city','billing_state','billing_zip'].forEach(id=>{let el=document.getElementById(id);if(el)el.addEventListener('input',()=>{if(document.getElementById('shipping_same_as_billing')?.checked)syncSameAddress()})});let sameBox=document.getElementById('shipping_same_as_billing');if(sameBox)sameBox.addEventListener('change',syncSameAddress);let zipTimer=null;let zipEl=document.getElementById('shipping_zip');function runZipLookupNow(){if(!zipEl)return;let d=zipEl.value.replace(/\D/g,'').slice(0,5);zipEl.value=d;if(d.length===5){clearTimeout(zipTimer);lookupZip(true)}}if(zipEl){zipEl.addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,5);e.target.value=d;clearTimeout(zipTimer);if(d.length===5){zipTimer=setTimeout(()=>lookupZip(true),350)}});zipEl.addEventListener('blur',runZipLookupNow);zipEl.addEventListener('change',runZipLookupNow);zipEl.addEventListener('keydown',e=>{if(e.key==='Tab'){setTimeout(runZipLookupNow,0)}})}let carrierEl=document.getElementById('shipping_carrier');if(carrierEl)carrierEl.addEventListener('change',()=>{if(carrierEl.value==='pickup'){setValue('shipping_cost','0');renderTotals()}else if(carrierEl.value==='manual'){let note=document.getElementById('shippingRateNote');if(note)note.innerHTML='<strong>Manual shipping:</strong> enter the shipping amount directly.'}});document.addEventListener('wheel',e=>{if(e.target&&e.target.matches&&e.target.matches('input[type=number]'))e.preventDefault()},{passive:false});renderStates();updateLabels();syncSameAddress();renderItems();loadAdminInventory();
+function bindZipAutoLookup(prefix){
+  let el=document.getElementById(prefix+'_zip');
+  if(!el)return;
+  let timer=null;
+  function run(force){let d=el.value.replace(/\D/g,'').slice(0,5);el.value=d;if(d.length===5){clearTimeout(timer);lookupAddressZip(prefix,!!force)}}
+  el.addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,5);e.target.value=d;clearTimeout(timer);if(d.length===5){timer=setTimeout(()=>lookupAddressZip(prefix,prefix==='shipping'),320)}else if(prefix==='shipping'){scheduleShippingRate(400)}});
+  el.addEventListener('blur',()=>run(prefix==='shipping'));
+  el.addEventListener('change',()=>run(prefix==='shipping'));
+  el.addEventListener('keydown',e=>{if(e.key==='Tab'){setTimeout(()=>run(prefix==='shipping'),0)}});
+}
+document.getElementById('tax_rate').addEventListener('input',renderTotals);
+document.getElementById('phone').addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,10);e.target.value=d.length>6?'('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6):d.length>3?'('+d.slice(0,3)+') '+d.slice(3):d});
+['billing_state','shipping_state'].forEach(id=>{let el=document.getElementById(id);if(el)el.addEventListener('input',()=>{normalizeStateInput(id);if(id.startsWith('shipping'))scheduleShippingRate(550);if(document.getElementById('shipping_same_as_billing')?.checked&&id.startsWith('billing'))syncSameAddress();})});
+['billing_street','billing_city','billing_state','billing_zip'].forEach(id=>{let el=document.getElementById(id);if(el)el.addEventListener('input',()=>{if(document.getElementById('shipping_same_as_billing')?.checked){syncSameAddress();scheduleShippingRate(550)}})});
+['shipping_street','shipping_city','shipping_state'].forEach(id=>{let el=document.getElementById(id);if(el)el.addEventListener('input',()=>scheduleShippingRate(550))});
+let sameBox=document.getElementById('shipping_same_as_billing');if(sameBox)sameBox.addEventListener('change',()=>{syncSameAddress();if(sameBox.checked&&valueOf('shipping_zip').replace(/\D/g,'').length===5)lookupZip(true);});
+bindZipAutoLookup('billing');
+bindZipAutoLookup('shipping');
+let carrierEl=document.getElementById('shipping_carrier');if(carrierEl)carrierEl.addEventListener('change',()=>{shippingOverrideTouched=false;scheduleShippingRate(120)});
+let weightEl=document.getElementById('shipping_weight_lbs');if(weightEl){weightEl.addEventListener('input',()=>scheduleShippingRate(650));weightEl.addEventListener('change',()=>scheduleShippingRate(120));}
+document.addEventListener('wheel',e=>{if(e.target&&e.target.matches&&e.target.matches('input[type=number]'))e.preventDefault()},{passive:false});renderStates();updateLabels();syncSameAddress();renderItems();loadAdminInventory();scheduleShippingRate(900);
 </script>`;
 }
 

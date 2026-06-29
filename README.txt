@@ -1,3 +1,13 @@
+HB Commerce Worker App v203 - Auto ZIP, Auto Shipping, FedEx Rate Fix, Checkout-Style Admin Theme
+
+Changes in v203:
+- Create Quote/Create Invoice now auto-fills billing city/state when a 5-digit billing ZIP is entered.
+- Shipping city/state also auto-fills from shipping ZIP.
+- The Shipping Address Same As Billing checkbox is no longer checked by default on new/cloned manual documents.
+- UPS/FedEx shipping rates auto-calculate when carrier, ZIP, address, package weight, or line items change. The manual Calculate Shipping button was removed.
+- FedEx rating was hardened: the Worker now sends a fuller Rate API payload, tries FedEx Ground Home Delivery first for residential destinations, falls back to FedEx Ground, parses FedEx charge responses more robustly, and shows better diagnostics on /admin/fedex-test.
+- Create Quote/Create Invoice admin pages now use a darker checkout-style navy/green/orange theme with readable field colors.
+
 HB Commerce Solutions Cloudflare Worker App
 ==========================================
 
