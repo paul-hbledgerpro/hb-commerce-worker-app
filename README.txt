@@ -3,6 +3,17 @@ HB Commerce Solutions Cloudflare Worker App
 
 This package replaces GoDaddy hosting and Google Apps Script with Cloudflare Workers + D1.
 
+
+V202 UPDATE - BILLING / SHIPPING / MANUAL SHIPPING CALCULATOR
+------------------------------------------------------------
+- Manual Quote and Invoice creation now has separate Billing Address and Shipping Address sections.
+- Added a checkbox: Shipping address same as billing address. When selected, the shipping fields auto-fill from billing fields.
+- Destination tax lookup now uses the Shipping Address.
+- Added Shipping Method / Carrier, optional Package Weight, Shipping Cost, and Calculate Shipping controls to manual quote/invoice creation.
+- UPS Ground and FedEx Ground calculation uses the existing /api/shipping/rate endpoint and adds the returned amount to the quote/invoice total as non-taxable shipping.
+- Existing older documents still work because legacy street/city/state/zip fields are mapped to the shipping destination.
+- No database migration is required because document detail fields are stored in data_json.
+
 WHAT IT INCLUDES
 ----------------
 - Public website:
