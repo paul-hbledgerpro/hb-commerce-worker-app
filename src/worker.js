@@ -13331,7 +13331,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V194 exact homepage background + readable cart/checkout text */
+/* V195 exact homepage background + readable cart/checkout text */
 .hb-shop-page-v192,.eufy-cart-page,.eufy-checkout-page{
   background:
     radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
@@ -17603,7 +17603,33 @@ async function publicShippingRate(request, env) {
   }
 }
 
-async function upsGroundRate(env, ship = {}
+async function upsGroundRate(env, ship = {}, cart = []) {
+  const id=String(env.UPS_CLIENT_ID||"").trim(), sec=String(env.UPS_CLIENT_SECRET||"").trim(), acct=String(env.UPS_ACCOUNT_NUMBER||"").trim();
+  if(!id||!sec||!acct) throw new Error("UPS credentials are not configured. Required secrets: UPS_CLIENT_ID, UPS_CLIENT_SECRET, UPS_ACCOUNT_NUMBER.");
+  const prod=String(env.UPS_FORCE_SANDBOX||"").trim()!=="1";
+  const base=prod?"https://onlinetools.ups.com":"https://wwwcie.ups.com";
+  const tx="hb-"+Date.now();
+  const authRes=await fetch(base+"/security/v1/oauth/token",{method:"POST",headers:{authorization:"Basic "+btoa(id+":"+sec),"content-type":"application/x-www-form-urlencoded","transId":tx,"transactionSrc":"hb-commerce"},body:"grant_type=client_credentials"});
+  const authText=await authRes.text();
+  let authJson={};try{authJson=authText?JSON.parse(authText):{}}catch{}
+  if(!authRes.ok||!authJson.access_token){
+    const em=authJson.response?.errors?.[0]?.message||authJson.error_description||authJson.error||authText||"Invalid Authentication Information";
+    throw new Error("UPS OAuth failed before rating request: "+em+". This means UPS_CLIENT_ID/UPS_CLIENT_SECRET do not match the selected environment or the app is not active for API OAuth.");
+  }
+  const fromZip=String(env.UPS_ORIGIN_ZIP||env.TAX_ORIGIN_ZIP||"60193"), toZip=normalizeTaxZip(ship.zip||"");
+  const weight=Math.max(1, cart.reduce((s,r)=>s+(Number(r.qty||1)*Number(env.EUFY_PACKAGE_WEIGHT_LB||18)),0));
+  const req={RateRequest:{Request:{RequestOption:"Rate"},Shipment:{Shipper:{Name:"HB Commerce Solutions",ShipperNumber:acct,Address:{PostalCode:fromZip,CountryCode:"US"}},ShipTo:{Address:{PostalCode:toZip,CountryCode:"US",ResidentialAddressIndicator:""}},ShipFrom:{Address:{PostalCode:fromZip,CountryCode:"US"}},PaymentDetails:{ShipmentCharge:{Type:"01",BillShipper:{AccountNumber:acct}}},Service:{Code:"03",Description:"UPS Ground"},Package:{PackagingType:{Code:"02",Description:"Package"},PackageWeight:{UnitOfMeasurement:{Code:"LBS"},Weight:String(Math.ceil(weight))}}}}};
+  const rateRes=await fetch(base+"/api/rating/v1/Rate",{method:"POST",headers:{authorization:"Bearer "+authJson.access_token,"content-type":"application/json","transId":tx,"transactionSrc":"hb-commerce"},body:JSON.stringify(req)});
+  const rateText=await rateRes.text();
+  let data={};try{data=rateText?JSON.parse(rateText):{}}catch{}
+  if(!rateRes.ok){
+    const em=data.response?.errors?.[0]?.message||data.response?.errors?.[0]?.code||rateText||"UPS rate failed";
+    throw new Error("UPS Rating failed after OAuth succeeded: "+em+". This usually means the Developer App is missing Rating API access or the UPS_ACCOUNT_NUMBER is not linked to the app.");
+  }
+  const rated=data.RateResponse?.RatedShipment, val=Number(rated?.TotalCharges?.MonetaryValue||0);
+  if(!val) throw new Error("UPS OAuth succeeded but no rate was returned. Confirm UPS_ACCOUNT_NUMBER, origin ZIP, destination ZIP, and Rating API access.");
+  return {ok:true, rate:{code:"ups_ground", label:"UPS Ground", amount:val, carrier:"UPS"}};
+}
 
 async function fedExGroundRate(env, ship = {}, cart = []) {
   const id = String(env.FEDEX_CLIENT_ID || env.FEDEX_API_KEY || "").trim();
@@ -17632,33 +17658,7 @@ async function fedExGroundRate(env, ship = {}, cart = []) {
   if (!val) throw new Error("FedEx OAuth succeeded but no rate was returned.");
   return { ok:true, rate:{ code:"fedex_ground", label:"FedEx Ground", amount:val, carrier:"FedEx" } };
 }
-, cart = []) {
-  const id=String(env.UPS_CLIENT_ID||"").trim(), sec=String(env.UPS_CLIENT_SECRET||"").trim(), acct=String(env.UPS_ACCOUNT_NUMBER||"").trim();
-  if(!id||!sec||!acct) throw new Error("UPS credentials are not configured. Required secrets: UPS_CLIENT_ID, UPS_CLIENT_SECRET, UPS_ACCOUNT_NUMBER.");
-  const prod=String(env.UPS_FORCE_SANDBOX||"").trim()!=="1";
-  const base=prod?"https://onlinetools.ups.com":"https://wwwcie.ups.com";
-  const tx="hb-"+Date.now();
-  const authRes=await fetch(base+"/security/v1/oauth/token",{method:"POST",headers:{authorization:"Basic "+btoa(id+":"+sec),"content-type":"application/x-www-form-urlencoded","transId":tx,"transactionSrc":"hb-commerce"},body:"grant_type=client_credentials"});
-  const authText=await authRes.text();
-  let authJson={};try{authJson=authText?JSON.parse(authText):{}}catch{}
-  if(!authRes.ok||!authJson.access_token){
-    const em=authJson.response?.errors?.[0]?.message||authJson.error_description||authJson.error||authText||"Invalid Authentication Information";
-    throw new Error("UPS OAuth failed before rating request: "+em+". This means UPS_CLIENT_ID/UPS_CLIENT_SECRET do not match the selected environment or the app is not active for API OAuth.");
-  }
-  const fromZip=String(env.UPS_ORIGIN_ZIP||env.TAX_ORIGIN_ZIP||"60193"), toZip=normalizeTaxZip(ship.zip||"");
-  const weight=Math.max(1, cart.reduce((s,r)=>s+(Number(r.qty||1)*Number(env.EUFY_PACKAGE_WEIGHT_LB||18)),0));
-  const req={RateRequest:{Request:{RequestOption:"Rate"},Shipment:{Shipper:{Name:"HB Commerce Solutions",ShipperNumber:acct,Address:{PostalCode:fromZip,CountryCode:"US"}},ShipTo:{Address:{PostalCode:toZip,CountryCode:"US",ResidentialAddressIndicator:""}},ShipFrom:{Address:{PostalCode:fromZip,CountryCode:"US"}},PaymentDetails:{ShipmentCharge:{Type:"01",BillShipper:{AccountNumber:acct}}},Service:{Code:"03",Description:"UPS Ground"},Package:{PackagingType:{Code:"02",Description:"Package"},PackageWeight:{UnitOfMeasurement:{Code:"LBS"},Weight:String(Math.ceil(weight))}}}}};
-  const rateRes=await fetch(base+"/api/rating/v1/Rate",{method:"POST",headers:{authorization:"Bearer "+authJson.access_token,"content-type":"application/json","transId":tx,"transactionSrc":"hb-commerce"},body:JSON.stringify(req)});
-  const rateText=await rateRes.text();
-  let data={};try{data=rateText?JSON.parse(rateText):{}}catch{}
-  if(!rateRes.ok){
-    const em=data.response?.errors?.[0]?.message||data.response?.errors?.[0]?.code||rateText||"UPS rate failed";
-    throw new Error("UPS Rating failed after OAuth succeeded: "+em+". This usually means the Developer App is missing Rating API access or the UPS_ACCOUNT_NUMBER is not linked to the app.");
-  }
-  const rated=data.RateResponse?.RatedShipment, val=Number(rated?.TotalCharges?.MonetaryValue||0);
-  if(!val) throw new Error("UPS OAuth succeeded but no rate was returned. Confirm UPS_ACCOUNT_NUMBER, origin ZIP, destination ZIP, and Rating API access.");
-  return {ok:true, rate:{code:"ups_ground", label:"UPS Ground", amount:val, carrier:"UPS"}};
-}
+
 
 async function publicTaxCalculate(request, env) {
   try {
