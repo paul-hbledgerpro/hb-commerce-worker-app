@@ -13271,6 +13271,90 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .shipping-rate-box{font-size:13px!important;line-height:1.4!important;border-radius:15px!important;padding:12px!important;background:rgba(126,230,108,.08)!important;color:#eafff0!important;border:1px solid rgba(126,230,108,.30)!important}.hb-eufy-card-fields{padding:14px!important;border-radius:16px!important}.hb-eufy-card-fields .card-field-title{font-size:17px!important}.hb-eufy-card-fields p{font-size:13px!important}.eufy-checkout-form button.primary{height:48px!important;border-radius:14px!important;font-size:15px!important;margin-top:8px!important;width:auto!important;min-width:180px!important;padding:0 22px!important}
 @media(max-width:980px){.hb-cart-main-panel,.shopping-checkout{grid-template-columns:1fr!important;grid-template-areas:'head' 'items' 'summary' 'actions'!important}.hb-cart-main-panel .eufy-tax-summary,.shopping-checkout .hb-checkout-summary-panel{position:static!important}.shopping-cart-line{grid-template-columns:86px 1fr!important}.shopping-cart-line input,.shopping-cart-line>span,.shopping-cart-line>button{grid-column:2!important;text-align:left!important}.payment-choice-row,.fulfillment-options{grid-template-columns:1fr!important}.hb-shop-compact-hero .container{width:calc(100% - 28px)!important;align-items:flex-start!important;flex-direction:column!important}.hb-cart-section>.container,.hb-checkout-section>.container{width:calc(100% - 28px)!important}}
 
+
+
+/* V189 professional light ecommerce cart/checkout redesign + UPS diagnostic polish */
+.hb-shop-cart-page,
+.hb-shop-checkout-page{
+  background:linear-gradient(180deg,#f5f8fc 0%,#eef4fb 52%,#f8fbff 100%)!important;
+  color:#10233d!important;
+}
+.hb-shop-cart-page .section,
+.hb-shop-checkout-page .section{padding:34px 0 56px!important}
+.hb-shop-compact-hero{
+  background:linear-gradient(135deg,#071a31,#06284d 60%,#0d4f2f)!important;
+  color:#fff!important;
+  border-bottom:4px solid #ff6a00!important;
+  padding:34px 0!important;
+  box-shadow:0 18px 45px rgba(6,40,77,.18)!important;
+}
+.hb-shop-compact-hero .container{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important}
+.hb-shop-compact-hero h1{font-size:42px!important;letter-spacing:-.04em!important;margin:4px 0 6px!important;color:#fff!important}
+.hb-shop-compact-hero p{margin:0!important;color:#dbeafe!important;font-size:16px!important;line-height:1.45!important}
+.hb-cart-shell,
+.hb-checkout-section .container{width:min(1240px,calc(100% - 44px))!important;max-width:1240px!important;margin:auto!important}
+.hb-shop-cart-page .hb-cart-main-panel{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 360px!important;
+  grid-template-areas:"head summary" "items summary" "actions summary"!important;
+  gap:22px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  color:#10233d!important;
+}
+.hb-cart-main-panel .cart-panel-head{grid-area:head!important;background:#fff!important;border:1px solid #d9e5f2!important;border-radius:22px!important;padding:20px 22px!important;box-shadow:0 14px 40px rgba(6,40,77,.08)!important}
+.hb-cart-main-panel .cart-panel-head h3{font-size:28px!important;margin:0!important;color:#06284d!important}
+.hb-cart-main-panel #eufyCartEmpty{grid-area:items!important;background:#fff!important;color:#405169!important;border-color:#d9e5f2!important}
+.hb-cart-main-panel #eufyCartItems{grid-area:items!important;display:grid!important;gap:16px!important}
+.hb-cart-main-panel .cart-checkout-actions{grid-area:actions!important;text-align:right!important}
+.hb-cart-main-panel .eufy-tax-summary{grid-area:summary!important;position:sticky!important;top:92px!important;align-self:start!important;background:#fff!important;border:1px solid #d9e5f2!important;color:#10233d!important;border-radius:24px!important;padding:22px!important;box-shadow:0 18px 50px rgba(6,40,77,.12)!important}
+.eufy-tax-summary .summary-title{font-size:22px!important;color:#06284d!important;font-weight:1000!important;border-bottom:1px solid #e6edf5!important;padding-bottom:12px!important;margin-bottom:10px!important}
+.eufy-tax-summary>div:not(.summary-title){padding:10px 0!important;border-bottom:1px solid #edf2f7!important;color:#334155!important;font-size:15px!important}
+.eufy-tax-summary strong{color:#06284d!important;font-size:17px!important}
+.eufy-tax-summary .grand{background:#06284d!important;border-radius:16px!important;color:#fff!important;margin-top:10px!important;padding:16px!important;border-bottom:0!important}
+.eufy-tax-summary .grand span,.eufy-tax-summary .grand strong{color:#fff!important;font-size:21px!important}
+.eufy-tax-summary small{display:block!important;color:#64748b!important;line-height:1.45!important;margin-top:12px!important;font-weight:750!important}
+.hb-shop-cart-page .cart-line,
+.hb-shop-cart-page .shopping-cart-line{
+  display:grid!important;grid-template-columns:124px minmax(0,1fr) 96px 128px 48px!important;align-items:center!important;gap:18px!important;
+  background:#fff!important;border:1px solid #d9e5f2!important;border-radius:24px!important;padding:18px!important;color:#10233d!important;box-shadow:0 14px 42px rgba(6,40,77,.08)!important;
+}
+.hb-shop-cart-page .cart-line-img{width:124px!important;height:124px!important;background:#f8fbff!important;border:1px solid #e5edf5!important;border-radius:20px!important;display:grid!important;place-items:center!important;overflow:hidden!important}
+.hb-shop-cart-page .cart-line-img img{width:100%!important;height:100%!important;object-fit:contain!important;padding:8px!important}
+.hb-shop-cart-page .cart-line strong a{color:#06284d!important;font-size:18px!important;line-height:1.25!important;text-decoration:none!important}
+.hb-shop-cart-page .cart-line small{color:#52657b!important;font-size:14px!important;margin-top:5px!important;display:block!important}
+.hb-shop-cart-page .cart-line input[type="number"]{height:44px!important;border:1px solid #cfdce9!important;background:#fff!important;color:#10233d!important;border-radius:12px!important;text-align:center!important;font-weight:900!important}
+.hb-shop-cart-page .cart-line>span{color:#06284d!important;font-size:18px!important;font-weight:1000!important;text-align:right!important}
+.hb-shop-cart-page .cart-line>button{width:42px!important;height:42px!important;border-radius:12px!important;background:#fff1f1!important;color:#b91c1c!important;box-shadow:none!important}
+.cart-coupon-toggle{margin-top:8px!important;border-radius:14px!important;background:#eff9ff!important;border:1px solid #ccecff!important;color:#10233d!important;padding:10px!important;display:inline-flex!important;align-items:center!important;gap:8px!important;font-weight:800!important}
+/* Checkout */
+.hb-shop-checkout-page .eufy-checkout.shopping-checkout{display:grid!important;grid-template-columns:minmax(0,1fr) 380px!important;gap:24px!important;align-items:start!important}
+.hb-shop-checkout-page .eufy-checkout-form,
+.hb-shop-checkout-page .hb-checkout-summary-panel{background:#fff!important;border:1px solid #d9e5f2!important;border-radius:24px!important;box-shadow:0 18px 50px rgba(6,40,77,.10)!important;color:#10233d!important;padding:24px!important}
+.hb-shop-checkout-page .hb-checkout-summary-panel{position:sticky!important;top:92px!important}
+.hb-shop-checkout-page .form-title{font-size:20px!important;letter-spacing:0!important;text-transform:none!important;color:#06284d!important;border-bottom:1px solid #e6edf5!important;padding-bottom:12px!important;margin-bottom:18px!important}
+.hb-shop-checkout-page h4{font-size:18px!important;color:#06284d!important;margin:24px 0 12px!important}
+.hb-shop-checkout-page .field label{color:#334155!important;font-size:13px!important;font-weight:900!important;margin-bottom:7px!important}
+.hb-shop-checkout-page input,
+.hb-shop-checkout-page select{
+  height:46px!important;background:#fff!important;color:#10233d!important;border:1px solid #cbd8e6!important;border-radius:12px!important;padding:0 13px!important;font-size:15px!important;font-weight:750!important;
+}
+.hb-shop-checkout-page .notice.success{background:#eefaf2!important;border-color:#b8e8c5!important;color:#135b2f!important}
+.checkout-coupon-box{background:#f3f8fd!important;border:1px solid #dbe8f4!important;border-radius:18px!important;padding:16px!important;margin-bottom:18px!important;color:#10233d!important}
+.checkout-coupon-row{display:grid!important;grid-template-columns:1fr auto!important;gap:10px!important}
+.same-ship{background:#eef4fb!important;border:1px solid #d9e5f2!important;color:#10233d!important;border-radius:14px!important;padding:10px 12px!important}
+.fulfillment-options,.payment-choice-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin:8px 0 12px!important}
+.payment-choice-row{grid-template-columns:repeat(3,1fr)!important}
+.fulfillment-options label,.payment-choice-row label{background:#f8fbff!important;border:1.5px solid #cbd8e6!important;color:#10233d!important;border-radius:16px!important;padding:14px!important;font-weight:950!important;min-height:62px!important;display:flex!important;align-items:center!important;gap:10px!important}
+.fulfillment-options label:has(input:checked),.payment-choice-row label:has(input:checked){border-color:#ff6a00!important;background:#fff7ed!important;box-shadow:0 0 0 3px rgba(255,106,0,.12)!important}
+.shipping-rate-box{background:#effaf4!important;border:1px solid #b8e8c5!important;color:#135b2f!important;border-radius:16px!important;padding:13px 15px!important;margin:10px 0 16px!important;font-weight:850!important}
+.hb-eufy-card-fields{background:#f8fbff!important;border:1px solid #cbdff4!important;border-radius:20px!important;color:#10233d!important;padding:18px!important;margin-top:14px!important}
+.hb-eufy-card-fields .card-field-title{font-size:18px!important;color:#06284d!important;font-weight:1000!important;margin-bottom:5px!important}
+.hb-shop-checkout-page #eufyPlaceOrderButton,.hb-shop-cart-page #eufyCheckoutBtn{height:52px!important;border-radius:15px!important;font-size:16px!important;font-weight:1000!important;background:linear-gradient(135deg,#ff6a00,#ff8a21)!important;color:#fff!important;box-shadow:0 14px 30px rgba(255,106,0,.25)!important}
+@media(max-width:980px){.hb-shop-cart-page .hb-cart-main-panel,.hb-shop-checkout-page .eufy-checkout.shopping-checkout{grid-template-columns:1fr!important;grid-template-areas:none!important}.hb-cart-main-panel .cart-panel-head,.hb-cart-main-panel #eufyCartItems,.hb-cart-main-panel .eufy-tax-summary,.hb-cart-main-panel .cart-checkout-actions{grid-area:auto!important}.hb-cart-main-panel .eufy-tax-summary,.hb-shop-checkout-page .hb-checkout-summary-panel{position:static!important}.hb-shop-cart-page .cart-line{grid-template-columns:96px 1fr!important}.hb-shop-cart-page .cart-line input,.hb-shop-cart-page .cart-line>span,.hb-shop-cart-page .cart-line>button{grid-column:2!important}.fulfillment-options,.payment-choice-row{grid-template-columns:1fr!important}.hb-shop-compact-hero .container{flex-direction:column!important;align-items:flex-start!important}.hb-shop-compact-hero h1{font-size:34px!important}}
+
 `;
 
 function installButtonHtml() {
@@ -17590,15 +17674,17 @@ async function adminUpsTest(request, env) {
   if (!user) return redirect('/admin-app');
   const url = new URL(request.url);
   const zip = normalizeTaxZip(url.searchParams.get('zip') || '60193');
-  const envMode = String(env.UPS_ENV || 'production').toLowerCase() === 'sandbox' ? 'sandbox' : 'production';
+  const envRaw = String(env.UPS_ENV || '').trim().toLowerCase();
+  const envMode = envRaw === 'sandbox' ? 'sandbox' : 'production';
+  const sandboxWarn = envMode === 'sandbox' ? `<div class="notice warning"><strong>UPS is currently running in SANDBOX mode.</strong><br>You said you are not using sandbox, so production UPS credentials will fail here. Delete the UPS_ENV secret with:<br><code>npx wrangler secret delete UPS_ENV</code><br>Then run this test again.</div>` : `<div class="notice success"><strong>Production mode:</strong> UPS_ENV is not set to sandbox.</div>`;
   let result = '';
   try {
     const r = await upsGroundRate(env, { zip }, [{ qty: 1 }]);
     result = `<div class="notice success"><strong>UPS rating connected.</strong><br>${escapeHtml(r.rate.label)} to ZIP ${escapeHtml(zip)}: ${money(r.rate.amount)}</div>`;
   } catch (err) {
-    result = `<div class="notice error"><strong>UPS test failed.</strong><br>${escapeHtml(err.message || String(err))}</div><div class="notice"><strong>Check these Cloudflare secrets:</strong><br>UPS_CLIENT_ID, UPS_CLIENT_SECRET, UPS_ACCOUNT_NUMBER, UPS_ORIGIN_ZIP. Also confirm UPS_ENV is ${envMode} and the UPS app has Rating API access.</div>`;
+    result = `<div class="notice error"><strong>UPS test failed.</strong><br>${escapeHtml(err.message || String(err))}</div><div class="notice"><strong>What to check next:</strong><br>1. Delete UPS_ENV if using production credentials.<br>2. Confirm UPS_CLIENT_ID and UPS_CLIENT_SECRET are from your UPS Developer App, not your UPS.com login.<br>3. Confirm UPS_ACCOUNT_NUMBER is the actual shipper/account number linked to that developer app.<br>4. Confirm the app has Rating API access enabled.</div>`;
   }
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><h2>UPS Rating API Test</h2><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/orders">Online Orders</a></div></div><section class="form-section"><div class="form-title">UPS Connection Test</div><p>Environment: <strong>${escapeHtml(envMode)}</strong></p><form method="get"><div class="field"><label>Destination ZIP for test</label><input name="zip" value="${escapeHtml(zip)}"></div><button class="orange">Run UPS Test</button></form>${result}</section></div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><h2>UPS Rating API Test</h2><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/orders">Online Orders</a></div></div><section class="form-section"><div class="form-title">UPS Connection Test</div><p>Environment: <strong>${escapeHtml(envMode)}</strong></p>${sandboxWarn}<form method="get"><div class="field"><label>Destination ZIP for test</label><input name="zip" value="${escapeHtml(zip)}"></div><button class="orange">Run UPS Test</button></form>${result}</section></div></main>`;
   return htmlPage('UPS Test | HB Commerce', layout(env, 'Dashboard', body));
 }
 
