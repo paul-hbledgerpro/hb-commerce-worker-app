@@ -301,7 +301,7 @@ function assetResponse(b64, mime) {
 }
 
 function homepageBackgroundThemeCss() {
-  const css = `/* HB Commerce homepage background theme */
+  const css = `
 :root{
   --hb-navy:#06284d;
   --hb-deep-navy:#061b35;
@@ -362,7 +362,7 @@ const CSS = `
 @media(max-width:850px){.slide{grid-template-columns:1fr}.slide-art{height:220px}.slider-dots{position:static;padding:0 34px 20px}.service-visual{height:150px}}
 
 
-/* V7 visual refresh: professional/dynamic theme refinements only */
+
 body{background:
   radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
   radial-gradient(circle at 88% 18%,rgba(19,138,61,.14),transparent 28%),
@@ -416,7 +416,7 @@ tr{transition:background .18s ease}tbody tr:hover td{background:rgba(255,106,0,.
 .doc{box-shadow:0 28px 80px rgba(6,40,77,.16);border:1px solid rgba(6,40,77,.10)}.brand-card{box-shadow:0 16px 38px rgba(6,40,77,.10)}
 .footer{background:linear-gradient(135deg,#041e3a,#06284d 70%,#0d4f2f);box-shadow:0 -16px 50px rgba(6,40,77,.12)}
 
-/* V8: stronger modern/dynamic visual system + admin command center */
+
 body{background:
   radial-gradient(circle at 8% 12%,rgba(255,106,0,.18),transparent 28%),
   radial-gradient(circle at 92% 8%,rgba(19,138,61,.18),transparent 30%),
@@ -466,7 +466,7 @@ body{background:
 @media(max-width:640px){.admin-metric-grid{grid-template-columns:1fr}.admin-tile{min-height:138px}.hero-card{padding:34px!important}.slide{padding:28px!important}}
 
 
-/* V9 full website redesign + dashboard workflow refinements */
+
 .modern-hero{padding:72px 0 42px;position:relative;overflow:hidden}
 .modern-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 24%,rgba(255,106,0,.20),transparent 28%),radial-gradient(circle at 88% 20%,rgba(19,138,61,.20),transparent 30%);pointer-events:none}
 .hero-shell{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:38px;align-items:center;min-height:590px}
@@ -509,7 +509,7 @@ body{background:
 @media(max-width:680px){.hero-copy{padding:28px;border-radius:30px}.hero-features{grid-template-columns:1fr}.modern-cta{grid-template-columns:1fr}.premium-service-grid{grid-template-columns:1fr}.v9-grid{grid-template-columns:1fr}.service-detail-grid{padding:28px;border-radius:30px}.modern-page-hero .panel{padding:32px}}
 
 
-/* V10 full public website redesign: bold welcoming modern layout, same color theme */
+
 .v10-site{overflow:hidden}.v10-hero{position:relative;min-height:760px;padding:78px 0;background:
  radial-gradient(circle at 12% 20%,rgba(255,106,0,.22),transparent 26%),
  radial-gradient(circle at 88% 18%,rgba(19,138,61,.24),transparent 30%),
@@ -540,7 +540,7 @@ body{background:
 @media(max-width:680px){.v10-hero{padding:44px 0}.v10-hero-copy{padding:26px 0}.v10-hero-panel{padding:18px;border-radius:32px}.v10-panel-grid>div{grid-template-columns:1fr}.v10-stat-grid{grid-template-columns:1fr}.v10-slide{padding:28px}.v10-dots{position:static;padding:0 28px 24px}.v10-cta,.v10-page-panel,.v10-service-hero-grid{padding:28px;border-radius:30px;grid-template-columns:1fr}.v10-service-hero-art .v10-visual{height:240px}.v10-slide-art .v10-visual{height:240px}}
 
 
-/* V11 CentriqPay Merchant Services page */
+
 .merchant-page{background:#fff;overflow:hidden}
 .merchant-hero{position:relative;min-height:560px;background:
   radial-gradient(circle at 78% 25%,rgba(40,220,70,.18),transparent 35%),
@@ -570,7 +570,7 @@ body{background:
 @media(max-width:680px){.merchant-benefits{grid-template-columns:1fr}.benefit-card{grid-template-columns:1fr}.merchant-hero{border-radius:0 0 28px 28px}.merchant-copy h1{font-size:40px}.merchant-tech-strip{padding:24px}.tech-grid{grid-template-columns:1fr}.tech-grid>div{border-right:0;border-bottom:1px solid rgba(255,255,255,.18);padding:16px 0}.tech-grid>div:last-child{border-bottom:0}}
 
 
-/* V12 mockup implementation: HB Commerce home/POS/security + CentriqPay merchant services */
+
 .topbar{background:#061a32!important;border-bottom:1px solid rgba(255,255,255,.10)!important;box-shadow:0 14px 42px rgba(0,0,0,.24)!important}.topbar:before{content:none!important}.nav{padding:0!important}.logo-link{background:#fff!important;border-radius:0!important;padding:14px 28px!important;margin-left:0!important;box-shadow:none!important}.logo-link img{height:72px!important}.nav-links>a,.dropdown-toggle{color:#fff!important}.nav-links>a:hover,.dropdown:hover .dropdown-toggle{background:rgba(255,106,0,.16)!important;color:#fff!important}.dropdown-menu a{color:var(--navy)!important}.nav-links .btn.primary,.nav-links .btn.small.primary{background:linear-gradient(135deg,var(--orange),var(--orange2))!important;color:#fff!important}.v12-public{background:#fff}.v12-main-hero{position:relative;min-height:560px;background:linear-gradient(90deg,rgba(3,20,39,.96),rgba(6,40,77,.92)),radial-gradient(circle at 78% 22%,rgba(255,106,0,.16),transparent 34%);color:#fff;overflow:hidden}.v12-main-hero:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,255,255,.09),transparent 24%),linear-gradient(90deg,rgba(6,40,77,.15),rgba(6,40,77,.75));pointer-events:none}.v12-main-grid{position:relative;z-index:1;display:grid;grid-template-columns:.95fr 1.05fr;gap:34px;align-items:center;padding:72px 0}.v12-main-copy h1{font-size:clamp(44px,5.4vw,72px);line-height:1.02;letter-spacing:-.055em;margin:0 0 20px;color:#fff}.v12-main-copy p{font-size:20px;line-height:1.55;color:rgba(255,255,255,.87);max-width:620px}.hero-checks{display:flex;flex-wrap:wrap;gap:22px;margin:22px 0;color:#fff;font-weight:850}.hero-checks span{color:#fff}.v12-home-art{height:360px;position:relative}.pos-monitor{position:absolute;left:80px;top:10px;width:460px;height:280px;background:#0b1525;border-radius:26px;box-shadow:0 28px 80px rgba(0,0,0,.45);padding:18px}.pos-screen{height:100%;background:#10253d;border-radius:18px;padding:18px;display:grid;grid-template-columns:1fr 120px;gap:16px}.screen-top{grid-column:1/3;height:28px;background:#1e3a5c;border-radius:9px}.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.product-grid span{background:#274967;border-radius:10px}.cart-side{background:#061a32;border-radius:12px;padding:14px;color:#fff}.cart-side em{display:block;color:#43df42;font-size:24px;font-style:normal;font-weight:950;margin:10px 0}.cart-side small{background:#138a3d;border-radius:8px;display:block;text-align:center;padding:9px;font-weight:950}.receipt-printer{position:absolute;left:30px;bottom:45px;width:150px;height:100px;background:#111927;border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.35)}.receipt-printer:before{content:"";position:absolute;left:35px;right:35px;top:-42px;height:56px;background:#fff;border-radius:10px 10px 0 0}.terminal-unit{position:absolute;right:26px;bottom:18px;width:160px;height:220px;background:#111;border-radius:28px;box-shadow:0 24px 70px rgba(0,0,0,.40);padding:22px;color:#fff;display:grid;align-content:start;gap:18px}.terminal-unit div{height:52px;background:#233848;border-radius:12px}.terminal-unit b{color:#43df42;text-align:center;font-size:20px}.terminal-unit span{height:80px;border-radius:12px;background:repeating-linear-gradient(90deg,#2c343d 0 21px,#12181f 21px 31px)}.v12-benefit-row{background:#fff;box-shadow:0 18px 55px rgba(6,40,77,.08)}.v12-icon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.v12-icon-card{text-align:center;padding:30px 24px;border-right:1px solid var(--line)}.v12-icon-card:last-child{border-right:0}.v12-icon-card div{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:var(--orange);color:#fff;margin:0 auto 13px;font-size:32px;box-shadow:0 14px 34px rgba(255,106,0,.25)}.v12-icon-card strong{display:block;color:var(--navy);font-size:18px}.v12-icon-card p{color:#334155;line-height:1.5}.v12-section-heading{text-align:center;margin-bottom:26px}.v12-section-heading.left{text-align:left}.v12-section-heading h2{font-size:38px;color:var(--navy);margin:0 0 8px;letter-spacing:-.035em}.v12-section-heading p{color:var(--muted);font-size:16px}.v12-service-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.v12-service-tile{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 34px rgba(6,40,77,.10);overflow:hidden;text-decoration:none!important;transition:.25s}.v12-service-tile:hover{transform:translateY(-7px);box-shadow:0 24px 60px rgba(6,40,77,.17)}.tile-visual{height:190px;overflow:hidden}.tile-visual .v12-visual{height:100%;border-radius:0;box-shadow:none}.tile-body{padding:22px;text-align:center}.tile-body h3{margin:0 0 9px;color:var(--navy);font-size:22px}.tile-body p{color:#405169;line-height:1.55}.tile-body span{color:var(--orange);font-weight:950}.v12-bottom-cta{background:#061a32;color:#fff;padding:42px 0}.v12-bottom-cta .container{display:grid;grid-template-columns:100px 1fr auto;gap:30px;align-items:center}.cart-mark{font-size:70px;color:var(--orange)}.v12-bottom-cta h2{font-size:32px;margin:0 0 8px}.v12-bottom-cta p{color:rgba(255,255,255,.82);font-size:17px}.v12-page-hero{background:linear-gradient(135deg,#061a32,#06284d);color:#fff;padding:76px 0}.v12-page-hero h1{font-size:clamp(40px,5vw,68px);line-height:1;letter-spacing:-.06em;margin:0 0 15px}.v12-page-hero p{max-width:760px;color:rgba(255,255,255,.85);font-size:18px;line-height:1.6}.v12-info-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:0 18px 48px rgba(6,40,77,.10);border-top:6px solid var(--orange)}.v12-info-card.alt{border-top-color:var(--green)}.v12-info-card h3{color:var(--navy);font-size:25px;margin-top:0}.v12-contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}.v12-contact-card{background:linear-gradient(135deg,#061a32,#06284d 64%,#138a3d);color:#fff;border-radius:28px;padding:34px;box-shadow:0 26px 70px rgba(6,40,77,.18)}.v12-contact-card h3{font-size:30px;line-height:1.16}.v12-contact-card .notice{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.86)}
 .pos-page{background:#fff}.pos-hero{background:linear-gradient(90deg,rgba(6,26,50,.98),rgba(6,40,77,.86)),radial-gradient(circle at 85% 25%,rgba(255,106,0,.18),transparent 30%);color:#fff;min-height:520px;overflow:hidden}.pos-hero-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:40px;align-items:center;padding:66px 0}.pos-hero h1{font-size:clamp(46px,5.4vw,76px);line-height:1;letter-spacing:-.065em;margin:0 0 18px;color:#fff}.pos-hero p{font-size:18px;line-height:1.6;color:rgba(255,255,255,.86);max-width:570px}.pos-outline,.security-outline{background:rgba(0,0,0,.18)!important;border:1px solid rgba(255,255,255,.55)!important;color:#fff!important}.pos-trust{display:flex;gap:26px;flex-wrap:wrap;margin-top:26px;color:#d9fbe1;font-weight:850}.pos-display-scene{position:relative;min-height:360px}.pos-display-scene .v12-visual{height:330px;box-shadow:none;background:transparent}.pos-price-badge{position:absolute;right:42px;top:24px;background:#101820;border-radius:16px;color:#fff;padding:18px 32px;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.32)}.pos-price-badge strong{display:block;color:#43df42;font-size:22px}.pos-benefit-bar{background:#061a32;color:#fff}.pos-feature-grid{display:grid;grid-template-columns:repeat(5,1fr)}.pos-feature{padding:24px;border-right:1px solid rgba(255,255,255,.15);display:grid;grid-template-columns:48px 1fr;gap:12px}.pos-feature span{font-size:34px;color:#43df42;grid-row:1/3}.pos-feature strong{color:#fff}.pos-feature p{grid-column:2;color:rgba(255,255,255,.72);font-size:13px}.pos-card-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}.pos-card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 34px rgba(6,40,77,.10);overflow:hidden;padding-bottom:18px}.card-img{height:150px;background:linear-gradient(135deg,#e8f0f8,#fff2e8);display:grid;place-items:center;font-size:60px}.pos-card h3{color:var(--navy);padding:18px 18px 0;margin:0}.pos-card p{padding:0 18px;color:#405169;line-height:1.45}.pos-card a{padding:0 18px;color:var(--orange);font-weight:950}.pos-dashboard-section{background:#061a32;color:#fff;padding:54px 0}.pos-dashboard-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:40px;align-items:center}.pos-dashboard-grid h2{font-size:34px}.pos-dashboard-grid p{color:rgba(255,255,255,.76);line-height:1.6}.pos-dashboard-ui{height:360px;background:#fff;border-radius:20px;display:grid;grid-template-columns:160px 1fr;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.28)}.dash-sidebar{background:#0b233a;padding:28px;display:grid;gap:14px;align-content:start}.dash-sidebar span{height:16px;border-radius:8px;background:#43df42}.dash-main{padding:24px}.dash-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.dash-cards b{background:#f6f9fc;border-radius:14px;padding:22px;color:#06284d}.dash-chart{height:130px;margin-top:20px;border-radius:14px;background:linear-gradient(180deg,rgba(19,138,61,.14),rgba(19,138,61,.02)),repeating-linear-gradient(90deg,#e5edf5 0 1px,transparent 1px 40px)}.dash-lines{display:grid;gap:10px;margin-top:20px}.dash-lines span{height:10px;border-radius:6px;background:#cbd7e8}.dash-lines span:nth-child(2n){width:70%;background:#77c77a}
 .security-page{background:#fff}.security-hero{background:linear-gradient(90deg,#061a32,#06284d 60%,#0d253d);color:#fff;min-height:545px;overflow:hidden}.security-hero-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:34px;align-items:center;padding:64px 0}.security-hero h1{font-size:clamp(48px,5.6vw,78px);line-height:1;letter-spacing:-.06em;margin:0 0 18px}.security-hero p{font-size:20px;color:rgba(255,255,255,.88);line-height:1.5}.security-points{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0}.security-points span{border:1px solid rgba(67,223,66,.32);border-radius:14px;padding:12px;color:#eaffee;font-weight:850}.security-stage{position:relative;min-height:380px}.monitor-wall{position:absolute;right:10px;top:0;width:560px;height:190px;background:#101820;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.35)}.monitor-wall i{background:linear-gradient(135deg,#173a5a,#6b879e);border-radius:6px;opacity:.85}.camera-row{position:absolute;left:0;right:0;bottom:0}.camera-row .v12-visual{height:240px;background:transparent;box-shadow:none}.security-bar{background:#061a32;color:#fff}.security-feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.security-feature{padding:24px 26px;border-right:1px solid rgba(255,255,255,.18);display:grid;grid-template-columns:52px 1fr;gap:12px}.security-feature:last-child{border-right:0}.security-feature span{font-size:34px;color:#43df42;grid-row:1/3}.security-feature strong{color:#fff}.security-feature p{grid-column:2;color:rgba(255,255,255,.73);font-size:13px}.security-product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.security-product{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 42px rgba(6,40,77,.11);padding:26px;display:grid;grid-template-columns:1fr .8fr;gap:16px;min-height:300px}.security-product h3{font-size:26px;color:var(--navy);margin:0}.security-product strong{color:var(--green);display:block;margin:4px 0 12px}.security-product ul{padding-left:0;list-style:none;color:#405169}.security-product li{margin:7px 0;padding-left:22px;position:relative}.security-product li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:950}.security-product-art .v12-visual{height:180px;box-shadow:none;background:transparent}.security-strip{background:#061a32;color:#fff;padding:24px 0}.security-strip-grid{display:grid;grid-template-columns:repeat(6,1fr)}.security-strip .security-feature{display:block;text-align:center;border-right:1px solid rgba(255,255,255,.15);padding:20px}.security-strip .security-feature span{display:block;font-size:30px}.security-strip .security-feature p{font-size:12px}
@@ -578,14 +578,14 @@ body{background:
 @media(max-width:700px){.logo-link{padding:10px!important}.logo-link img{height:54px!important}.v12-icon-grid,.v12-bottom-cta .container,.v12-contact-grid{grid-template-columns:1fr}.v12-icon-card{border-right:0;border-bottom:1px solid var(--line)}.v12-main-grid{padding:40px 0}.v12-home-art{display:none}.pos-card-grid,.pos-feature-grid,.security-feature-grid,.security-strip-grid{grid-template-columns:1fr}.pos-dashboard-ui{grid-template-columns:1fr;height:auto}.dash-sidebar{display:none}.security-product{grid-template-columns:1fr}.merchant-benefits{grid-template-columns:1fr}.merchant-hero-grid,.merchant-solutions-grid,.merchant-solutions-panel{grid-template-columns:1fr}}
 
 
-/* V13 exact mockup style implementation */
+
 .v13-topbar{background:#071b35!important;border-bottom:1px solid rgba(255,255,255,.12)!important;box-shadow:0 12px 34px rgba(0,0,0,.22)!important}.v13-topbar:before{display:none!important}.v13-nav{padding:0!important;min-height:72px}.v13-logo-box{align-self:stretch;display:flex;align-items:center;background:#fff!important;border-radius:0!important;padding:10px 28px!important;min-width:310px;box-shadow:none!important}.v13-logo-box img{height:58px!important}.v13-nav-links{gap:24px!important;margin-left:auto}.v13-nav-links>a,.v13-nav-links .dropdown-toggle{color:#fff!important;text-transform:uppercase;font-size:13px;font-weight:950;letter-spacing:.02em}.v13-nav-links>a:hover,.v13-nav-links .dropdown:hover .dropdown-toggle{background:transparent!important;color:var(--orange)!important}.nav-quote{border:1px solid var(--orange)!important;border-radius:4px!important;padding:13px 18px!important}.v13-nav-links .btn.primary{background:linear-gradient(135deg,var(--orange),var(--orange2))!important;color:#fff!important;border-radius:4px!important;text-transform:uppercase}.v13-footer{background:#071b35!important;color:#fff!important;border-top:4px solid var(--orange)}
 .v13-public{background:#fff}.v13-page-showcase{padding:0 0 34px;background:linear-gradient(180deg,#ffffff,#f5f7fb)}.container.wide{width:min(1540px,calc(100% - 24px))}.v13-mockup-stage{background:#fff;border-radius:0;box-shadow:0 18px 54px rgba(6,40,77,.13);overflow:hidden;margin:0 auto}.v13-mockup-stage img{width:100%;display:block}.v13-mockup-stage.home-image{max-width:960px}.v13-mockup-stage.wide-image{max-width:1500px}.v13-live-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:20px auto 0}.v13-live-actions .btn{border-radius:6px!important;text-transform:uppercase}.v13-live-actions .btn:not(.orange){border:1px solid var(--orange);background:#071b35;color:#fff}.v13-services-landing{min-height:640px;padding:70px 0;background:linear-gradient(135deg,#071b35,#0b2b4d 65%,#061322);color:#fff}.v13-dark-intro{text-align:center;max-width:860px;margin:0 auto 34px}.v13-dark-intro h1{font-size:clamp(42px,5vw,70px);line-height:1;letter-spacing:-.05em;margin:0 0 12px;color:#fff}.v13-dark-intro p{font-size:18px;color:rgba(255,255,255,.80);line-height:1.55}.v13-service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.v13-service-tile{background:#fff;color:var(--navy);border-radius:10px;overflow:hidden;padding:34px 28px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.25);border-bottom:4px solid var(--orange);text-decoration:none!important;transition:transform .2s ease,box-shadow .2s ease}.v13-service-tile:hover{transform:translateY(-6px);box-shadow:0 34px 80px rgba(0,0,0,.35)}.v13-service-tile span{display:grid;place-items:center;width:70px;height:70px;margin:0 auto 18px;border-radius:50%;background:var(--orange);color:#fff;font-size:34px}.v13-service-tile h3{font-size:24px;margin:0 0 10px}.v13-service-tile p{color:#405169;line-height:1.5}.v13-info-hero{padding:70px 0;background:linear-gradient(135deg,#071b35,#0b2b4d 62%,#061322);color:#fff;min-height:560px;display:flex;align-items:center}.v13-info-grid,.v13-contact-grid{display:grid;grid-template-columns:1fr .9fr;gap:42px;align-items:center}.v13-info-hero h1{font-size:clamp(42px,5vw,72px);line-height:1;letter-spacing:-.06em;margin:0 0 16px;color:#fff}.v13-info-hero p{font-size:18px;line-height:1.65;color:rgba(255,255,255,.84);max-width:720px}.v13-about-card,.v13-contact-form{background:#fff!important;color:var(--navy);border-radius:10px!important;padding:30px!important;box-shadow:0 28px 80px rgba(0,0,0,.28)!important;border-top:5px solid var(--orange)!important}.v13-about-card h3{font-size:28px;margin:0 0 18px}.v13-about-card ul{margin:0;padding-left:20px;color:#405169;line-height:1.8;font-weight:800}.v13-benefit-strip{background:#fff;box-shadow:0 -12px 34px rgba(6,40,77,.08)}.v13-benefit-strip .container{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}.v13-benefit-strip div div{padding:30px 18px;border-right:1px solid var(--line);font-weight:950;color:var(--navy)}.v13-benefit-strip div div:last-child{border-right:0}.v13-contact-detail{display:inline-flex;margin-top:14px;padding:16px 20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:17px}.v13-contact-detail a{color:#fff;text-decoration:underline}.contact-hero{padding:80px 0}.v13-contact-form .form-title{color:var(--navy)}
 @media(max-width:950px){.v13-logo-box{min-width:0;width:100%;justify-content:center}.v13-nav{flex-direction:column;padding-bottom:14px!important}.v13-nav-links{justify-content:center;margin:0}.v13-service-grid,.v13-info-grid,.v13-contact-grid{grid-template-columns:1fr}.v13-benefit-strip .container{grid-template-columns:1fr 1fr}.v13-mockup-stage.home-image{max-width:100%}}
 @media(max-width:620px){.v13-nav-links{gap:8px}.v13-nav-links>a,.v13-nav-links .dropdown-toggle{font-size:12px}.v13-benefit-strip .container{grid-template-columns:1fr}.v13-info-hero{padding:48px 0}.v13-page-showcase{padding-bottom:24px}.container.wide{width:100%}}
 
 
-/* V14 exact mockup implementation */
+
 .v14-pixel-page{margin:0;background:#fff;min-height:100vh;overflow-x:hidden}
 .v14-stage{position:relative;width:100%;margin:0 auto;background:#fff}
 .v14-stage img{width:100%;height:auto;display:block;margin:0;padding:0}
@@ -594,7 +594,7 @@ body{background:
 .v14-merchant .v14-stage,.v14-pos .v14-stage,.v14-security .v14-stage{max-width:1920px}
 .v14-stage .hot{position:absolute;display:block;background:rgba(255,255,255,0);z-index:5;text-decoration:none}
 .v14-stage .hot:focus-visible{outline:3px solid var(--orange);outline-offset:2px;background:rgba(255,106,0,.08)}
-/* Default desktop hotspots for full service-page mockups */
+
 .v14-stage .logo{left:0;top:0;width:18%;height:7.5%}
 .v14-stage .nav-home{left:29%;top:0;width:6.5%;height:7.5%}
 .v14-stage .nav-services{left:36%;top:0;width:8.5%;height:7.5%}
@@ -603,13 +603,13 @@ body{background:
 .v14-stage .nav-admin{right:2%;top:0;width:13%;height:7.5%}
 .v14-stage .cta-one{left:4%;top:32%;width:16%;height:7%}
 .v14-stage .cta-two{left:21%;top:32%;width:16%;height:7%}
-/* POS has its CTA slightly higher and wider on the approved mockup */
+
 .v14-pos .cta-one{left:9%;top:32%;width:13%;height:7%}
 .v14-pos .cta-two{left:23%;top:32%;width:16%;height:7%}
-/* Security has CTAs lower-left */
+
 .v14-security .cta-one{left:4.5%;top:34%;width:11%;height:7%}
 .v14-security .cta-two{left:16%;top:34%;width:11%;height:7%}
-/* Home mockup is a cropped page, so hotspot zones are adjusted */
+
 .v14-home .logo{left:0;top:0;width:31%;height:6.5%}
 .v14-home .nav-home{left:35%;top:0;width:8%;height:6.5%}
 .v14-home .nav-services{left:43%;top:0;width:10%;height:6.5%}
@@ -619,7 +619,7 @@ body{background:
 .v14-home .cta-one{left:8%;top:33%;width:21%;height:5%}
 .v14-home .cta-two{left:14%;top:77%;width:30%;height:8%}
 
-/* V15 functional exact image pages + live header/forms */
+
 .v15-topbar{position:sticky;top:0;background:#061b35!important;border-bottom:1px solid rgba(255,255,255,.12)!important;z-index:80;box-shadow:0 14px 36px rgba(0,0,0,.20)!important}
 .v15-topbar:before{display:none!important}.v15-nav{padding:0!important;min-height:70px}.v15-logo-box{background:#fff!important;border-radius:0!important;padding:12px 28px!important;align-self:stretch;display:flex;align-items:center;box-shadow:none!important}.v15-logo-box img{height:58px!important;max-width:310px!important}
 .v15-nav-links{gap:22px!important;margin-left:auto}.v15-nav-links>a,.v15-nav-links .dropdown-toggle{color:#fff!important;border-radius:0!important;text-transform:uppercase;font-size:13px;letter-spacing:.03em;padding:26px 0!important;background:transparent!important}.v15-nav-links>a:hover,.v15-nav-links .dropdown:hover .dropdown-toggle{color:var(--orange)!important;transform:none!important}.v15-nav-links .dropdown-menu{top:68px;background:#071b35;border-radius:0 0 12px 12px;border-color:rgba(255,255,255,.12)}.v15-nav-links .dropdown-menu a{color:#fff}.v15-nav-links .nav-quote{border:1px solid var(--orange)!important;padding:12px 20px!important;border-radius:5px!important;color:#fff!important}.v15-nav-links .btn.primary{background:linear-gradient(135deg,var(--orange),var(--orange2))!important;border-radius:5px!important;color:#fff!important;padding:12px 20px!important}
@@ -647,7 +647,7 @@ body{background:
 @media(max-width:900px){body{padding-bottom:20px}.hero-card,.grid-2,.grid-3,.grid-4,.summary-grid,.party,.doc-header,.cta{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}.nav-links{width:100%;gap:6px}.dropdown-menu{position:static;display:block;box-shadow:none;border:0;padding:4px 0;min-width:0}.hero h1{font-size:34px}.hero-card{padding:28px}.doc{overflow:auto}.doc-inner{min-width:760px}.calc-strip{grid-template-columns:1fr 1fr}.footer .container{flex-direction:column;align-items:flex-start}}@media print{.topbar,.footer,.no-print,.form-section:not(.preview-section){display:none!important}body{background:#fff}.container{width:100%;margin:0}.doc{box-shadow:none;border:0;border-radius:0;min-height:11in}.doc-inner{min-width:0}.preview-section{padding:0;margin:0;border:0;box-shadow:none}}
 
 
-/* V16 Solutions dropdown visibility fix */
+
 .v15-topbar .dropdown{position:relative!important}
 .v15-topbar .dropdown-menu{
   background:#ffffff!important;
@@ -691,7 +691,7 @@ body{background:
 
 
 
-/* V17 requested refinements */
+
 .footer-admin-link{font-size:11px;color:rgba(255,255,255,.35)!important;text-transform:uppercase;letter-spacing:.08em}
 .footer-admin-link:hover{color:var(--orange)!important}
 .v15-image-stage .hot{transition:background .18s ease,box-shadow .18s ease,transform .18s ease;border-radius:8px}
@@ -713,7 +713,7 @@ body{background:
 
 
 
-/* V19 full hero section banner slider */
+
 .v19-full-hero-slider{
   position:relative;
   height:680px;
@@ -883,7 +883,7 @@ body{background:
 
 
 
-/* V22 Admin Portal quote/invoice form refinements */
+
 .line-item-card{overflow-x:auto}
 .line-item-row{display:grid;grid-template-columns:70px minmax(170px,.9fr) minmax(260px,1.4fr) 105px 95px 105px 105px;gap:10px;align-items:end;min-width:980px}
 .line-item-row .field{margin-bottom:0}
@@ -894,7 +894,7 @@ body{background:
 
 
 
-/* V23 refinements: cleaner banner button hover, reports, mobile */
+
 .v15-image-stage .hot:hover,
 .v15-image-stage .hot:active{
   background:rgba(255,255,255,0)!important;
@@ -927,7 +927,7 @@ body{background:
 
 
 
-/* V25 Professional Mobile Website */
+
 .mobile-menu-toggle,.mobile-menu-button{display:none}
 .v25-mobile-home{display:none}
 @media(max-width:760px){
@@ -998,7 +998,7 @@ body{background:
 }
 
 
-/* V27 polished mobile solution graphics */
+
 .v27-mobile-service{display:none}
 @media(max-width:760px){
   .v23-mobile-service.v27-mobile-service{
@@ -1097,7 +1097,7 @@ body{background:
 
 
 
-/* V28 mobile graphics + admin app polish */
+
 .v28-mobile-graphic-card{margin:18px 0 20px;border-radius:24px;overflow:hidden;background:#061b35;box-shadow:0 22px 56px rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.16);position:relative}
 .v28-mobile-graphic-card img{display:block;width:100%;height:auto}
 .v28-mobile-graphic-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,27,53,0) 35%,rgba(6,27,53,.65) 100%);pointer-events:none}
@@ -1111,7 +1111,7 @@ body{background:
 
 
 
-/* V29 private admin app shell */
+
 .admin-app-topbar{position:sticky;top:0;z-index:999;background:#061b35;border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(6,27,53,.22)}
 .admin-app-nav{width:min(1280px,calc(100% - 28px));margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:76px}
 .admin-app-logo{background:#fff;border-radius:16px;padding:8px 12px;display:flex;align-items:center}
@@ -1135,7 +1135,7 @@ body{background:
 
 
 
-/* V30 cleaner mobile solution graphics + dashboard hero logout removal */
+
 @media(max-width:760px){
   .v23-mobile-service.v30-mobile-service{
     display:block!important;
@@ -1216,25 +1216,25 @@ body{background:
 
 
 
-/* V36 line item sale-price field */
+
 .line-item-row-v36{grid-template-columns:70px minmax(160px,.85fr) minmax(240px,1.25fr) 100px 112px 95px 105px 105px!important;min-width:1120px!important}
 .sale-field input{border-color:#a8d8b7;background:#f4fff7}
 .sale-field label{color:#0f7a37}
 @media(max-width:900px){.line-item-row-v36{min-width:1160px!important}}
 
-/* V37 eufy NVR bundle storefront */
+
 .eufy-store{background:#f8fafc}.eufy-store .section-title h2{color:var(--navy)}.eufy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:24px}.eufy-card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 34px rgba(6,40,77,.08);overflow:hidden;display:flex;flex-direction:column}.eufy-product-media{height:118px;background:radial-gradient(circle at 80% 15%,rgba(19,138,61,.22),transparent 35%),linear-gradient(135deg,#061b35,#09264a);display:grid;place-items:center}.eufy-product-media span{color:#fff;font-size:34px;font-weight:950;letter-spacing:.04em}.eufy-card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.eufy-card h3{font-size:18px;line-height:1.2;color:var(--navy);margin:0}.eufy-card p{font-size:13.5px;line-height:1.45;color:#475569;margin:0;flex:1}.eufy-price{font-size:24px;font-weight:950;color:var(--green)}.eufy-card-actions{display:grid;grid-template-columns:82px 1fr;gap:10px}.eufy-card-actions input{height:44px}.eufy-card-actions button{height:44px}.eufy-checkout{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;margin-top:36px}.eufy-cart-panel,.eufy-checkout form{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 16px 40px rgba(6,40,77,.10)}.cart-line{display:grid;grid-template-columns:1fr 70px 95px 34px;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.cart-line strong{color:var(--navy);display:block}.cart-line small{color:var(--muted);display:block;margin-top:3px}.cart-line input{height:38px}.cart-line button{height:34px;border:0;border-radius:9px;background:#fff1f1;color:#b64242;font-weight:950}.eufy-cart-total{display:flex;justify-content:space-between;gap:14px;margin-top:18px;padding-top:16px;border-top:2px solid var(--line);font-weight:950;color:var(--navy)}.eufy-cart-total strong{font-size:22px;color:var(--green)}.payment-choice-row{display:flex;gap:12px;flex-wrap:wrap}.payment-choice-row label,.same-ship{background:#eef4fb;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:850;color:var(--navy)}.notice.warning{background:#fff8ec;border-color:#ffd4a8;color:#7c3b00}.success-order{max-width:800px;margin:auto}.success-order p{font-size:16px;line-height:1.6;color:#475569}
 @media(max-width:900px){.eufy-checkout{grid-template-columns:1fr}.cart-line{grid-template-columns:1fr 64px}.cart-line span{font-weight:950}.cart-line button{grid-column:2}.eufy-card-actions{grid-template-columns:70px 1fr}}
 
 
-/* V38 Security + eufy PoE NVR storefront */
+
 .security-solutions-live{background:#fff;padding-top:36px}.security-live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}.security-live-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;text-decoration:none!important;color:inherit;box-shadow:0 16px 44px rgba(6,40,77,.10);transition:.22s}.security-live-card:hover{transform:translateY(-5px);box-shadow:0 24px 70px rgba(6,40,77,.18)}.security-live-card h3{font-size:24px;color:var(--navy);margin:14px 0 8px}.security-live-card p{color:#334155;line-height:1.45}.security-live-card ul{padding:0;margin:14px 0 0;list-style:none}.security-live-card li{margin:7px 0;color:#334155;font-weight:750}.security-live-card li:before{content:'✓';color:#138a3d;font-weight:950;margin-right:8px}.security-live-img{height:160px;border-radius:14px;background:linear-gradient(135deg,#eef4fb,#fff);display:grid;place-items:center;color:var(--navy);font-size:42px;font-weight:950;overflow:hidden}.security-live-img.eufy{background:#f8fafc}.security-live-img.eufy img{max-width:100%;max-height:160px;object-fit:contain}.eufy-tile{border-top:5px solid var(--green)}
 .eufy-collection-hero{background:radial-gradient(circle at 82% 20%,rgba(19,138,61,.26),transparent 34%),linear-gradient(135deg,#061b35,#09264a 60%,#0d4f2f);color:#fff;padding:78px 0}.eufy-collection-hero h1{font-size:clamp(42px,5vw,72px);line-height:1.02;margin:10px 0 16px;color:#fff;letter-spacing:-.055em}.eufy-collection-hero p{max-width:840px;color:rgba(255,255,255,.86);font-size:18px;line-height:1.55}.eufy-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.eufy-store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.eufy-shop-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 16px 46px rgba(6,40,77,.10);display:flex;flex-direction:column}.eufy-card-image{background:#f8fafc;display:grid;place-items:center;min-height:260px;padding:16px}.eufy-card-image img{max-width:100%;height:230px;object-fit:contain}.eufy-card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.eufy-category{color:#138a3d;font-weight:950;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.eufy-shop-card h3{font-size:19px;color:var(--navy);margin:0;line-height:1.2}.eufy-shop-card h3 a{color:inherit;text-decoration:none}.eufy-shop-card p{color:#475569;line-height:1.45;margin:0;flex:1}.eufy-price-row{display:flex;align-items:baseline;gap:12px}.eufy-sale{font-size:24px;color:#061b35;font-weight:950}.eufy-regular{text-decoration:line-through;color:#94a3b8;font-weight:850}.eufy-coupon{background:#eaf8ef;color:#0f7a37;border:1px solid #bde8c9;border-radius:12px;padding:8px 10px;font-size:13px;font-weight:850}.eufy-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:4px}.eufy-actions .btn,.eufy-actions button{flex:1;min-height:40px}
 .eufy-checkout{margin-top:36px;display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}.eufy-cart-panel,.eufy-checkout form{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 18px 52px rgba(6,40,77,.09)}.cart-line{display:grid;grid-template-columns:1fr 70px 95px 34px;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.cart-line small{display:block;color:#64748b}.cart-line input{height:38px;padding:0 8px}.cart-line button{height:34px;border:0;border-radius:8px;background:#fff1f1;color:#b64242;font-weight:950}.eufy-cart-total{display:flex;justify-content:space-between;align-items:center;margin-top:15px;font-size:20px;color:var(--navy)}.payment-choice-row{display:flex;gap:12px;flex-wrap:wrap}.payment-choice-row label{border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#fff;font-weight:850}.same-ship{margin:12px 0 16px}.warning{background:#fff8eb!important;border-color:#ffdeb8!important;color:#7c3f00!important}
 .eufy-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}.eufy-detail-image{background:#f8fafc;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 18px 52px rgba(6,40,77,.10)}.eufy-detail-image img{width:100%;height:460px;object-fit:contain}.eufy-detail-info h1{font-size:42px;line-height:1.05;color:var(--navy);margin:8px 0 14px}.eufy-detail-info .lead{font-size:18px;color:#334155;line-height:1.55}.eufy-price-row.detail .eufy-sale{font-size:34px}.eufy-coupon.big{font-size:15px;margin:12px 0}.eufy-detail-bullets{padding:0;list-style:none}.eufy-detail-bullets li{margin:10px 0;font-weight:800;color:#334155}.eufy-detail-bullets li:before{content:'✓';color:#138a3d;font-weight:950;margin-right:8px}.eufy-detail-actions{display:flex;gap:12px;align-items:center;margin:18px 0}.eufy-detail-actions input{max-width:100px}.eufy-info-panels{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0}.eufy-info-panels>div{background:#eef4fb;border:1px solid var(--line);border-radius:18px;padding:20px}.back-link{display:inline-block;margin-bottom:18px;color:#ff6a00;font-weight:950;text-decoration:none}
 @media(max-width:1000px){.security-live-grid,.eufy-store-grid,.eufy-checkout,.eufy-detail-grid,.eufy-info-panels{grid-template-columns:1fr}.eufy-detail-image img{height:320px}.security-live-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.security-live-grid{grid-template-columns:1fr}.eufy-card-image img{height:190px}.cart-line{grid-template-columns:1fr 60px}.cart-line span{grid-column:1}.eufy-detail-info h1{font-size:32px}.eufy-collection-hero{padding:48px 0}.eufy-detail-actions{display:block}.eufy-detail-actions input,.eufy-detail-actions button{width:100%;margin-top:8px}}
 
-/* V39 shopping-style cart workflow */
+
 .nav-cart{position:relative;display:inline-flex!important;align-items:center;gap:7px;color:#fff!important;text-decoration:none;font-weight:900;padding:10px 12px!important;border-radius:10px;background:rgba(255,255,255,.07)!important;border:1px solid rgba(255,255,255,.16)!important}
 .nav-cart:hover{background:rgba(255,106,0,.18)!important;color:#fff!important}
 .cart-badge,.eufy-cart-floating-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#ff6a00;color:#fff;font-size:12px;font-weight:950;line-height:1}
@@ -1244,12 +1244,12 @@ body{background:
 
 
 
-/* V40 eufy coupon-checkbox cart behavior */
+
 .eufy-price-row.v40{align-items:flex-start;gap:10px;flex-wrap:wrap}.eufy-price-row.v40 .eufy-current{font-size:22px;color:var(--navy);font-weight:950}.eufy-price-row.v40 .eufy-after{font-size:14px;color:#0f7a37;background:#eaf8ef;border:1px solid #bde8c9;border-radius:999px;padding:6px 10px;font-weight:900}.eufy-coupon-check{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:#e8f8ff;border:1px solid #bceaf7;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px;color:#10233d}.eufy-coupon-check input{width:20px;height:20px}.eufy-coupon-check span{font-weight:950}.eufy-coupon-check em{font-style:normal;color:#475569;font-weight:850;margin-left:4px}.eufy-coupon-check button{border:0;background:#fff;color:var(--navy);border-radius:9px;padding:8px 10px;font-weight:950;cursor:pointer}.eufy-coupon-check.big{font-size:15px;margin:14px 0 16px}.cart-coupon-toggle{display:block;margin-top:6px;background:#e8f8ff;border:1px solid #bceaf7;border-radius:10px;padding:7px 9px;font-size:12px;font-weight:900;color:#10233d}.cart-coupon-toggle input{vertical-align:middle;margin-right:5px}.eufy-cart-toast div a:first-child{display:none}.eufy-detail-actions{grid-template-columns:110px 1fr}.eufy-detail-actions .btn{display:none!important}
 @media(max-width:700px){.eufy-coupon-check{grid-template-columns:auto 1fr}.eufy-coupon-check button{grid-column:1/3}.eufy-detail-actions{display:grid;grid-template-columns:1fr}.eufy-detail-actions input{max-width:none!important}}
 
 
-/* V41 EUFY checkout coupon-code flow */
+
 .checkout-coupon-box{background:#eef9ff;border:1px solid #c8e8f6;border-radius:18px;padding:16px;margin:0 0 18px}
 .checkout-coupon-box label{display:block;font-weight:950;color:#061b35;margin-bottom:8px}
 .checkout-coupon-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
@@ -1261,12 +1261,12 @@ body{background:
 .cart-coupon-toggle.muted{color:#64748b;background:#f8fafc;border-color:#e2e8f0}
 @media(max-width:760px){.checkout-coupon-row{grid-template-columns:1fr}.checkout-coupon-row .btn{width:100%}}
 
-/* V42 Admin eufy product manager */
+
 .admin-eufy-page .eufy-admin-grid{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}.eufy-admin-list,.eufy-admin-editor{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 52px rgba(6,40,77,.09);padding:18px}.eufy-admin-list-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:12px}.eufy-admin-list-head h3{margin:0;color:var(--navy)}.eufy-admin-list-head small{color:var(--muted);font-weight:850}.eufy-admin-list-item{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center;padding:10px;border-radius:14px;text-decoration:none!important;color:var(--navy);border:1px solid transparent}.eufy-admin-list-item:hover,.eufy-admin-list-item.active{background:#eef4fb;border-color:#cbd5e1}.eufy-admin-list-item img{width:62px;height:52px;object-fit:contain;background:#f8fafc;border-radius:10px}.eufy-admin-list-item strong{display:block;font-size:13px;line-height:1.22}.eufy-admin-list-item small{display:block;color:#64748b;font-size:12px;margin-top:3px}.eufy-admin-preview{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:12px;margin:12px 0}.eufy-admin-preview img{width:110px;height:80px;object-fit:contain}.eufy-admin-preview strong{display:block;color:var(--navy)}.eufy-admin-preview span{display:block;color:var(--green);font-weight:950;margin-top:4px}.eufy-video-box{margin-top:12px}.eufy-video-box .btn{width:100%}
 @media(max-width:1000px){.admin-eufy-page .eufy-admin-grid{grid-template-columns:1fr}.eufy-admin-list{max-height:420px;overflow:auto}}
 
 
-/* V43 eufy admin active/inactive/delete controls */
+
 .eufy-admin-list-row{display:grid;grid-template-columns:1fr;gap:8px;border:1px solid transparent;border-radius:16px;padding:8px;margin-bottom:8px;background:#fff}
 .eufy-admin-list-row.active{background:#eef4fb;border-color:#cbd5e1}
 .eufy-admin-list-main{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center;text-decoration:none!important;color:var(--navy)}
@@ -1283,7 +1283,7 @@ body{background:
 @media(max-width:520px){.eufy-admin-status-form{grid-template-columns:1fr}.eufy-status-choice{justify-content:center}}
 
 
-/* V44 tax manager */
+
 .admin-tax-page table{width:100%;border-collapse:collapse}
 .admin-tax-page th,.admin-tax-page td{border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:13px;vertical-align:middle}
 .admin-tax-page th{color:var(--navy);background:#f8fafc}
@@ -1291,7 +1291,7 @@ body{background:
 @media(max-width:760px){.admin-tax-page .grid-2{grid-template-columns:1fr}.admin-tax-page .table-wrap{overflow-x:auto}}
 
 
-/* V45 precise tax calculation UI */
+
 .checkout-tax-box{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#f1fbf5;border:1px solid #bde8c9;border-radius:18px;padding:15px;margin:0 0 18px}
 .checkout-tax-box label{display:block;color:#0f7a37;font-weight:950;margin-bottom:5px}
 .checkout-tax-box strong{display:block;color:#061b35;font-size:18px}
@@ -1299,16 +1299,16 @@ body{background:
 @media(max-width:760px){.checkout-tax-box{grid-template-columns:1fr}.checkout-tax-box .btn{width:100%}}
 
 
-/* V46 Online Orders + tax review workflow */
+
 .online-orders-grid{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}.online-orders-list,.online-order-detail{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 52px rgba(6,40,77,.09);padding:18px}.online-orders-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:var(--navy);font-weight:950}.online-order-list-item{display:block;padding:12px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px;background:#fff;text-decoration:none!important;color:var(--navy)}.online-order-list-item:hover,.online-order-list-item.active{background:#eef4fb;border-color:#cbd5e1}.online-order-list-item strong{display:block}.online-order-list-item span{display:block;color:#334155;font-weight:850;margin-top:3px}.online-order-list-item small{display:block;color:#64748b;margin-top:3px}.tax-final-note{background:#fff8e8;border-color:#ffd9a8;color:#5a3400}.checkout-tax-box{display:none!important}@media(max-width:1000px){.online-orders-grid{grid-template-columns:1fr}.online-orders-list{max-height:430px;overflow:auto}}
 
 
-/* V48 LTS product catalog + manager */
+
 .security-live-grid-v48{grid-template-columns:repeat(3,minmax(0,1fr))!important}.lts-placeholder{height:100%;min-height:190px;display:grid;place-items:center;text-align:center;background:linear-gradient(135deg,#f8fafc,#eaf2f9);border:1px solid #d9e2ef;border-radius:16px;color:#06284d}.lts-placeholder span{display:block;font-size:34px;color:#d62828;font-weight:950;letter-spacing:.08em}.lts-placeholder strong{display:block;font-size:13px;margin-top:8px;color:#334155;max-width:90%;line-height:1.25}.lts-price-note{display:inline-flex;background:#fff7ed;border:1px solid #fed7aa;color:#b45309;border-radius:999px;padding:7px 12px;font-weight:950;font-size:13px;margin:8px 0}.lts-price-note.big{font-size:16px;padding:10px 14px}.lts-shop-card .eufy-card-image{background:#fff}.lts-detail-image .lts-placeholder{min-height:360px}.lts-cart-thumb{height:58px;width:58px;border-radius:12px;display:grid;place-items:center;background:#eef4fb;color:#d62828;font-weight:950}.lts-admin-thumb{width:62px;height:52px;display:grid;place-items:center;background:#eef4fb;border-radius:10px;color:#d62828;font-weight:950}.lts-admin-thumb.big{width:110px;height:80px}.admin-lts-page .eufy-admin-list-main .lts-admin-thumb{width:62px;height:52px}.admin-lts-page select{width:100%;min-height:44px;border:1px solid #bfd0e5;border-radius:12px;padding:0 12px;background:#fff}
 @media(max-width:900px){.security-live-grid-v48{grid-template-columns:1fr!important}.lts-detail-image .lts-placeholder{min-height:240px}}
 
 
-/* V49 LTS image verification */
+
 .lts-unverified-placeholder small{display:block;margin-top:10px;color:#b64242;font-size:12px;font-weight:950}
 .lts-verify-pill{display:inline-flex;margin-top:6px;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:950}
 .lts-verify-pill.good{background:#eaf8ef;color:#0f7a37;border:1px solid #bde8c9}
@@ -1324,13 +1324,13 @@ body{background:
 @media(max-width:760px){.lts-admin-summary{grid-template-columns:1fr}}
 
 
-/* V50 official LTS SKU image lookup */
+
 .lts-official-image{width:100%;height:100%;object-fit:contain;background:#fff;border-radius:14px}
 .lts-shop-card .eufy-card-image,.lts-detail-image{background:#fff}
 .lts-unverified-placeholder small{display:block;margin-top:10px;color:#b64242;font-size:12px;font-weight:950}
 
 
-/* V51 Security hero button update */
+
 .v15-security .v51-security-products-button{
   left:4.5%!important;
   top:65.2%!important;
@@ -1361,7 +1361,7 @@ body{background:
 }
 
 
-/* V53 exact overlay for old security mockup buttons */
+
 .v15-security .v51-security-products-button,
 .v15-security .v51-security-products-button:hover,
 .v15-security .v51-security-products-button:active,
@@ -1403,7 +1403,7 @@ body{background:
 
 
 
-/* V54 Customer account / anti-spam gate */
+
 .account-page{min-height:72vh;display:grid;place-items:center;padding:54px 16px;background:radial-gradient(circle at 80% 20%,rgba(19,138,61,.18),transparent 30%),linear-gradient(135deg,#f8fafc,#eef4fb)}
 .account-card{width:min(620px,100%);background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 24px 70px rgba(6,40,77,.16)}
 .account-logo{background:#fff;border:1px solid var(--line);border-radius:20px;padding:12px;margin-bottom:18px;text-align:center}.account-logo img{max-width:310px;width:100%;height:auto}
@@ -1414,7 +1414,7 @@ body{background:
 
 
 
-/* V56 homepage banner carousel + header icons */
+
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .v15-nav-links .nav-icon-link{width:46px;height:46px;display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:0!important;border-radius:999px!important;color:#fff!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.18)!important;position:relative;text-decoration:none!important}
 .v15-nav-links .nav-icon-link svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
@@ -1428,7 +1428,7 @@ body{background:
 
 
 
-/* V58 homepage banner button/dot alignment fix */
+
 .v56-controls{display:none!important}
 .v56-banner-actions{
   z-index:8!important;
@@ -1470,7 +1470,7 @@ body{background:
 }
 
 
-/* V59 homepage banner height, manual controls, and button alignment */
+
 .v56-banner-slider{
   width:min(100%,1600px)!important;
   height:auto!important;
@@ -1515,7 +1515,7 @@ body{background:
 @media(max-width:760px){.v56-banner-slider{display:none!important}.v56-arrow{display:none!important}}
 
 
-/* V60 banner clarity, height, and clean dot controls */
+
 .v56-banner-slider{
   aspect-ratio:1600/560!important;
   max-height:560px!important;
@@ -1586,7 +1586,7 @@ body{background:
 
 
 
-/* V61 final homepage slider sizing, dot cleanup, and CTA alignment */
+
 .v56-banner-slider{
   width:min(100%,1672px)!important;
   height:auto!important;
@@ -1641,7 +1641,7 @@ body{background:
 .v56-pos-actions{top:55.5%!important}
 .v56-security-actions{top:72.0%!important}
 
-/* Use the dots already designed into the banner images; these invisible controls sit on top for clicking without creating double dots. */
+
 .v56-controls{
   display:flex!important;
   opacity:0!important;
@@ -1703,7 +1703,7 @@ body{background:
 
 
 
-/* V62 professional homepage banner final alignment */
+
 .v56-banner-slider{
   width:100%!important;
   max-width:none!important;
@@ -1765,7 +1765,7 @@ body{background:
 .v56-pos-actions{top:65.5%!important}
 .v56-security-actions{top:73.5%!important}
 
-/* Cover the dots baked into the banner with one real clickable dot control row. */
+
 .v56-controls{
   display:flex!important;
   opacity:1!important;
@@ -1839,7 +1839,7 @@ body{background:
 
 
 
-/* V64 original full banners restored exactly, with real buttons aligned over the original button area */
+
 .v56-banner-slider{
   width:100%!important;
   max-width:none!important;
@@ -1897,7 +1897,7 @@ body{background:
   border:1px solid rgba(255,106,0,.95)!important;
   box-shadow:none!important;
 }
-/* Exact approximate button locations for the original 1916x821 artwork */
+
 .v56-home-actions{left:3.70%!important;top:69.2%!important}
 .v56-merchant-actions{left:4.10%!important;top:65.8%!important}
 .v56-pos-actions{left:3.65%!important;top:63.0%!important}
@@ -1908,7 +1908,7 @@ body{background:
 .v56-pos-actions .btn{min-width:245px!important}
 .v56-security-actions .btn{min-width:455px!important}
 
-/* Original banners do not include duplicated dot controls; use one professional real dot control row. */
+
 .v56-controls{
   display:flex!important;
   opacity:1!important;
@@ -1981,7 +1981,7 @@ body{background:
 
 
 
-/* V65 final: original banners, no cropping, no ghost overlap, scalable CTA alignment */
+
 .v56-banner-slider{
   width:100%!important;
   max-width:none!important;
@@ -1995,7 +1995,7 @@ body{background:
   background:#061b35!important;
 }
 
-/* Prevent cross-fade ghosting/overlap that made multiple banners appear on top of each other. */
+
 .v19-hero-slide,
 .v56-banner-slide{
   position:absolute!important;
@@ -2029,7 +2029,7 @@ body{background:
   pointer-events:none!important;
 }
 
-/* The CTA containers are sized as percentages of the banner so alignment stays correct on every screen width. */
+
 .v56-banner-actions{
   position:absolute!important;
   right:auto!important;
@@ -2068,7 +2068,7 @@ body{background:
   box-shadow:none!important;
 }
 
-/* Per-banner exact CTA areas based on the original banner artwork. */
+
 .v56-home-actions{
   left:3.70%!important;
   top:65.4%!important;
@@ -2103,7 +2103,7 @@ body{background:
 }
 .v56-security-actions .btn{width:100%!important}
 
-/* Keep the original image's dots visually; invisible website dot hit-area is still clickable. */
+
 .v56-controls{
   opacity:0!important;
   visibility:visible!important;
@@ -2135,7 +2135,7 @@ body{background:
   cursor:pointer!important;
 }
 
-/* Clean manual arrows, kept close to the edges. */
+
 .v56-arrow{
   z-index:47!important;
   width:38px!important;
@@ -2168,7 +2168,7 @@ body{background:
 
 
 
-/* V66 final homepage banner implementation: exact no-button banner artwork */
+
 .v56-banner-slider{
   width:100%!important;
   max-width:none!important;
@@ -2213,13 +2213,13 @@ body{background:
   filter:saturate(1.03) contrast(1.02)!important;
 }
 
-/* No real buttons on banner anymore. */
+
 .v56-banner-actions{
   display:none!important;
   pointer-events:none!important;
 }
 
-/* Home banner is informational only. Other three slides are clickable to their solution pages. */
+
 .v56-banner-slide .v19-slide-link{
   position:absolute!important;
   inset:0!important;
@@ -2234,7 +2234,7 @@ body{background:
   pointer-events:none!important;
 }
 
-/* Remove side arrows completely per request. */
+
 .v56-arrow,
 .v56-prev,
 .v56-next{
@@ -2242,7 +2242,7 @@ body{background:
   pointer-events:none!important;
 }
 
-/* Keep one clean dot control row for manual sliding. */
+
 .v56-controls{
   display:flex!important;
   opacity:1!important;
@@ -2292,7 +2292,7 @@ body{background:
 
 
 
-/* V67 homepage banner max-width request: centered 1600px, no cropping/cutting */
+
 .v56-banner-slider{
   width:min(100%,1600px)!important;
   max-width:1600px!important;
@@ -2321,9 +2321,7 @@ body{background:
 }
 
 
-/* V137 homepage banner size aligned closer to the reference website:
-   a wider, shorter hero so the slider feels more premium while still keeping
-   all banner information fully visible. */
+
 .v56-banner-slider{
   width:min(100%,1680px)!important;
   max-width:1680px!important;
@@ -2354,7 +2352,7 @@ body{background:
 }
 
 
-/* V72 homepage clone using mock component images + real menus */
+
 body{background:#06101f!important;color:#f8fafc!important}
 .hb-v72-topbar{background:rgba(2,10,22,.98)!important;border-bottom:1px solid rgba(255,255,255,.08)!important;box-shadow:0 18px 54px rgba(0,0,0,.28)!important}
 .hb-v72-topbar:before{display:none!important}
@@ -2414,7 +2412,7 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V73 homepage body alignment fix: match approved mock proportions */
+
 .hb-v72-hero .container{
   width:min(1532px, calc(100% - 72px))!important;
   max-width:1532px!important;
@@ -2581,7 +2579,7 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V74 unified public dark theme + security options like homepage cards */
+
 body{background:#06101f!important;color:#f8fafc!important}
 .v15-image-page,.v15-services-page,.v15-info-page,.eufy-page,.account-page,.hb-v72-dark-page{
   background:linear-gradient(180deg,#06101f,#07152a 64%,#06101f)!important;
@@ -2786,7 +2784,7 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V75 real solution page clones + square security option cards */
+
 .hb-v75-solution-page{background:linear-gradient(180deg,#06101f,#07152a 65%,#06101f);color:#fff;overflow:hidden}
 .hb-v75-solution-hero{position:relative;padding:82px 0 52px;background:radial-gradient(circle at 80% 16%,rgba(255,106,0,.14),transparent 30%),radial-gradient(circle at 15% 20%,rgba(21,130,255,.14),transparent 30%),linear-gradient(180deg,#06101f,#07162b)}
 .hb-v75-solution-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(45,255,96,.18),transparent 34%,transparent 69%,rgba(255,106,0,.16));pointer-events:none}
@@ -2828,7 +2826,7 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V77 approved solution page hero mockups */
+
 .hb-v77-solution-page{
   background:linear-gradient(180deg,#06101f,#07152a 68%,#06101f)!important;
   color:#fff!important;
@@ -2893,7 +2891,7 @@ body{background:#06101f!important;color:#f8fafc!important}
   background:#07111f!important;
 }
 
-/* Requested account-link color fix */
+
 .account-links a,
 .account-card .account-links a,
 .account-page .account-links a{
@@ -2906,7 +2904,7 @@ body{background:#06101f!important;color:#f8fafc!important}
   color:#ff8c21!important;
 }
 
-/* Make account card theme match the dark site so white links are readable */
+
 .account-page{
   background:radial-gradient(circle at 80% 18%,rgba(255,106,0,.18),transparent 30%),radial-gradient(circle at 15% 18%,rgba(19,138,61,.20),transparent 34%),linear-gradient(135deg,#06101f,#07152a)!important;
 }
@@ -2935,7 +2933,7 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V78 real-component solution pages based on approved visual components */
+
 .hb-v78-solution-page{
   background:linear-gradient(180deg,#06101f,#07152a 70%,#06101f)!important;
   color:#fff!important;
@@ -3150,9 +3148,9 @@ body{background:#06101f!important;color:#f8fafc!important}
 
 
 
-/* V79 Admin portal theme + smart device responsive website */
 
-/* Admin portal: match public website color system */
+
+
 body:has(.admin-app-topbar){
   background:
     radial-gradient(circle at 78% 10%,rgba(255,106,0,.16),transparent 30%),
@@ -3204,7 +3202,7 @@ body:has(.admin-app-topbar){
   color:rgba(255,255,255,.62)!important;
 }
 
-/* Admin content surfaces */
+
 .admin-app-topbar ~ main,
 .admin-app-topbar ~ main.section,
 .admin-app-topbar ~ section{
@@ -3351,7 +3349,7 @@ body:has(.admin-app-topbar){
   border:1px solid rgba(255,255,255,.12)!important;
 }
 
-/* Admin document editor/table mobile support */
+
 .admin-app-topbar ~ main .line-item-row,
 .admin-app-topbar ~ main .line-item-row-v36{
   background:rgba(255,255,255,.045)!important;
@@ -3364,7 +3362,7 @@ body:has(.admin-app-topbar){
   color:#fff!important;
 }
 
-/* Public smart device responsive improvements */
+
 @media(max-width:1180px){
   .container{width:min(100% - 36px, 980px)!important}
   .hb-v72-nav{width:min(100% - 36px, 980px)!important}
@@ -3624,7 +3622,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V80 readability + fixed tax admin refinements */
+
 .admin-dashboard,
 .admin-dashboard *{
   opacity:1!important;
@@ -3733,7 +3731,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V81 mobile/tablet navigation cleanup */
+
 @media(max-width:1200px){
   html,body{
     max-width:100%!important;
@@ -3932,7 +3930,7 @@ body:has(.admin-app-topbar){
   }
 }
 
-/* Smartphone-specific page polish */
+
 @media(max-width:760px){
   .hb-v72-nav{
     width:calc(100% - 24px)!important;
@@ -3949,7 +3947,7 @@ body:has(.admin-app-topbar){
     border-radius:20px!important;
   }
 
-  /* Keep solution heroes from starting under or behind menu */
+  
   .hb-v78-hero{
     padding-top:34px!important;
   }
@@ -3982,7 +3980,7 @@ body:has(.admin-app-topbar){
   }
 }
 
-/* Tablet/iPad card and product page spacing */
+
 @media(min-width:761px) and (max-width:1200px){
   .hb-v72-nav-links{
     left:24px!important;
@@ -3998,13 +3996,13 @@ body:has(.admin-app-topbar){
 
 
 
-/* V82 admin mobile / tablet app experience */
+
 .admin-menu-toggle,
 .admin-menu-button{
   display:none;
 }
 
-/* Desktop/admin shared polish */
+
 .admin-nav-links{
   display:flex;
   align-items:center;
@@ -4032,7 +4030,7 @@ body:has(.admin-app-topbar){
   gap:22px!important;
 }
 
-/* Tablet admin: app-style navigation and single-column work areas */
+
 @media(max-width:1180px){
   .admin-app-topbar{
     position:sticky!important;
@@ -4230,7 +4228,7 @@ body:has(.admin-app-topbar){
   }
 }
 
-/* Phone admin: one-handed app layout */
+
 @media(max-width:760px){
   .admin-app-nav{
     width:calc(100% - 22px)!important;
@@ -4354,7 +4352,7 @@ body:has(.admin-app-topbar){
   }
 }
 
-/* Very small phones */
+
 @media(max-width:420px){
   .admin-app-logo img{
     height:38px!important;
@@ -4376,7 +4374,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V83 merchant application options and forms */
+
 .hb-merchant-app-options{
   background:#07111f!important;
   color:#fff!important;
@@ -4528,7 +4526,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V84 merchant application privacy + draft controls */
+
 .hb-app-form input[type="password"]{
   letter-spacing:.12em!important;
   font-weight:900!important;
@@ -4589,7 +4587,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V86 brighten homepage solution square tabs only */
+
 .hb-v72-card-grid .hb-v72-image-card img{
   filter:brightness(1.18) contrast(1.08) saturate(1.12)!important;
 }
@@ -4602,7 +4600,7 @@ body:has(.admin-app-topbar){
 }
 
 
-/* V90 exact-style homepage and services solution cards — built from real HTML/CSS/SVG, not mock images */
+
 .hb-v72-card-grid{
   position:relative!important;
   z-index:4!important;
@@ -4838,7 +4836,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V91 exact clone real-component cards + real-component solution visuals */
+
 .hb-v72-card-grid{
   display:grid!important;
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
@@ -5166,7 +5164,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V94 Admin top menu neon-orange border polish */
+
 .admin-app-topbar{
   border-bottom:1px solid rgba(255,106,0,.32)!important;
   box-shadow:0 18px 54px rgba(0,0,0,.34),0 0 28px rgba(255,106,0,.10)!important;
@@ -5215,7 +5213,7 @@ body:has(.admin-app-topbar){
   background:#ff8c21!important;
   box-shadow:0 0 10px rgba(255,106,0,.42)!important;
 }
-/* top utility/action button rows inside admin pages */
+
 .admin-dashboard .section-title .btn-row .btn,
 .admin-dashboard .section-title .btn-row button,
 .admin-app-topbar ~ main .section-title .btn-row .btn,
@@ -5232,7 +5230,7 @@ body:has(.admin-app-topbar){
 }
 
 
-/* V95 Admin 3D neon orange nav + dashboard tabs */
+
 .admin-app-topbar{
   background:
     linear-gradient(180deg,rgba(4,14,29,.99),rgba(2,9,20,.99))!important;
@@ -5319,7 +5317,7 @@ body:has(.admin-app-topbar){
     inset 0 -10px 18px rgba(0,0,0,.32)!important;
 }
 
-/* Dashboard square tabs / command-center tiles */
+
 .admin-dashboard .admin-tile,
 .admin-metric-grid .admin-tile,
 .admin-metric-grid.v9-grid .admin-tile{
@@ -5417,7 +5415,7 @@ body:has(.admin-app-topbar){
     inset 0 -18px 28px rgba(0,0,0,.26)!important;
 }
 
-/* Admin page top action buttons / tab-like list items */
+
 .admin-dashboard .section-title .btn-row .btn,
 .admin-dashboard .section-title .btn-row button,
 .admin-app-topbar ~ main .section-title .btn-row .btn,
@@ -5451,7 +5449,7 @@ body:has(.admin-app-topbar){
     inset 0 -9px 16px rgba(0,0,0,.28)!important;
 }
 
-/* selected list tabs in Admin managers */
+
 .admin-dashboard .online-order-list-item,
 .admin-dashboard .customer-admin-list-item{
   border:1.5px solid rgba(255,106,0,.45)!important;
@@ -5472,7 +5470,7 @@ body:has(.admin-app-topbar){
     inset 0 1px 0 rgba(255,255,255,.20)!important;
 }
 
-/* mobile admin menu button 3D */
+
 .admin-menu-button{
   border:1.7px solid rgba(255,106,0,.78)!important;
   background:
@@ -5495,7 +5493,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V96 Create Invoice reliability fix */
+
 .admin-dashboard .admin-hero:before,
 .admin-dashboard .admin-hero:after{
   pointer-events:none!important;
@@ -5519,7 +5517,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V97 Admin document line-item readability fix */
+
 .admin-document-page .line-item-card,
 .admin-dashboard.admin-document-page .line-item-card,
 .admin-app-topbar ~ main .line-item-card{
@@ -5648,7 +5646,7 @@ body:has(.admin-app-topbar){
 
 
 
-/* V98 Line item input font/autofill visibility fix */
+
 html body .admin-document-page #items .line-item-card input,
 html body .admin-document-page #items .line-item-card textarea,
 html body .admin-document-page #items .line-item-card select,
@@ -5692,7 +5690,7 @@ html body .admin-document-page #items .line-item-card textarea::placeholder{
   -webkit-text-fill-color:rgba(255,255,255,.52)!important;
 }
 
-/* Chrome/Safari autofill override: fixes the light blue field with invisible typed text */
+
 html body .admin-document-page #items .line-item-card input:-webkit-autofill,
 html body .admin-document-page #items .line-item-card input:-webkit-autofill:hover,
 html body .admin-document-page #items .line-item-card input:-webkit-autofill:focus,
@@ -5725,7 +5723,7 @@ html body .admin-document-page #items .line-item-card .discount-field input{
 
 
 
-/* V99 taxable checkbox visibility + accounting report enhancements */
+
 html body .admin-document-page #items .line-item-card input[type="checkbox"],
 html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card input[type="checkbox"]{
   -webkit-appearance:checkbox!important;
@@ -5886,7 +5884,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card in
 
 
 
-/* V100 report chart clipping + yearly breakdown controls */
+
 .report-chart{
   overflow:visible!important;
 }
@@ -5954,7 +5952,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card in
   font-size:20px!important;
 }
 
-/* Stronger custom Taxable checkbox so checked mark is always visible */
+
 html body .admin-document-page #items .line-item-card .inline-check input[type="checkbox"],
 html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .inline-check input[type="checkbox"]{
   -webkit-appearance:none!important;
@@ -5994,7 +5992,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V102 Admin workflow repair */
+
 .admin-nav-links a[href="/admin/dashboard?app=1"]:first-child,
 .admin-nav-links a[href="/admin/dashboard?app=1"]:nth-child(2){
   border-color:rgba(255,106,0,.90)!important;
@@ -6006,7 +6004,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V103 Login screen action links as buttons */
+
 .account-links.account-action-buttons{
   display:grid!important;
   grid-template-columns:1fr 1fr!important;
@@ -6077,7 +6075,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V105 Approved Quote lifecycle display */
+
 .converted-quote-row td{
   background:rgba(16,185,129,.045)!important;
 }
@@ -6135,7 +6133,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V106 Purple Admin template-inspired dashboard customized to HB Commerce theme */
+
 .purple-admin-dashboard{
   padding:28px 0 54px!important;
   background:
@@ -6533,7 +6531,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V107 Purple Admin template styling matched to HB dark/neon theme */
+
 .hb-template-dashboard{background:linear-gradient(135deg,#06101f,#07152a 60%,#06101f)!important;color:#f8fafc!important;}
 .hb-template-dashboard .purple-admin-shell{grid-template-columns:270px minmax(0,1fr)!important;gap:24px!important;max-width:1540px!important;width:min(1540px,calc(100% - 28px))!important;}
 .hb-template-sidebar{background:linear-gradient(180deg,#040b15,#071426)!important;border:1px solid rgba(255,106,0,.42)!important;box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08)!important;}
@@ -6544,14 +6542,14 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .hb-template-chart-row{display:grid;grid-template-columns:1.45fr .85fr;gap:22px}.hb-template-card{background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96))!important;border:1.5px solid rgba(255,106,0,.34)!important;border-radius:24px!important;box-shadow:0 22px 62px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08)!important}.hb-template-card h3{color:#fff!important}.hb-template-card span,.hb-template-card p{color:#cbd5e1!important}.hb-template-bars{min-height:260px!important;padding-top:52px!important;overflow:visible!important}.hb-template-bars .purple-chart-bar em{bottom:calc(100% + 8px)!important;transform:translateX(-50%) rotate(-13deg)!important;color:#f8fafc!important}.hb-traffic-card{display:grid;gap:18px}.hb-donut-wrap{position:relative;display:grid;place-items:center;padding:10px 0}.hb-donut{width:178px;height:178px;border-radius:50%;background:conic-gradient(#ff6a00 0 32%,#10b981 32% 58%,#3b82f6 58% 78%,#8adf52 78% 100%);box-shadow:0 0 34px rgba(255,106,0,.14);position:relative}.hb-donut:after{content:"";position:absolute;inset:25px;border-radius:50%;background:#071426;border:1px solid rgba(255,255,255,.10)}.hb-donut-center{position:absolute;text-align:center}.hb-donut-center strong{display:block;color:#fff;font-size:31px}.hb-donut-center small{color:#cbd5e1;font-weight:850}.purple-workflow-list.compact{gap:8px!important}.purple-workflow-list.compact .purple-workflow-item{min-height:54px!important;padding:10px 12px!important}.purple-workflow-list.compact .purple-workflow-item span{font-size:20px!important;color:#fff!important}
 .hb-template-lower-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(320px,.75fr);gap:22px}.hb-recent-tickets .table-wrap{max-height:490px;overflow:auto}.hb-recent-updates{display:grid;gap:10px}.purple-update-item{display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:11px}.purple-update-item>span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,106,0,.22);color:#fff;font-weight:950}.purple-update-item.green>span{background:rgba(16,185,129,.24)}.purple-update-item.danger>span{background:rgba(239,68,68,.25)}.purple-update-item strong{display:block;color:#fff;font-size:14px}.purple-update-item small{display:block;color:#cbd5e1;font-size:12px}.purple-update-item em{font-style:normal;color:#ffb14f;font-weight:950;font-size:12px}.purple-update-item.green em{color:#8adf52}.purple-update-item.danger em{color:#fca5a5}
 .hb-todo-add{display:grid;grid-template-columns:1fr auto;gap:10px;margin:8px 0 12px}.hb-todo-add input{background:#06111f!important;border:1.5px solid rgba(255,106,0,.42)!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.hb-todo-add button{background:linear-gradient(135deg,#ff6a00,#ff8c21)!important;color:#fff!important;border-radius:14px!important}.hb-todo-list{display:grid;gap:8px;margin:0;padding:0;list-style:none}.hb-todo-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:15px;padding:10px 11px}.hb-todo-list label{display:flex;gap:10px;align-items:center;color:#fff!important;font-weight:850}.hb-todo-list input{width:18px!important;height:18px!important;accent-color:#ff8c21!important}.hb-todo-list li.done span{text-decoration:line-through;color:#94a3b8}.hb-todo-list button{width:30px;height:30px;padding:0;border-radius:10px;background:rgba(239,68,68,.22)!important;color:#fff!important;border:1px solid rgba(239,68,68,.38)!important}
-/* EUFY/LTS admin manager full dark theme readability */
+
 .admin-eufy-page .eufy-admin-list,.admin-eufy-page .eufy-admin-editor,.admin-lts-page .eufy-admin-list,.admin-lts-page .eufy-admin-editor{background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98))!important;border:1.6px solid rgba(255,106,0,.36)!important;color:#eaf3ff!important;box-shadow:0 22px 60px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.08)!important}.admin-eufy-page .eufy-admin-list-head h3,.admin-lts-page .eufy-admin-list-head h3,.admin-eufy-page .form-title,.admin-lts-page .form-title{color:#fff!important}.admin-eufy-page .eufy-admin-list-head small,.admin-lts-page .eufy-admin-list-head small{color:#cbd5e1!important}.admin-eufy-page .eufy-admin-list-row,.admin-lts-page .eufy-admin-list-row{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.11)!important;color:#eaf3ff!important}.admin-eufy-page .eufy-admin-list-row.active,.admin-eufy-page .eufy-admin-list-row:hover,.admin-lts-page .eufy-admin-list-row.active,.admin-lts-page .eufy-admin-list-row:hover{background:rgba(255,106,0,.14)!important;border-color:rgba(255,106,0,.54)!important;box-shadow:0 0 22px rgba(255,106,0,.12)!important}.admin-eufy-page .eufy-admin-list-main,.admin-lts-page .eufy-admin-list-main{color:#fff!important}.admin-eufy-page .eufy-admin-list-main strong,.admin-lts-page .eufy-admin-list-main strong{color:#fff!important;text-shadow:0 1px 0 rgba(0,0,0,.45)!important}.admin-eufy-page .eufy-admin-list-main small,.admin-lts-page .eufy-admin-list-main small{color:#dbe7f5!important}.admin-eufy-page .eufy-admin-status-form,.admin-lts-page .eufy-admin-status-form{background:rgba(2,10,22,.58)!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:14px!important;padding:8px!important}.admin-eufy-page .eufy-status-choice,.admin-lts-page .eufy-status-choice{color:#fff!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.12)!important}.admin-eufy-page input,.admin-eufy-page textarea,.admin-eufy-page select,.admin-lts-page input,.admin-lts-page textarea,.admin-lts-page select{background:#06111f!important;border:1.5px solid rgba(255,106,0,.42)!important;color:#fff!important;-webkit-text-fill-color:#fff!important}.admin-eufy-page label,.admin-lts-page label{color:#dbe7f5!important}.admin-eufy-page .eufy-admin-preview,.admin-lts-page .eufy-admin-preview{background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.11)!important}.admin-eufy-page .eufy-admin-preview strong,.admin-lts-page .eufy-admin-preview strong{color:#fff!important}.admin-eufy-page .eufy-admin-preview span,.admin-lts-page .eufy-admin-preview span{color:#8adf52!important}.admin-eufy-page .notice,.admin-lts-page .notice{color:#eaf3ff!important}.lts-admin-summary div{background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96))!important;border:1px solid rgba(255,106,0,.30)!important}.lts-admin-summary strong{color:#fff!important}.lts-admin-summary span{color:#cbd5e1!important}
 @media(max-width:1180px){.hb-template-dashboard .purple-admin-shell{grid-template-columns:1fr!important}.hb-template-sidebar{position:relative!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.hb-sidebar-profile,.purple-brand-block{grid-column:1/-1}.hb-template-chart-row,.hb-template-lower-grid{grid-template-columns:1fr!important}.hb-template-gradient-cards{grid-template-columns:1fr!important}}
 @media(max-width:760px){.hb-template-sidebar{grid-template-columns:1fr}.hb-template-page-header{grid-template-columns:1fr;display:grid}.hb-template-gradient-cards .purple-gradient-card strong{font-size:28px!important}.hb-todo-add{grid-template-columns:1fr}.admin-eufy-page .eufy-admin-grid{grid-template-columns:1fr!important}.admin-eufy-page .eufy-admin-list{max-height:560px;overflow:auto}}
 
 
 
-/* V108 dashboard refinements: recent updates rectangle, status progress, notification settings */
+
 .hb-recent-updates-wide{
   margin-top:22px!important;
 }
@@ -6658,7 +6656,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 }
 .admin-notifications-page label,.admin-notifications-page .form-title{color:#fff!important}
 
-/* EUFY/LTS manager readability reinforcement */
+
 .admin-dashboard .eufy-admin-list,
 .admin-dashboard .lts-admin-list,
 .admin-dashboard .product-admin-list,
@@ -6697,7 +6695,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V109 independent Private Admin sidebar scrolling + phone input polish */
+
 .purple-admin-shell,
 .hb-template-dashboard .purple-admin-shell{
   align-items:flex-start!important;
@@ -6745,7 +6743,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V110 notification provider settings */
+
 .admin-notifications-page input[type="password"]{
   background:#06111f!important;
   color:#fff!important;
@@ -6758,7 +6756,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V111 free app push notifications */
+
 .hb-app-push-section{
   border-color:rgba(16,185,129,.55)!important;
   box-shadow:0 0 34px rgba(16,185,129,.12),0 22px 60px rgba(0,0,0,.32)!important;
@@ -6772,7 +6770,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V112 mobile admin responsiveness, server-synced todo, calendar sync, push-only notifications */
+
 .hb-todo-add-v112{
   display:grid!important;
   grid-template-columns:1fr minmax(190px,.55fr) minmax(150px,.42fr) auto!important;
@@ -6903,7 +6901,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V113 professional mobile admin dashboard + push diagnostics */
+
 .hb-app-push-section .btn-row{
   gap:10px!important;
   flex-wrap:wrap!important;
@@ -7088,7 +7086,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V114 stronger phone-specific Admin Portal and 4 KPI card layout */
+
 .hb-kpi-four{
   grid-template-columns:repeat(4,minmax(0,1fr))!important;
 }
@@ -7322,7 +7320,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V115 Todo description input size fix */
+
 .hb-todo-card .hb-todo-add-v112,
 .admin-dashboard .hb-todo-card .hb-todo-add-v112{
   display:grid!important;
@@ -7382,7 +7380,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V116 true mobile Admin Portal view */
+
 @media(max-width:760px){
   :root{
     --mobile-gap:10px;
@@ -7664,7 +7662,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V117 desktop chart space utilization + crisp HTML/CSS bars */
+
 .hb-template-chart-row-v117{
   align-items:stretch!important;
   grid-template-columns:minmax(0,1.55fr) minmax(340px,.75fr)!important;
@@ -7828,7 +7826,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V118 chart clipping fix: keep bars, values, and month labels inside the graph box */
+
 .hb-combined-stats-card .hb-dashboard-chart-stack{
   gap:16px!important;
 }
@@ -7890,7 +7888,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V121 homepage eufy deal banners: exact product images, current logo, no buttons */
+
 .hb-eufy-deals-home{
   width:min(1680px,calc(100vw - 36px))!important;
   margin:34px auto 36px!important;
@@ -8174,7 +8172,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V122: combine existing homepage banners and eufy deal banners into one top slider */
+
 .hb-v122-home-hero{
   padding-top:24px!important;
 }
@@ -8403,7 +8401,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   filter:drop-shadow(0 30px 42px rgba(0,0,0,.52)) saturate(1.05) contrast(1.03)!important;
   transform:translateY(1%)!important;
 }
-/* Hide the previous separate v121 carousel if an older browser cache keeps it in the DOM */
+
 .hb-eufy-deals-home{
   display:none!important;
 }
@@ -8481,7 +8479,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V123 fix: first four homepage banners are now real HTML/CSS slides using visible current website assets */
+
 .hb-current-banner-slide{
   display:grid!important;
   grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)!important;
@@ -8645,8 +8643,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V125 homepage banner size refinement
-   Keeps the same banner ratio and all 8 slides, but reduces the desktop footprint. */
+
 .hb-home-combined-slider-wrap{
   width:min(1520px,calc(100vw - 96px))!important;
   margin:0 auto 30px!important;
@@ -8680,7 +8677,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V126 refined smaller homepage banners without clipping */
+
 .hb-home-combined-slider-wrap{
   width:min(1520px,calc(100vw - 84px))!important;
   margin:0 auto 30px!important;
@@ -8792,7 +8789,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   }
 }
 
-/* V126 admin document inventory autocomplete + margin display */
+
 .admin-document-page datalist#adminInventoryList{
   display:none!important;
 }
@@ -8827,7 +8824,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V127 cart tax summary + quote-order admin refinements */
+
 .eufy-tax-summary{
   display:grid!important;
   gap:8px!important;
@@ -8861,7 +8858,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V128 checkout checkbox, visible cart icon, client account dropdown, smaller homepage banners */
+
 .same-ship{
   display:inline-flex!important;
   align-items:center!important;
@@ -8885,7 +8882,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   grid-column:auto!important;
 }
 
-/* Make top-right cart clearly visible on dark theme */
+
 .hb-v72-nav-links .nav-cart.nav-icon-link{
   width:50px!important;
   height:50px!important;
@@ -8924,7 +8921,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   font-size:12px!important;
 }
 
-/* Logged-in client account menu */
+
 .customer-account-dropdown{
   position:relative!important;
   display:inline-flex!important;
@@ -9021,7 +9018,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   color:#ffd6d6!important;
 }
 
-/* Smaller homepage banner height while keeping content visible */
+
 .hb-home-combined-slider-wrap{
   width:min(1480px,calc(100vw - 92px))!important;
   margin:0 auto 26px!important;
@@ -9106,7 +9103,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   }
 }
 
-/* Account profile cards */
+
 .account-profile-grid{
   display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -9134,7 +9131,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V129 customer checkout cleanup and cart readability */
+
 .eufy-checkout-form .notice.success,
 .eufy-checkout-form .notice.warning,
 .eufy-checkout-form .tax-final-note{
@@ -9142,7 +9139,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   line-height:1.45!important;
 }
 
-/* Keep same-address checkbox compact with checkbox before label */
+
 .eufy-checkout-form .same-ship{
   display:inline-flex!important;
   align-items:center!important;
@@ -9165,7 +9162,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   accent-color:#ff6a00!important;
 }
 
-/* Make checkout/cart panel text readable on the current dark theme */
+
 .eufy-cart-panel.shopping-cart-panel{
   background:linear-gradient(145deg,rgba(6,22,42,.96),rgba(7,20,35,.98))!important;
   border:1px solid rgba(255,255,255,.14)!important;
@@ -9222,7 +9219,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   -webkit-text-fill-color:#fff!important;
 }
 
-/* Top-right cart icon stronger visibility */
+
 .hb-v72-nav-links .nav-cart.nav-icon-link{
   background:linear-gradient(145deg,rgba(255,106,0,.28),rgba(255,255,255,.08))!important;
   border-color:rgba(255,106,0,.78)!important;
@@ -9235,7 +9232,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   stroke:none!important;
 }
 
-/* Slightly shorter homepage banners, while keeping content safely inside */
+
 .hb-home-combined-slider-wrap{
   width:min(1460px,calc(100vw - 96px))!important;
   margin:0 auto 24px!important;
@@ -9280,8 +9277,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V130 homepage eufy banner anti-clipping fix
-   Keeps the v129 design but gives all 8 banners safe vertical room and scales eufy slide internals. */
+
 .hb-home-combined-slider-wrap{
   width:min(1460px,calc(100vw - 96px))!important;
   margin:0 auto 26px!important;
@@ -9291,7 +9287,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   min-height:0!important;
 }
 
-/* Keep solution/regular slides balanced after the safe-height adjustment */
+
 .hb-current-banner-slide{
   padding:clamp(18px,1.9vw,34px)!important;
 }
@@ -9305,7 +9301,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   max-height:76%!important;
 }
 
-/* eufy deal slides: shrink and center every element so nothing is cut off at the bottom */
+
 .hb-home-eufy-slide{
   padding:clamp(18px,1.75vw,30px)!important;
   align-items:center!important;
@@ -9423,7 +9419,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V131 footer information/account links and policy pages */
+
 .hb-v131-footer{
   background:#1e1b17!important;
   border-top:1px solid rgba(255,255,255,.08)!important;
@@ -9532,9 +9528,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V133 reference-size homepage banners + HB theme footer
-   Footer keeps the new ecommerce information layout, but uses HB Commerce navy/green/orange theme.
-   Banner height is closer to a compact retail/ecommerce hero while preserving all slide content. */
+
 .hb-home-combined-slider-wrap{
   width:min(1420px,calc(100vw - 96px))!important;
   margin:0 auto 24px!important;
@@ -9674,7 +9668,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   .hb-home-eufy-slide .hb-eufy-deal-visual img{max-height:220px!important;}
 }
 
-/* HB Commerce theme footer — keep layout, remove reference-site brown styling */
+
 .hb-v131-footer{
   background:
     radial-gradient(circle at 8% 12%,rgba(19,138,61,.24),transparent 28%),
@@ -9748,7 +9742,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V134 professional information/policy pages with HB Commerce theme */
+
 .hb-v134-info-page{
   background:
     radial-gradient(circle at 8% 10%,rgba(19,138,61,.22),transparent 28%),
@@ -9999,7 +9993,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .hb-v131-footer-support .hb-v131-email-stack a{
   color:#dbeafe!important;
 }
-/* tighten old generic policy styles if older classes are still present */
+
 .hb-policy-page .hb-v72-page-hero{display:none!important;}
 @media(max-width:980px){
   .hb-v134-info-layout{grid-template-columns:1fr!important;}
@@ -10015,19 +10009,16 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V136 restored previous public website header/layout.
-   This intentionally removes the v135 ecommerce-style header redesign and returns to the prior HB Commerce layout. */
 
 
 
-/* V138 professional mobile website layout
-   Mobile polish inspired by the provided reference site's organized mobile experience,
-   while keeping the HB Commerce logo, navy/orange/green theme, and current elements. */
+
+
 @media(max-width:760px){
   html,body{max-width:100%!important;overflow-x:hidden!important;}
   body{background:#06101f!important;}
 
-  /* Compact sticky mobile header */
+  
   .hb-v72-topbar{
     position:sticky!important;
     top:0!important;
@@ -10156,7 +10147,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
     height:24px!important;
   }
 
-  /* Show and organize homepage banners on mobile instead of hiding them */
+  
   .hb-v122-home-hero{padding-top:14px!important;}
   .hb-home-combined-slider-wrap{
     width:calc(100vw - 20px)!important;
@@ -10286,7 +10277,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   .hb-home-combined-dot{width:9px!important;height:9px!important;}
   .hb-home-combined-dot.active{width:24px!important;}
 
-  /* Homepage cards and trust sections */
+  
   .hb-v72-card-grid,
   .hb-v72-bottom-grid,
   .hb-v72-info-grid{
@@ -10303,7 +10294,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   .hb-v72-industries img,
   .hb-v72-compliance{border-radius:20px!important;}
 
-  /* Product/detail/cart pages */
+  
   .section{padding:34px 0!important;}
   .container{width:calc(100vw - 24px)!important;max-width:none!important;}
   .security-live-grid,
@@ -10347,7 +10338,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   .eufy-tax-summary{padding:14px!important;}
   .payment-choice-row{display:grid!important;grid-template-columns:1fr!important;}
 
-  /* Account/profile/footer */
+  
   .account-card{width:calc(100vw - 24px)!important;border-radius:22px!important;padding:22px!important;}
   .account-profile-grid{grid-template-columns:1fr!important;}
   .hb-v131-footer{padding:34px 0 30px!important;}
@@ -10367,7 +10358,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V139 quote/invoice display: show regular sale price on line items and summarize discounts in totals */
+
 .line-table .regular-price{
   font-weight:950!important;
   color:#10233d!important;
@@ -10385,7 +10376,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V140 quote/invoice readability + non-taxable shipping cost */
+
 .doc,
 .doc *{
   opacity:1!important;
@@ -10457,7 +10448,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V141 quote/invoice discount-column display */
+
 .doc .line-table.has-discount-column th:nth-child(4),
 .doc .line-table.has-discount-column td:nth-child(4),
 .doc .line-table.has-discount-column th:nth-child(5),
@@ -10498,7 +10489,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V142 ZipTax destination-tax integration */
+
 .admin-document-page .tax-rate-field{
   display:grid!important;
   grid-template-columns:1fr auto!important;
@@ -10531,7 +10522,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V143 automatic destination tax, template previews, terms/payment fields */
+
 .admin-document-page textarea[name="terms_conditions"]{
   min-height:150px!important;
   resize:vertical!important;
@@ -10684,7 +10675,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V144 active HB side-bar quote/invoice template */
+
 .hb-side-doc{
   width:min(1080px,100%)!important;
   margin:0 auto!important;
@@ -11249,7 +11240,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V145 exact-template refinement: cropped uploaded logo + cloned payment sections */
+
 .hb-side-doc .side-logo{
   text-align:center!important;
   margin-bottom:30px!important;
@@ -11479,7 +11470,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V146 fine-detail exact-match refinements for selected quote/invoice template */
+
 .hb-side-doc{
   font-family:Inter,Arial,Helvetica,sans-serif!important;
   background:#fff!important;
@@ -11858,7 +11849,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V147 exact left-panel divider/swoosh + recreated quote/invoice logo */
+
 .hb-side-doc .hb-doc-side{
   border-right:5px solid #ff6a00!important;
   background:
@@ -11870,8 +11861,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   position:relative!important;
   z-index:5!important;
 }
-/* Two large bottom arcs that visually separate the blue side panel from the white panel,
-   matching the orange/green ribbon from the approved screenshot. */
+
 .hb-side-doc .hb-doc-side:before{
   content:""!important;
   position:absolute!important;
@@ -11956,7 +11946,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   -webkit-text-fill-color:#7ee66c!important;
   text-shadow:0 2px 5px rgba(0,0,0,.4)!important;
 }
-/* exact Other Payment Methods block */
+
 .hb-side-doc .side-payment-methods{
   margin-top:6px!important;
 }
@@ -12003,7 +11993,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   font-family:Arial Black,Arial,sans-serif!important;
   font-size:25px!important;
 }
-/* fine tune secure payment clone */
+
 .hb-side-doc .hb-secure-payment{
   border:1.55px solid #23aa43!important;
   border-radius:10px!important;
@@ -12042,7 +12032,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
   border-radius:6px!important;
   font-size:12px!important;
 }
-/* bottom greeting clone */
+
 .hb-side-doc .hb-doc-thanks{
   grid-template-columns:minmax(70px,1fr) auto auto auto minmax(70px,1fr)!important;
   gap:14px!important;
@@ -12069,7 +12059,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V152 exact requested invoice/quote template refinements */
+
 .hb-side-doc{
   font-family:"Arial Narrow","Roboto Condensed",Arial,Helvetica,sans-serif!important;
 }
@@ -12334,7 +12324,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V154 actual user-provided divider image applied to quote/invoice template */
+
 .hb-side-doc{
   font-family:Arial,Helvetica,sans-serif!important;
 }
@@ -12486,7 +12476,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V155 visible supplied divider image + white cutout refinement */
+
 .hb-side-doc .hb-doc-side{
   border-right:0!important;
   overflow:visible!important;
@@ -12547,7 +12537,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V156 compact quote/invoice readability layout + payment method icon refinement */
+
 .hb-side-doc .hb-info-card{
   min-height:142px!important;
   padding:34px 18px 15px!important;
@@ -12655,7 +12645,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .hb-side-doc .hb-side-totals .grand span:last-child{
   font-size:24px!important;
 }
-/* More polished check/Zelle icon blocks without external image dependencies */
+
 .hb-side-doc .method-icon.check{
   position:relative!important;
   background:linear-gradient(145deg,#13a33b,#08752c)!important;
@@ -12701,7 +12691,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V157 lower bottom sections + bill/ship overlap fix */
+
 .hb-side-doc .hb-doc-main{
   display:flex!important;
   flex-direction:column!important;
@@ -12761,7 +12751,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V158 Admin users and role permissions */
+
 .permission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .perm-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px;color:#fff;font-weight:850}
 .perm-card input{width:18px;height:18px}
@@ -12769,7 +12759,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V159 Admin header cleanup + top sidebar create actions */
+
 .hb-template-sidebar .hb-sidebar-create-link,
 .purple-admin-sidebar .hb-sidebar-create-link{
   border-color:rgba(126,230,108,.55)!important;
@@ -12783,11 +12773,11 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V160 removed Templates top-nav link + forced ZIP relookup on every change/blur/tab */
 
 
 
-/* V161 reminder emails, payment-link action, paid watermark */
+
+
 .hb-side-doc .paid-watermark{
   position:absolute!important;
   left:57%!important;
@@ -12810,13 +12800,13 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V162 reminder email log and paid watermark position */
+
 .admin-reminder-email-log table{min-width:1180px!important}
 .admin-reminder-email-log td:nth-child(8){max-width:320px!important}
 
 
 
-/* V163 paid watermark centered in white invoice panel + check payment evidence */
+
 .hb-side-doc .paid-watermark{
   left:calc(280px + (100% - 280px)/2)!important;
   top:48%!important;
@@ -12834,23 +12824,23 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V164 deploy fix: removed duplicate bytesToBase64 declaration */
 
 
 
-/* V165 clone actions + POS support billing setup */
+
+
 .admin-pos-support-page table{min-width:1040px!important}
 
 
 
-/* V166 calendar + separate admin pages + popup panels */
+
 .admin-popup-page .admin-popup-head{display:flex;gap:16px;align-items:center;margin-bottom:18px;background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96));border:1px solid rgba(255,106,0,.34);border-radius:22px;padding:16px 18px;color:#fff}.admin-popup-page .admin-popup-head h2{margin:0;color:#fff}.admin-popup-page .admin-popup-head p{margin:3px 0 0;color:#cbd5e1}.admin-popup-page .form-section input[readonly]{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
 
 
-/* V167 Google Calendar public ICS URL fix */
 
 
-/* V168 centered admin logo topbar + private-admin layout settings */
+
+
 .hb-centered-admin-topbar .hb-centered-admin-nav{justify-content:center!important;min-height:104px!important;padding:12px 18px!important;}
 .admin-centered-logo{display:flex!important;align-items:center!important;justify-content:center!important;width:min(360px,90vw)!important;}
 .admin-centered-logo img{width:260px!important;max-width:100%!important;max-height:88px!important;object-fit:contain!important;filter:drop-shadow(0 12px 26px rgba(0,0,0,.32))!important;}
@@ -12859,7 +12849,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V169 drag-and-drop Admin layout organizer */
+
 .layout-drag-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .layout-drag-grid h3{color:#fff;margin:0 0 6px;font-size:20px}
 .drag-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
@@ -12873,27 +12863,27 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V170 Admin layout color controls and login logo update */
+
 .layout-color-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0 20px}
 .layout-color-row input[type=color]{width:100%;height:52px;border-radius:14px;border:1.5px solid rgba(255,106,0,.45);background:rgba(255,255,255,.08);padding:6px}
 @media(max-width:760px){.layout-color-row{grid-template-columns:1fr}}
 
 
 
-/* V171 Private Admin font color fix: label text changes, icons keep original styling */
+
 .hb-sidebar-link-label{display:inline-block;line-height:1.15}
 
 
 
-/* V173 Authorize.Net AcceptUI payment page */
+
 .AcceptUI.green{min-height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,#138a3d,#20c96b);color:#fff;font-weight:950;padding:0 22px;cursor:pointer}
 
 
-/* V175 Fix invoice payment link cursor */
+
 .hb-secure-payment a.pay-btn{cursor:pointer!important;opacity:1!important;pointer-events:auto!important}.hb-secure-payment button.pay-btn:disabled{cursor:not-allowed!important;opacity:.72!important}
 
 
-/* V176 unified invoice/quote email + print layout */
+
 @media print{
   @page{size:Letter portrait;margin:0!important}
   html,body{width:8.5in!important;min-height:11in!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
@@ -12920,7 +12910,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V177 exact one-page print layout: force desktop invoice layout in print */
+
 @media print{
   @page{size:Letter portrait;margin:0!important}
   html,body{
@@ -13025,7 +13015,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V178 print layout correction: use Chrome print zoom so the exact designed invoice occupies one page */
+
 @media print{
   @page{size:Letter portrait;margin:0!important}
   html,body{
@@ -13151,7 +13141,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V181: move only left-side copy up on Merchant/POS/Security homepage banners */
+
 .hb-current-merchant .hb-current-banner-copy,
 .hb-current-pos .hb-current-banner-copy,
 .hb-current-security .hb-current-banner-copy{
@@ -13166,11 +13156,10 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 }
 
 
-/* V182 unified uploaded HB Commerce logo restored on v181 base */
 
 
-/* V183 homepage banner right-side image integration.
-   Only adjusts right-side visual panels; left text/logo/font sizing is untouched. */
+
+
 .hb-current-merchant .hb-current-banner-visual,
 .hb-current-pos .hb-current-banner-visual,
 .hb-current-security .hb-current-banner-visual,
@@ -13240,7 +13229,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V184: eufy readability, checkout/card form, cart layout, compliance placement, mobile/print invoice refinements */
+
 .eufy-page,.eufy-detail-page,.eufy-cart-page,.eufy-checkout-page{background:#06111f!important;color:#eef7ff!important}
 .eufy-store-card,.eufy-detail-info,.eufy-cart-panel,.eufy-checkout-form{background:#07192e!important;border-color:rgba(148,184,220,.24)!important;color:#eef7ff!important}
 .eufy-store-card h3,.eufy-detail-info h1,.eufy-cart-panel h2,.eufy-checkout-form h4,.eufy-checkout-form label,.cart-line strong a{color:#fff!important}
@@ -13269,7 +13258,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V185 cart/checkout shipping + pickup + UPS-style rate UI */
+
 .eufy-cart-page .eufy-cart-panel{max-width:1180px!important;margin:auto!important}
 .eufy-cart-page .cart-line{grid-template-columns:112px 1fr 96px 130px 52px!important;align-items:center!important}
 .eufy-cart-page .cart-line-img img{width:100%!important;height:96px!important;object-fit:contain!important;background:#fff!important}
@@ -13282,7 +13271,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V187 rebuilt professional cart/checkout layout with normal 100% scale sizing */
+
 .hb-shop-compact-hero{padding:30px 0 8px!important;background:linear-gradient(135deg,#06111f,#08223e)!important;color:#fff!important}
 .hb-shop-compact-hero .container{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;width:min(1280px,calc(100% - 40px))!important}
 .hb-shop-compact-hero h1{margin:4px 0 6px!important;font-size:clamp(30px,3vw,44px)!important;line-height:1.05!important;color:#fff!important}
@@ -13305,17 +13294,17 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* v192 removed superseded cart/checkout CSS block. */
 
 
-/* v192 removed superseded cart/checkout CSS block. */
 
 
-/* V192 true premium ecommerce cart/checkout rebuild using homepage background */
+
+
+
 .hb-shop-page-v192{min-height:100vh;background:radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),radial-gradient(circle at 88% 18%,rgba(19,138,61,.14),transparent 28%),linear-gradient(135deg,#fbfdff 0%,#f7fafc 44%,#eef8f3 100%)!important;color:#06284d!important}.hb-shop-hero-v192{padding:42px 0 18px!important;border-bottom:3px solid #ff6a00!important}.hb-shop-hero-v192 .container{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:20px!important}.hb-shop-hero-v192 h1{margin:2px 0 8px!important;font-size:clamp(36px,3.4vw,58px)!important;letter-spacing:-.06em!important;color:#06284d!important}.hb-shop-hero-v192 p{margin:0!important;color:#405169!important;font-weight:700!important}.hb-pro-shop-section{padding:34px 0 70px!important}.hb-pro-commerce-shell.cart-view{display:grid!important;grid-template-columns:minmax(0,1fr) 390px!important;gap:28px!important;align-items:start!important}.hb-pro-commerce-shell.checkout-view{display:block!important}.hb-pro-cart-board,.hb-pro-order-summary,.hb-pro-checkout-form{background:rgba(255,255,255,.94)!important;border:1px solid #d8e4f2!important;border-radius:28px!important;box-shadow:0 24px 70px rgba(6,40,77,.12)!important;color:#10233d!important}.hb-pro-cart-board{padding:24px!important}.hb-pro-panel-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;border-bottom:1px solid #dbe7f5!important;padding-bottom:18px!important;margin-bottom:18px!important}.hb-pro-panel-head span,.hb-pro-summary-label,.hb-pro-checkout-head span{color:#ff6a00!important;text-transform:uppercase!important;letter-spacing:.14em!important;font-size:12px!important;font-weight:1000!important}.hb-pro-panel-head h2,.hb-pro-order-summary h2,.hb-pro-checkout-head h2{color:#06284d!important;margin:3px 0!important;font-size:30px!important;letter-spacing:-.04em!important}.hb-pro-panel-head p,.hb-pro-checkout-head p{color:#526174!important;margin:0!important;font-weight:650!important}.hb-pro-soft-btn,.hb-pro-checkout-btn,.hb-pro-place-order,.hb-pro-coupon-row button{display:inline-flex!important;align-items:center!important;justify-content:center!important;text-decoration:none!important;border:0!important;border-radius:16px!important;font-weight:1000!important}.hb-pro-soft-btn{background:#edf5ff!important;color:#06284d!important;padding:13px 18px!important;box-shadow:0 10px 26px rgba(6,40,77,.10)!important}.hb-pro-checkout-btn,.hb-pro-place-order{background:linear-gradient(135deg,#ff6a00,#ff8c21)!important;color:#fff!important;padding:16px 22px!important;width:100%!important;box-shadow:0 18px 42px rgba(255,106,0,.24)!important}.hb-pro-empty-cart{background:#f8fbff!important;border:1px dashed #b8c9dc!important;border-radius:18px!important;padding:20px!important;color:#405169!important;font-weight:850!important}.hb-pro-cart-items,.hb-pro-summary-items{display:grid!important;gap:16px!important}.hb-pro-cart-item{display:grid!important;grid-template-columns:150px minmax(0,1fr) 96px 130px 48px!important;gap:18px!important;align-items:center!important;background:#fff!important;border:1px solid #dce8f5!important;border-radius:24px!important;padding:18px!important;box-shadow:0 15px 42px rgba(6,40,77,.08)!important}.hb-pro-item-img{height:142px!important;background:linear-gradient(135deg,#fff,#f2f7fc)!important;border:1px solid #dbe7f5!important;border-radius:20px!important;display:grid!important;place-items:center!important;overflow:hidden!important}.hb-pro-item-img img{max-width:92%!important;max-height:92%!important;object-fit:contain!important}.hb-pro-item-kicker{display:block!important;color:#138a3d!important;text-transform:uppercase!important;letter-spacing:.12em!important;font-size:11px!important;font-weight:1000!important;margin-bottom:5px!important}.hb-pro-item-copy h3{margin:0 0 9px!important;font-size:22px!important;line-height:1.18!important;color:#06284d!important}.hb-pro-item-copy h3 a{color:#06284d!important;text-decoration:none!important}.hb-pro-item-price{display:flex!important;align-items:baseline!important;gap:9px!important;margin-bottom:10px!important;color:#10233d!important}.hb-pro-old-price{color:#93a4b8!important;text-decoration:line-through!important;font-weight:850!important}.hb-pro-item-price strong{color:#06284d!important;font-size:18px!important}.hb-pro-item-price em{color:#64748b!important;font-style:normal!important}.hb-pro-coupon-pill,.hb-pro-pill{display:inline-flex!important;align-items:center!important;gap:9px!important;border-radius:16px!important;padding:11px 13px!important;background:#eaf8ff!important;border:1px solid #c8edff!important;color:#10233d!important;font-weight:900!important}.hb-pro-coupon-pill input{width:18px!important;height:18px!important;accent-color:#ff6a00!important}.hb-pro-pill.muted{color:#64748b!important;background:#f1f5f9!important;border-color:#dbe7f5!important}.hb-pro-qty label,.hb-pro-line-total label{display:block!important;font-size:12px!important;color:#64748b!important;font-weight:900!important;margin-bottom:7px!important;text-transform:uppercase!important}.hb-pro-qty input{width:86px!important;height:48px!important;border:1px solid #cbd9e8!important;border-radius:14px!important;text-align:center!important;font-weight:1000!important;color:#06284d!important;background:#fff!important}.hb-pro-line-total strong{color:#06284d!important;font-size:18px!important}.hb-pro-remove{width:46px!important;height:46px!important;border:0!important;border-radius:15px!important;background:#fff1f1!important;color:#b91c1c!important;font-size:22px!important;font-weight:1000!important}.hb-pro-order-summary{padding:24px!important;position:sticky!important;top:92px!important}.hb-pro-summary-lines{display:grid!important;gap:0!important;border-top:1px solid #dbe7f5!important;margin-top:18px!important}.hb-pro-summary-lines div{display:flex!important;justify-content:space-between!important;gap:16px!important;padding:15px 0!important;border-bottom:1px solid #e6edf6!important;color:#405169!important;font-weight:850!important}.hb-pro-summary-lines strong{color:#138a3d!important;font-size:19px!important}.hb-pro-summary-total{margin:18px 0!important;background:#06284d!important;color:#fff!important;border-top:4px solid #ff6a00!important;border-radius:18px!important;padding:16px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-weight:1000!important}.hb-pro-summary-total strong{color:#fff!important;font-size:28px!important}.hb-pro-summary-note{display:block!important;color:#526174!important;line-height:1.5!important;font-weight:750!important}.hb-pro-summary-trust{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin-top:18px!important}.hb-pro-summary-trust span{background:#f2f8ff!important;border:1px solid #dbe7f5!important;border-radius:12px!important;padding:9px!important;color:#405169!important;font-size:12px!important;font-weight:900!important}.hb-pro-checkout-layout{display:grid!important;grid-template-columns:minmax(0,760px) 390px!important;gap:28px!important;align-items:start!important}.hb-pro-checkout-form{padding:24px!important}.hb-pro-checkout-head{padding:4px 2px 20px!important;border-bottom:1px solid #dbe7f5!important;margin-bottom:18px!important}.hb-pro-checkout-progress{display:grid!important;grid-template-columns:auto 1fr auto 1fr auto!important;gap:10px!important;align-items:center!important;margin:12px 0 22px!important}.hb-pro-checkout-progress span{color:#64748b!important;font-weight:1000!important}.hb-pro-checkout-progress span.active{color:#138a3d!important}.hb-pro-checkout-progress i{height:2px!important;background:#dbe7f5!important}.hb-pro-step{display:grid!important;grid-template-columns:42px minmax(0,1fr)!important;gap:16px!important;background:#fff!important;border:1px solid #dce8f5!important;border-radius:22px!important;padding:18px!important;margin-bottom:16px!important;box-shadow:0 12px 34px rgba(6,40,77,.06)!important}.hb-pro-step-num{width:42px!important;height:42px!important;border-radius:14px!important;background:#06284d!important;color:#fff!important;display:grid!important;place-items:center!important;font-weight:1000!important}.hb-pro-step h3{margin:0!important;color:#06284d!important;font-size:22px!important}.hb-pro-step p{margin:3px 0 16px!important;color:#526174!important;font-weight:650!important}.hb-pro-fields{display:grid!important;gap:14px!important}.hb-pro-fields.two{grid-template-columns:1fr 1fr!important}.hb-pro-fields.three{grid-template-columns:1fr 110px 150px!important}.hb-pro-step .field label{color:#10233d!important;font-weight:950!important}.hb-pro-step input{height:50px!important;border:1px solid #c9d7e8!important;border-radius:14px!important;background:#f9fcff!important;color:#10233d!important;padding:0 14px!important;font-size:15px!important;font-weight:800!important}.hb-pro-coupon-row{display:grid!important;grid-template-columns:1fr 120px!important;gap:12px!important}.hb-pro-coupon-row button{background:#edf5ff!important;color:#06284d!important}.hb-pro-same-ship{display:inline-flex!important;align-items:center!important;gap:9px!important;margin-top:12px!important;color:#10233d!important;font-weight:900!important}.hb-pro-same-ship input{width:18px!important;height:18px!important;accent-color:#ff6a00!important}.hb-pro-option-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}.hb-pro-option-grid label{display:flex!important;gap:10px!important;align-items:flex-start!important;background:#f8fbff!important;border:1px solid #cbd9e8!important;border-radius:18px!important;padding:14px!important;color:#10233d!important;font-weight:950!important}.hb-pro-option-grid label:has(input:checked){border-color:#138a3d!important;box-shadow:0 0 0 3px rgba(19,138,61,.12)!important;background:#f1fff7!important}.hb-pro-option-grid label.disabled{opacity:.55!important}.hb-pro-option-grid input{width:18px!important;height:18px!important;margin-top:2px!important;accent-color:#ff6a00!important}.hb-pro-option-grid b{display:block!important;color:#06284d!important}.hb-pro-option-grid em{display:block!important;color:#64748b!important;font-style:normal!important;font-size:12px!important;margin-top:3px!important}.hb-pro-rate-box,.hb-pro-tax-note{border-radius:16px!important;padding:13px 14px!important;margin:13px 0!important;font-weight:850!important;line-height:1.45!important}.hb-pro-rate-box{background:#f1fff7!important;border:1px solid #a8e6bd!important;color:#0f5132!important}.hb-pro-tax-note{background:#fff8ed!important;border:1px solid #ffd49b!important;color:#7c3f00!important}.hb-pro-address-box{margin-top:12px!important}.hb-pro-card-box{background:#f8fbff!important;border:1px solid #cbd9e8!important;border-radius:18px!important;padding:16px!important;margin-top:14px!important;color:#10233d!important}.hb-pro-card-box strong{color:#06284d!important}.hb-pro-card-box p{color:#526174!important;margin:3px 0 14px!important}.hb-pro-summary-items{display:grid!important;gap:10px!important;margin:15px 0!important}.hb-pro-summary-item{display:grid!important;grid-template-columns:56px 1fr!important;gap:11px!important;align-items:center!important;background:#f8fbff!important;border:1px solid #e2edf7!important;border-radius:16px!important;padding:10px!important}.hb-pro-summary-item a{height:54px!important;background:#fff!important;border-radius:12px!important;display:grid!important;place-items:center!important}.hb-pro-summary-item img{max-width:92%!important;max-height:92%!important;object-fit:contain!important}.hb-pro-summary-item strong{display:block!important;color:#06284d!important;font-size:13px!important;line-height:1.2!important}.hb-pro-summary-item small{display:block!important;color:#64748b!important;font-weight:850!important;margin-top:3px!important}@media(max-width:1100px){.hb-pro-commerce-shell.cart-view,.hb-pro-checkout-layout{grid-template-columns:1fr!important}.hb-pro-order-summary{position:static!important}.hb-pro-cart-item{grid-template-columns:120px 1fr!important}.hb-pro-qty,.hb-pro-line-total,.hb-pro-remove{grid-column:2!important}.hb-pro-option-grid{grid-template-columns:1fr!important}}@media(max-width:700px){.hb-shop-hero-v192 .container{align-items:flex-start!important;flex-direction:column!important}.hb-pro-cart-board,.hb-pro-order-summary,.hb-pro-checkout-form{padding:18px!important;border-radius:22px!important}.hb-pro-cart-item{grid-template-columns:92px 1fr!important;padding:13px!important}.hb-pro-item-img{height:94px!important}.hb-pro-item-copy h3{font-size:17px!important}.hb-pro-fields.two,.hb-pro-fields.three{grid-template-columns:1fr!important}.hb-pro-coupon-row{grid-template-columns:1fr!important}.hb-pro-step{grid-template-columns:1fr!important}.hb-pro-step-num{width:36px!important;height:36px!important}.hb-pro-summary-total strong{font-size:24px!important}}
 
 
-/* V193 cart/add-to-cart + UPS-rate fix + downloadable homepage background theme */
+
 .hb-shop-page-v192,.eufy-cart-page,.eufy-checkout-page{
   background:
     radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
@@ -13331,7 +13320,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 
 
 
-/* V197 exact homepage background + readable cart/checkout text */
+
 .hb-shop-page-v192,.eufy-cart-page,.eufy-checkout-page{
   background:
     radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
@@ -13352,7 +13341,7 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .hb-pro-summary-total span,.hb-pro-summary-total strong{color:#fff!important;-webkit-text-fill-color:#fff!important}
 
 
-/* V198 exact homepage background for cart and checkout */
+
 .hb-shop-page-v192,.eufy-cart-page,.eufy-checkout-page{background:radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),radial-gradient(circle at 88% 18%,rgba(19,138,61,.14),transparent 28%),linear-gradient(135deg,#fbfdff 0%,#f7fafc 44%,#eef8f3 100%)!important;background-attachment:fixed!important;color:#06284d!important}
 .hb-shop-page-v192:before,.eufy-cart-page:before,.eufy-checkout-page:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(120deg,rgba(6,40,77,.035),rgba(255,106,0,.025),rgba(19,138,61,.035))!important}
 .hb-shop-page-v192>*{position:relative;z-index:1}
@@ -13361,6 +13350,12 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card .i
 .hb-pro-cart-board p,.hb-pro-step p,.hb-pro-summary-note,.hb-pro-item-price em,.hb-pro-empty-cart{color:#405169!important;-webkit-text-fill-color:#405169!important}
 .hb-pro-summary-lines span,.hb-pro-summary-lines strong{color:#10233d!important;-webkit-text-fill-color:#10233d!important}
 .hb-pro-summary-total span,.hb-pro-summary-total strong{color:#fff!important;-webkit-text-fill-color:#fff!important}
+
+
+.hb-side-totals .balance-grand{background:linear-gradient(90deg,#ff6a00,#138a3d)!important;color:#fff!important;border-top:3px solid #fff!important}
+.hb-side-totals .balance-grand span{color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:1000!important}
+.hb-side-totals .balance-grand span:last-child{font-size:28px!important}
+
 `;
 
 function installButtonHtml() {
@@ -13844,7 +13839,7 @@ function industryTrustStrip(){
 
 
 
-/* v184: removed unused legacy eufy deals carousel. */
+
 
 
 
@@ -15114,7 +15109,7 @@ function eufyStoreScript(products = null) {
   return `<script>(function(){
 const KEY='hb_eufy_quote_cart';
 const products=${JSON.stringify(products)};
-const TAX_RATE=0.10;/* display fallback; checkout calls ZipTax */
+const TAX_RATE=0.10;
 function money(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}
 function find(id){return products.find(p=>p.id===id)}
 function getCart(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}
@@ -15158,9 +15153,30 @@ async function pageEufyCollection(env) {
   return htmlPage('EUFY PoE NVR Camera Systems | HB Commerce Solutions', layout(env, 'Security', body));
 }
 
+
+const HB_SHOP_BACKGROUND_STYLE = `<style id="hb-shop-background-force">
+body:has(.hb-shop-page-v192),body:has(.eufy-cart-page),body:has(.eufy-checkout-page),.hb-shop-page-v192,.eufy-cart-page,.eufy-checkout-page{
+  background:
+    radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
+    radial-gradient(circle at 88% 18%,rgba(19,138,61,.14),transparent 28%),
+    linear-gradient(135deg,#fbfdff 0%,#f7fafc 44%,#eef8f3 100%)!important;
+  background-attachment:fixed!important;
+  color:#06284d!important;
+}
+body:has(.hb-shop-page-v192)::before,body:has(.eufy-cart-page)::before,body:has(.eufy-checkout-page)::before{
+  content:""!important;position:fixed!important;inset:0!important;pointer-events:none!important;z-index:-1!important;
+  background:linear-gradient(120deg,rgba(6,40,77,.035),rgba(255,106,0,.025),rgba(19,138,61,.035))!important;
+}
+.hb-shop-page-v192 *,.eufy-cart-page *,.eufy-checkout-page *{text-shadow:none!important}
+.hb-pro-cart-board h2,.hb-pro-order-summary h2,.hb-pro-checkout-form h2,.hb-pro-step h3,.hb-pro-cart-item h3 a,.hb-pro-line-total strong{color:#06284d!important;-webkit-text-fill-color:#06284d!important}
+.hb-pro-cart-board p,.hb-pro-step p,.hb-pro-summary-note,.hb-pro-item-price em,.hb-pro-empty-cart{color:#405169!important;-webkit-text-fill-color:#405169!important}
+.hb-pro-summary-lines span,.hb-pro-summary-lines strong{color:#10233d!important;-webkit-text-fill-color:#10233d!important}
+.hb-pro-summary-total span,.hb-pro-summary-total strong{color:#fff!important;-webkit-text-fill-color:#fff!important}
+</style>`;
+
 async function pageEufyCart(env) {
   const products = await quoteProductsForEnv(env);
-  const body = `<main class="hb-shop-page-v192 eufy-cart-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Cart</div><h1>Your Shopping Cart</h1><p>Review your eufy products, coupon savings, estimated tax, and delivery options before checkout.</p></div><a class="hb-pro-soft-btn" href="/security-camera-systems/eufy-poe-nvr-camera-systems">Continue Shopping</a></div></section><section class="hb-pro-shop-section"><div class="container">${eufyCartPanel(true)}${eufyStoreScript(products)}</div></section></main>`;
+  const body = `${HB_SHOP_BACKGROUND_STYLE}<main class="hb-shop-page-v192 eufy-cart-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Cart</div><h1>Your Shopping Cart</h1><p>Review your eufy products, coupon savings, estimated tax, and delivery options before checkout.</p></div><a class="hb-pro-soft-btn" href="/security-camera-systems/eufy-poe-nvr-camera-systems">Continue Shopping</a></div></section><section class="hb-pro-shop-section"><div class="container">${eufyCartPanel(true)}${eufyStoreScript(products)}</div></section></main>`;
   return htmlPage('Cart | HB Commerce Solutions', layout(env, 'Cart', body));
 }
 
@@ -15168,7 +15184,7 @@ async function pageEufyCheckout(env) {
   const products = await quoteProductsForEnv(env);
   const acfg = authNetConfig(env);
   const acceptJsV1 = String(env.AUTHORIZE_NET_ENV || "production").toLowerCase() === "sandbox" ? "https://jstest.authorize.net/v1/Accept.js" : "https://js.authorize.net/v1/Accept.js";
-  const body = `<main class="hb-shop-page-v192 eufy-checkout-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Checkout</div><h1>Secure Checkout</h1><p>Complete delivery, live UPS rating, ZipTax, and payment in a clean secure checkout.</p></div><a class="hb-pro-soft-btn" href="/cart">Back to Cart</a></div></section><section class="hb-pro-shop-section"><div class="container hb-pro-checkout-layout">${eufyCheckoutForm()}${eufyCartPanel(false)}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};</script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}function cart(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}}function ship(){return{street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''}}function fulfill(){let r=document.querySelector('input[name=fulfillment_type]:checked');return r?r.value:'ups'}function setShipReq(on){['shipStreet','shipCity','shipState','shipZip'].forEach(id=>{let e=q(id);if(e)e.required=on});let b=q('shippingAddressBlock');if(b)b.style.display=on?'block':'none'}async function rate(){let box=q('shippingRateBox'),c=cart(),f=fulfill();setShipReq(f!=='pickup');if(f==='pickup'){window.hbEufyShippingReady=true;window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(0);if(q('shipService'))q('shipService').value='pickup';if(box)box.innerHTML='<strong>Pickup selected</strong><br><small>No shipping charge.</small>';calc();return}window.hbEufyShippingReady=false;let s=ship();if(!s.zip||String(s.zip).replace(/\D/g,'').length<5){window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=(f==='fedex'?'FedEx needed':'UPS needed');if(box)box.innerHTML='<strong>'+(f==='fedex'?'FedEx Ground':'UPS Ground')+'</strong><br><small>Enter shipping ZIP to calculate live carrier rate.</small>';calc();return}try{let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:s,fulfillment_type:f})});let j=await r.json(),x=j.rates&&j.rates[0];if(!j.ok||!x)throw new Error(j.message||'Carrier rate unavailable');window.hbEufyShippingReady=true;window.hbEufyShipCost=Number(x.amount||0);if(q('shipCost'))q('shipCost').value=String(x.amount||0);if(q('shipService'))q('shipService').value=x.code||f;if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(x.amount||0);if(box)box.innerHTML='<strong>'+x.label+'</strong> '+m(x.amount||0)+'<br><small>'+(j.source||'live carrier rate')+'</small>'}catch(e){if(box)box.innerHTML='<strong>Carrier rate could not be calculated</strong><br><small>Please verify ZIP/address or choose Pickup. Admin can also verify shipping.</small>';window.hbEufyShipCost=0;window.hbEufyShippingReady=false}calc()}async function calc(){let c=cart();if(!c.length)return;try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0),sh=Number(window.hbEufyShipCost||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax+sh);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}window.hbUpdateShippingRate=rate;['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(rate,350));el.addEventListener('blur',rate)}});document.addEventListener('change',e=>{if(e.target&&e.target.name==='fulfillment_type')rate()});document.addEventListener('DOMContentLoaded',()=>setTimeout(rate,700));})();</script></section></main>`;
+  const body = `${HB_SHOP_BACKGROUND_STYLE}<main class="hb-shop-page-v192 eufy-checkout-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Checkout</div><h1>Secure Checkout</h1><p>Complete delivery, live UPS rating, ZipTax, and payment in a clean secure checkout.</p></div><a class="hb-pro-soft-btn" href="/cart">Back to Cart</a></div></section><section class="hb-pro-shop-section"><div class="container hb-pro-checkout-layout">${eufyCheckoutForm()}${eufyCartPanel(false)}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};</script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}function cart(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}}function ship(){return{street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''}}function fulfill(){let r=document.querySelector('input[name=fulfillment_type]:checked');return r?r.value:'ups'}function setShipReq(on){['shipStreet','shipCity','shipState','shipZip'].forEach(id=>{let e=q(id);if(e)e.required=on});let b=q('shippingAddressBlock');if(b)b.style.display=on?'block':'none'}async function rate(){let box=q('shippingRateBox'),c=cart(),f=fulfill();setShipReq(f!=='pickup');if(f==='pickup'){window.hbEufyShippingReady=true;window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(0);if(q('shipService'))q('shipService').value='pickup';if(box)box.innerHTML='<strong>Pickup selected</strong><br><small>No shipping charge.</small>';calc();return}window.hbEufyShippingReady=false;let s=ship();if(!s.zip||String(s.zip).replace(/\D/g,'').length<5){window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=(f==='fedex'?'FedEx needed':'UPS needed');if(box)box.innerHTML='<strong>'+(f==='fedex'?'FedEx Ground':'UPS Ground')+'</strong><br><small>Enter shipping ZIP to calculate live carrier rate.</small>';calc();return}try{let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:s,fulfillment_type:f})});let j=await r.json(),x=j.rates&&j.rates[0];if(!j.ok||!x)throw new Error(j.message||'Carrier rate unavailable');window.hbEufyShippingReady=true;window.hbEufyShipCost=Number(x.amount||0);if(q('shipCost'))q('shipCost').value=String(x.amount||0);if(q('shipService'))q('shipService').value=x.code||f;if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(x.amount||0);if(box)box.innerHTML='<strong>'+x.label+'</strong> '+m(x.amount||0)+'<br><small>'+(j.source||'live carrier rate')+'</small>'}catch(e){if(box)box.innerHTML='<strong>Carrier rate could not be calculated</strong><br><small>Please verify ZIP/address or choose Pickup. Admin can also verify shipping.</small>';window.hbEufyShipCost=0;window.hbEufyShippingReady=false}calc()}async function calc(){let c=cart();if(!c.length)return;try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0),sh=Number(window.hbEufyShipCost||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax+sh);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}window.hbUpdateShippingRate=rate;['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(rate,350));el.addEventListener('blur',rate)}});document.addEventListener('change',e=>{if(e.target&&e.target.name==='fulfillment_type')rate()});document.addEventListener('DOMContentLoaded',()=>setTimeout(rate,700));})();</script></section></main>`;
   return htmlPage('Checkout | HB Commerce Solutions', layout(env, 'Checkout', body));
 }
 
@@ -17573,7 +17589,7 @@ function taxOrigin(env) {
   };
 }
 
-/* TaxJar and override lookups are intentionally disabled. HB Commerce now uses a fixed 10% tax rate across all admin quotes, invoices, and online orders. */
+
 function taxJarHeaders(env) {
   return { 'content-type': 'application/json' };
 }
@@ -19216,7 +19232,7 @@ function bytesToBase64(bytes) {
   return btoa(binary);
 }
 
-/* v176: removed old manual PDF builder so emailed invoices/quotes use the exact live document link instead of outdated PDF attachment. */
+
 
 
 
@@ -19367,9 +19383,38 @@ async function adminTogglePaid(request, env) {
   return redirect(id ? `/admin/pay?id=${encodeURIComponent(id)}` : "/admin/dashboard");
 }
 
+
+function balanceMatchKey(v){return String(v||"").trim().toLowerCase().replace(/\s+/g," ")}
+async function attachOpenInvoiceBalance(env, doc){
+  if(!doc||doc.type!=="Invoice"||doc.paid)return doc;
+  const email=balanceMatchKey(doc.email), name=balanceMatchKey(doc.customer_name);
+  if(!email&&!name)return doc;
+  const res=await env.DB.prepare("SELECT id,customer_name,email,status,paid,total,created_at,updated_at,data_json FROM documents WHERE type='Invoice' AND paid=0 ORDER BY created_at ASC LIMIT 1000").all();
+  const matches=[];
+  for(const row of (res.results||[])){
+    let d={};try{d=JSON.parse(row.data_json||"{}")}catch{}
+    const st=String(row.status||d.status||"").toLowerCase();
+    if(row.paid||d.paid||st==="paid"||st==="canceled"||st==="deleted"||d.canceled_at||d.deleted_at)continue;
+    const rowEmail=balanceMatchKey(row.email||d.email), rowName=balanceMatchKey(row.customer_name||d.customer_name);
+    const ok=email?rowEmail===email:rowName===name;
+    if(!ok)continue;
+    const dd={...d,id:row.id,status:row.status||d.status,paid:row.paid||d.paid};
+    matches.push({id:row.id,created:String(row.created_at||d.created_at||""),updated:String(row.updated_at||d.updated_at||""),total:Number(row.total||calcTotals(dd).total||0)});
+  }
+  if(matches.length<2)return doc;
+  matches.sort((a,b)=>a.created.localeCompare(b.created)||a.updated.localeCompare(b.updated)||a.id.localeCompare(b.id));
+  const latest=matches[matches.length-1];
+  if(latest&&latest.id===doc.id){
+    doc.customer_balance_total=matches.reduce((s,r)=>s+Number(r.total||0),0);
+    doc.customer_balance_count=matches.length;
+  }
+  return doc;
+}
+
 async function reviewPage(request, env, id, token, message = "") {
   const doc = await getDoc(env, id);
   if (!doc || doc.token !== token) return htmlPage("Document Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found or link expired.</div></div></section>`), 404);
+  await attachOpenInvoiceBalance(env, doc);
   const wantsDecline = new URL(request.url).searchParams.get("action") === "decline";
   const action = doc.type === "Quote" ? (wantsDecline ? declineBlock(doc) : approvalBlock(doc)) : `<div class="notice no-print" style="margin-top:18px">Invoices are view-only and do not require customer approval.</div>`;
   const body = `<main class="section"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
@@ -19499,6 +19544,7 @@ function renderDocument(doc) {
     ? `<div class="signature-proof no-print"><strong>Client Approval Proof</strong><br>Approved by: ${escapeHtml(doc.approved_by || "")}${doc.approved_at ? `<br>Approved at: ${escapeHtml(formatDateTime(doc.approved_at))}` : ""}${doc.approved_signature ? `<img src="${escapeHtml(doc.approved_signature)}" alt="Client signature">` : ""}${doc.approval_notes ? `<div class="hint">Notes: ${escapeHtml(doc.approval_notes)}</div>` : ""}</div>`
     : "";
   const paidWatermark = type === "Invoice" && doc.paid ? `<div class="paid-watermark">PAID</div>` : "";
+  const balanceLine = type === "Invoice" && Number(doc.customer_balance_count||0)>1 ? `<div class="total-row balance-grand"><span>BALANCE TOTAL</span><span>${money(doc.customer_balance_total||totals.total)}</span></div>` : "";
   return `<article class="doc hb-side-doc" id="printable-document">${paidWatermark}
     <aside class="hb-doc-side"><img class="hb-panel-divider-img" src="${HB_DOC_DIVIDER_SRC}" alt="" aria-hidden="true">
       <div class="side-logo hb-logo-exact"><img class="hb-full-logo-img" src="${HB_DOC_TEMPLATE_LOGO_SRC}" alt="HB Commerce Solutions"></div>
@@ -19553,7 +19599,7 @@ function renderDocument(doc) {
           <div class="total-row discount-row"><span>Accumulated Discount</span><span>-${money(totals.discounts)}</span></div>
           <div class="total-row"><span>Shipping Cost</span><span>${money(totals.shipping)}</span></div>
           <div class="total-row"><span>Tax (${Number(totals.rate).toFixed(3)}%)</span><span>${money(totals.tax)}</span></div>
-          <div class="total-row grand"><span>${type === "Invoice" ? "TOTAL DUE" : "QUOTE TOTAL"}</span><span>${money(totals.total)}</span></div>
+          <div class="total-row grand"><span>${type === "Invoice" ? "TOTAL DUE" : "QUOTE TOTAL"}</span><span>${money(totals.total)}</span></div>${balanceLine}
         </div>
       </section>
 
