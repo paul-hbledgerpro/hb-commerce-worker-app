@@ -1887,3 +1887,393 @@ V175 PAYMENT CURSOR FIX
 - Preserved v174 branded payment page, Authorize.Net AcceptUI, Admin layout settings, and all prior features.
 - Worker raw size: 3129404 bytes. Cloudflare free-plan headroom: 16324 bytes.
 - Node syntax check and route-handler check passed.
+
+
+V176 UNIFIED DOCUMENT EMAIL + PRINT FIX
+---------------------------------------
+- Based on v175.
+- Fixed the major mismatch between Admin View, emailed invoice/quote, and Print/Save PDF.
+- Document email no longer attaches the old manually generated PDF template.
+- Email now sends the secure live invoice/quote link, so customers see the same design as Admin View.
+- Invoice emails include Pay Secure Online and View Invoice buttons.
+- Quote emails include Approve Quote and Decline Quote buttons.
+- Removed the unused old manual invoice/quote PDF builder from worker.js.
+- Added strong print CSS so Print / Save PDF from the live review page uses the same invoice/quote design and is scaled to fit on Letter page where possible.
+- Browser print headers/footers may still need to be turned off in the browser print dialog for a perfectly clean PDF.
+- Preserved v175 branded payment page, Authorize.Net AcceptUI, Admin layout settings, and all prior features.
+- Worker raw size: 3119885 bytes. Cloudflare free-plan headroom: 25843 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V177 EXACT ONE-PAGE PRINT LAYOUT FIX
+------------------------------------
+- Based on v176.
+- Fixed Print / Save PDF so the live invoice/quote keeps the desktop layout instead of switching to the mobile/stacked layout.
+- Forces Bill To and Ship To to stay side-by-side in print.
+- Forces Terms/Conditions and totals to stay side-by-side in print.
+- Forces Secure Payment to keep the designed horizontal layout in print.
+- Scales the 1080px document to fit a Letter-size print page.
+- Preserves v176 email behavior: customer emails send the live invoice/quote link instead of the old PDF attachment.
+- For the best browser PDF result, use Destination: Save as PDF, Margins: None, and enable Background graphics.
+- Worker raw size: 3122902 bytes. Cloudflare free-plan headroom: 22826 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V178 PRINT MATCHES VIEW + DIVIDER FIX
+-------------------------------------
+- Based on v177.
+- Fixed Print / Save PDF layout so the invoice/quote keeps the same desktop design as Admin View.
+- Changed print scaling from CSS transform to Chrome-supported zoom so the element occupies the scaled page space instead of spilling onto a second page.
+- Forced the left panel divider image to remain visible in print:
+  orange vertical line and orange/green curved divider are printed from the actual image element.
+- Forced Bill To / Ship To, lower totals, and secure payment layout to stay in the designed two-column/horizontal format.
+- Customer emails still send the live document link so customers view the same design instead of the old PDF attachment.
+- Recommended print settings: Save as PDF, Margins None, Background graphics ON, Headers and footers OFF.
+- Worker raw size: 3126620 bytes. Cloudflare free-plan headroom: 19108 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V181 V178-BASE BANNER POSITION + ZIPTAX EUFY CARD CHECKOUT
+----------------------------------------------------------
+- Built from v178 as requested.
+- Homepage Merchant Services, POS Software, and Security Camera Systems banner slides:
+  - moved only the left-side copy block upward
+  - did not enlarge fonts
+  - did not move or resize right-side images
+- eufy checkout updates:
+  - priced eufy products remain Add to Cart / Checkout
+  - checkout now offers Credit Card, Check, and Zelle
+  - Credit Card orders redirect to the Authorize.Net secure payment flow after order submission
+  - successful card payments mark the online order paid
+  - Check/Zelle orders stay as Online Orders in Admin Portal for follow-up
+- Website checkout tax:
+  - ZipTax is used to calculate destination sales tax from shipping address/ZIP when available
+  - if ZipTax is unavailable or not configured, checkout falls back to the existing 10% fixed tax behavior
+- Admin Online Orders text/tax labels were updated to no longer say fixed 10%.
+- Preserved v178 invoice/quote print/divider behavior and all previous Admin Portal functionality.
+- Worker raw size: 3129864 bytes. Cloudflare free-plan headroom: 15864 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V182 V181 LOGO RESTORED EVERYWHERE
+----------------------------------
+- Based on v181 so the corrected banner movement, ZipTax eufy checkout tax, and eufy credit card/check/Zelle checkout are preserved.
+- Restored the newly uploaded HB Commerce logo across:
+  - website header
+  - website footer
+  - homepage/current/eufy banner logos
+  - Admin Portal centered header
+  - Admin login screen
+  - quote/invoice template
+  - branded payment page
+- Added a versioned logo route for cache busting:
+  /assets/logo-v182.webp
+- Kept /assets/logo.png as a compatibility route.
+- Worker raw size: 3136891 bytes. Cloudflare free-plan headroom: 8837 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V183 HOMEPAGE BANNER RIGHT-SIDE IMAGE INTEGRATION
+-------------------------------------------------
+- Based on v182.
+- Keeps all v182 logo updates everywhere.
+- Keeps all v181 eufy checkout / ZipTax / Credit Card / Check / Zelle updates.
+- Refines only the right-side image placement on homepage banners:
+  - Merchant Services
+  - POS Software
+  - Security Camera Systems
+  - All 4 eufy camera banners
+- Left-side text, logo placement, and font sizes were not changed.
+- Right-side images now fill the right visual half more naturally with an integrated branded glow panel.
+- Images use object-fit: contain so product/visual details are not cropped.
+- Worker raw size: 3139526 bytes. Cloudflare free-plan headroom: 6202 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V184 EUFY CHECKOUT + MOBILE INVOICE REFINEMENTS
+-----------------------------------------------
+- Based on v183.
+- eufy product/card readability:
+  - fixed hard-to-read dark price/text colors on eufy product cards.
+  - kept coupon and sale-price badges readable on the dark theme.
+- Cart / checkout visual refinements:
+  - improved cart line item cards.
+  - improved checkout grid/card layout.
+  - improved payment method selection styling.
+- Credit card checkout:
+  - selecting Credit Card now opens a secure card-entry section directly under the payment method.
+  - card data is tokenized in the browser by Authorize.Net Accept.js.
+  - HB Commerce does not store raw card numbers.
+  - the same Place Order button becomes Pay & Place Order for credit card.
+  - successful card payment saves the Online Order as Paid Online in Admin.
+  - Check/Zelle still submits as Online Order for Admin follow-up.
+- Checkout tax:
+  - preserves ZipTax destination tax flow from v181/v183.
+- Homepage compliance block:
+  - restyled and centered the Compliant / Certified / Trusted block so it looks like a professional trust strip instead of an awkward standalone section.
+- Mobile Admin invoice view:
+  - invoice/quote view keeps the full desktop invoice canvas available on mobile, with horizontal scroll instead of stacking into a broken mobile layout.
+- Print / Save PDF:
+  - tightened print scaling and spacing to better keep one-page invoices together when the browser print dialog uses proper settings.
+  - For best print: Margins None, Background graphics ON, Headers/Footers OFF.
+- Preserved v183 banner image integration and v182 logo restoration.
+- Worker raw size: 3143718 bytes. Cloudflare free-plan headroom: 2010 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V185 CART / CHECKOUT SHIPPING + PICKUP + UPS RATE UI
+----------------------------------------------------
+- Based on v184.
+- Preserves:
+  - uploaded HB Commerce logo across website/admin/template
+  - v183 homepage banner right-side image integration
+  - eufy checkout direct Authorize.Net card tokenization
+  - ZipTax destination tax calculation
+  - Check/Zelle orders going to Admin Online Orders
+  - mobile invoice and print refinements from v184
+- Cart/checkout layout:
+  - improved cart line item structure for a cleaner ecommerce-style cart
+  - added shipping line to the cart totals panel
+  - improved delivery method and payment method visual selection
+- Checkout fulfillment:
+  - customer can choose Shipping or Pickup
+  - Pickup sets shipping cost to $0 and hides the shipping address block
+  - Shipping keeps shipping address fields required
+- UPS-style rate integration:
+  - added /api/shipping/rate
+  - if UPS credentials are configured, checkout requests an UPS Ground rate based on destination ZIP
+  - if UPS credentials are not configured or UPS fails, checkout falls back to STANDARD_SHIPPING_FALLBACK, defaulting to $0 with Admin review
+- Order records:
+  - stores fulfillment_type
+  - stores shipping_service
+  - stores shipping_cost
+  - card checkout charges subtotal + ZipTax tax + shipping
+  - Check/Zelle online orders include shipping/tax info for Admin follow-up
+- Size optimization:
+  - de-duplicated embedded logo base64 to recover worker size headroom.
+- Required optional UPS secrets:
+  UPS_CLIENT_ID
+  UPS_CLIENT_SECRET
+  UPS_ACCOUNT_NUMBER
+  UPS_ORIGIN_ZIP
+  STANDARD_SHIPPING_FALLBACK
+  UPS_ENV=sandbox only for UPS sandbox testing
+- Worker raw size: 3103134 bytes. Cloudflare free-plan headroom: 42594 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V187 REBUILT PROFESSIONAL CART/CHECKOUT + UPS DIAGNOSTIC
+--------------------------------------------------------
+- Based on v185, not v186, to avoid oversized checkout elements.
+- Rebuilt cart CSS layout:
+  - product list on left
+  - professional sticky order summary on right
+  - cleaner product rows with better image/title/price/quantity/remove spacing
+- Rebuilt checkout CSS layout:
+  - checkout form on left
+  - sticky order summary on right
+  - normal 100% browser scale sizing, not enlarged due to zoom misunderstanding
+  - compact input heights, labels, radio cards, delivery method, and payment method sections
+- Preserved shipping/pickup logic:
+  - Shipping requires address
+  - Pickup hides shipping address and uses $0 shipping
+- UPS improvements:
+  - added transaction headers to UPS OAuth/rating requests
+  - customer no longer sees raw UPS errors such as Invalid Authentication Information
+  - added admin-only UPS test route: /admin/ups-test?zip=60123
+- Important: UPS Invalid Authentication Information is a credential/environment/API-access issue. Use /admin/ups-test after setting UPS secrets.
+- Preserved:
+  - uploaded HB Commerce logo everywhere
+  - v183 banner image integration
+  - ZipTax destination tax
+  - direct Authorize.Net tokenized card checkout
+  - Check/Zelle Online Orders
+- Worker raw size: 3114362 bytes. Cloudflare free-plan headroom: 31366 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V188 PROFESSIONAL CART/CHECKOUT + STRICT UPS RATES
+--------------------------------------------------
+- Based on v187.
+- Keeps rebuilt professional cart and checkout layouts with normal 100% sizing.
+- UPS shipping is strict by default: checkout requires a live UPS rate for Shipping.
+- Customer no longer gets standard fallback shipping unless ALLOW_STANDARD_SHIPPING_FALLBACK=1 is explicitly set.
+- If UPS cannot authenticate/rate, the checkout tells customer to choose Pickup or contact HB Commerce while UPS API is fixed.
+- Added /admin/ups-test?zip=60123 to diagnose UPS credentials/API access without exposing secrets.
+- Worker raw size: 3115052 bytes. Cloudflare free-plan headroom: 30676 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V189 LIGHT PROFESSIONAL CART/CHECKOUT + UPS DIAGNOSTIC
+------------------------------------------------------
+- Based on v188.
+- Reworked cart and checkout visually with a lighter, professional ecommerce-style theme while preserving HB Commerce navy/orange/green branding.
+- Cart now has a clean product list and sticky order summary on desktop.
+- Checkout now has white card sections, cleaner fields, compact delivery/payment option cards, and a professional order summary.
+- This is CSS/UX only for the cart/checkout layout; payment, ZipTax, and UPS logic remain intact.
+- UPS admin test now clearly warns when UPS_ENV is set to sandbox and gives the exact command to delete it for production credentials.
+- Live UPS rates are still required when customer selects Shipping.
+- Worker raw size: 3125458 bytes. Cloudflare free-plan headroom: 20270 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V190 REAL ECOMMERCE CART/CHECKOUT + UPS FIX
+-------------------------------------------
+- Based on v189.
+- Rebuilt cart structure with a real product-list + sticky order-summary layout.
+- Rebuilt checkout form into a step-based ecommerce checkout:
+  1. Contact information
+  2. Coupon
+  3. Billing address
+  4. Delivery method / shipping address
+  5. Payment method / card fields
+- Fixed text contrast issues caused by old dark-theme CSS overriding light cart/checkout pages.
+- Keeps HB Commerce navy, orange, and green theme while using a lighter ecommerce background.
+- Keeps direct Authorize.Net card tokenization from checkout.
+- Keeps Check/Zelle online order flow.
+- Keeps ZipTax destination tax.
+- UPS fix:
+  - UPS_ENV is now ignored so an accidental sandbox secret will not force sandbox mode.
+  - Production is used by default.
+  - Sandbox is used only if UPS_FORCE_SANDBOX=1 is set.
+  - UPS errors now state whether OAuth failed before rating or Rating failed after OAuth succeeded.
+  - Admin UPS test now shows which required secrets are present/missing.
+  - Admin UPS test explains that the UPS Developer App must have Rating API access, not only Shipping.
+- Worker raw size: 3135765 bytes. Cloudflare free-plan headroom: 9963 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V191 PREMIUM CART/CHECKOUT + UPS REVIEW
+---------------------------------------
+- Based on v190.
+- Rebuilt cart and checkout markup again, not just colors.
+- Cart:
+  - premium ecommerce-style layout with product list and sticky order summary.
+  - clearer product row with image, name, price, coupon, qty, line total, and remove button.
+  - uses HB Commerce homepage-style light gradient background and high-contrast card text.
+- Checkout:
+  - rebuilt into step cards for Contact, Coupon, Billing, Delivery, and Payment.
+  - right-side order summary contains mini product rows and totals.
+  - delivery method remains Shipping / Pickup.
+  - credit card form remains inline and tokenized via Authorize.Net.
+- UPS:
+  - preserved strict UPS diagnostics from v190.
+  - callback URL is not required for OAuth client-credentials flow used by this Worker.
+  - if UPS test fails at OAuth, check the actual Cloudflare secrets and whether the UPS app credentials are production credentials.
+- Worker raw size: 3137606 bytes. Cloudflare free-plan headroom: 8122 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V192 TRUE PREMIUM ECOMMERCE CART / CHECKOUT REBUILD
+---------------------------------------------------
+- Based on v191.
+- Rebuilt the cart and checkout markup again instead of just changing colors.
+- Cart now uses a modern ecommerce structure:
+  - homepage-style light gradient background
+  - large product list panel
+  - individual product cards with image, name, unit price, coupon, quantity, line total, and remove button
+  - sticky right-side order summary
+  - high-contrast text/colors
+- Checkout now uses a modern ecommerce structure:
+  - homepage-style light gradient background
+  - compact checkout hero
+  - customer, coupon, billing, delivery, and payment cards
+  - sticky order summary on the right
+  - high-contrast readable fields and labels
+- Delivery options:
+  - UPS Ground live rate
+  - Pickup
+  - FedEx placeholder / coming soon section for later API integration
+- Preserves UPS functionality from v191, which the user confirmed is working.
+- Preserves ZipTax, Authorize.Net tokenized card checkout, Check/Zelle workflow, uploaded logo, invoice/quote and admin features from prior versions.
+- Removed superseded v189/v191 cart CSS blocks to prevent conflicts and recover Worker size.
+- Worker raw size: 3132639 bytes. Cloudflare free-plan headroom: 13089 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V193 ADD-TO-CART + UPS RATE + HOMEPAGE THEME DOWNLOAD FIX
+----------------------------------------------------------
+- Based on v192.
+- Fixed eufy Add to Cart by allowing products to be added to localStorage cart without requiring account status first. Checkout still requires a verified customer account.
+- Added safer Add to Cart button handling on product cards and product detail pages.
+- Improved UPS checkout behavior: UPS is no longer called before the customer enters a complete ZIP code, so the page does not show premature UPS errors.
+- Keeps live UPS rating required for shipping once a ZIP/address is entered.
+- Keeps Pickup option at $0 shipping.
+- Keeps ZipTax destination sales tax and Authorize.Net card tokenization.
+- Added downloadable homepage background theme CSS as a file in the ZIP and as a live route: /assets/hb-homepage-background-theme.css
+- Re-applied homepage background gradients to cart/checkout pages while forcing high-contrast text colors.
+- Worker raw size: 3134968 bytes. Cloudflare free-plan headroom: 10760 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V197 DEPLOY FIXED CART + SAME ADDRESS + FEDEX
+--------------------------------------------
+- Based on v193, the last version with fixed Add to Cart direction and homepage-theme cart/checkout work.
+- Fixes the Cloudflare build failure from v194/v195/v196 by inserting FedEx after the complete upsGroundRate function instead of inside the UPS function signature.
+- Validated with esbuild bundling to catch the exact parser error Wrangler was reporting.
+- Add to Cart buttons now use data attributes plus a delegated click listener to avoid inline-handler/button nesting issues.
+- Shipping address same as billing now copies billing street/city/state/ZIP immediately and keeps copying if billing fields are edited while the box is checked.
+- Cart/checkout use the exact homepage background gradient and readability overrides.
+- Delivery Method now includes UPS Ground, FedEx Ground, and Pickup.
+- Added FedEx Ground live rate lookup and /admin/fedex-test?zip=60123.
+- Preserved UPS, ZipTax, Authorize.Net card tokenization, and Admin Portal features.
+- Worker raw size: 3142187 bytes. Cloudflare free-plan headroom: 3541 bytes.
+- esbuild syntax/bundle check and route-handler check passed.
+
+
+V198 V197 DESIGN + BUTTON/CHECKBOX/FedEx FIX
+--------------------------------------------
+- Based on v197 so the cart and checkout page layout/design from v197 stays in place.
+- Fixed the actual runtime JavaScript syntax error inside eufyStoreScript that was preventing Add to Cart, cart rendering, and checkbox behavior from running.
+- Restored Add to Cart button behavior using the working v189 style direct button calls for eufy product cards and product detail pages.
+- Restored Add to Quote Cart behavior for LTS item/detail pages.
+- Restored same-as-billing copy behavior using the v189 function and added listeners so the shipping address updates when the checkbox is selected.
+- Kept the v197 cart/checkout markup and visual layout; only the broken cart script/functionality was corrected.
+- Kept homepage-background styling for cart and checkout with readable text overrides.
+- Kept UPS working and kept FedEx live rate code + /admin/fedex-test?zip=60123 from v197.
+- Runtime script check for eufyStoreScript passed. This catches the browser-side cart script error that normal node --check does not catch.
+- Worker raw size: 3144268 bytes. Cloudflare free-plan headroom: 1460 bytes.
+- Node syntax check, eufy runtime script syntax check, and route-handler check passed.
+
+
+V199 CART/CHECKOUT HOMEPAGE BACKGROUND + LATEST INVOICE BALANCE TOTAL
+--------------------------------------------------------------------
+- Based on v198, preserving the now-working Add to Cart / Add to Quote Cart and same-as-billing checkbox behavior.
+- Forces the exact homepage background theme onto cart and checkout pages using an in-page CSS override:
+  radial orange glow, radial green glow, and light green/white gradient.
+- Adds high-contrast text overrides for cart/checkout so the text stays readable on the homepage-style background.
+- Adds customer open-invoice balance logic:
+  - if a customer has more than one open invoice,
+  - only the latest-created open invoice for that customer shows an extra line under TOTAL DUE,
+  - the line is BALANCE TOTAL and includes the total of all open invoices for that customer.
+- Customer matching uses email first; if email is missing, it falls back to customer name.
+- Older open invoices for that customer do not show the balance line.
+- Stripped code comments from worker.js to regain Cloudflare free-plan size headroom.
+- Worker raw size: 3134223 bytes. Cloudflare free-plan headroom: 11505 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V200 BALANCE TOTAL PAYMENT FIX
+------------------------------
+- Based on v199.
+- Keeps the working cart/checkout homepage background and latest-invoice BALANCE TOTAL display.
+- Fixes the Pay Secure Online flow for customers with multiple open invoices:
+  - the latest open invoice for a customer shows BALANCE TOTAL under TOTAL DUE.
+  - the payment page now also shows BALANCE TOTAL.
+  - the Authorize.Net charge amount uses BALANCE TOTAL instead of only that invoice total.
+  - after a successful balance payment, all included open invoices for that customer are marked Paid.
+- Older open invoices for the same customer still pay only their own invoice amount unless they are included in the latest invoice balance payment.
+- Customer matching uses email first, then customer name fallback.
+- Worker raw size: 3136444 bytes. Cloudflare free-plan headroom: 9284 bytes.
+- Node syntax check and route-handler check passed.
+
+
+V201 AUTHORIZE.NET AUTH DIAGNOSTICS
+-----------------------------------
+- Based on v200.
+- Added admin-only Authorize.Net test page: /admin/authnet-test.
+- The test page verifies the server-side API Login ID + Transaction Key against the selected Authorize.Net endpoint without charging a card.
+- Payment pages now show Authorize.Net AcceptUI error codes such as E_WC_21 / E_WC_19 instead of only the plain text message.
+- AUTHORIZE_NET_ENV is now trimmed and accepts sandbox/test/testing/apitest as sandbox aliases; production remains the default when unset.
+- Worker raw size: 3140296 bytes. Cloudflare free-plan headroom: 5432 bytes.
+- Node syntax check passed.

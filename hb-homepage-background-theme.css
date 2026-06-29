@@ -1,0 +1,25 @@
+/* HB Commerce homepage background theme */
+:root{
+  --hb-navy:#06284d;
+  --hb-deep-navy:#061b35;
+  --hb-orange:#ff6a00;
+  --hb-green:#138a3d;
+  --hb-page-bg-1:#fbfdff;
+  --hb-page-bg-2:#f7fafc;
+  --hb-page-bg-3:#eef8f3;
+}
+body,.hb-homepage-background{
+  background:
+    radial-gradient(circle at 12% 8%,rgba(255,106,0,.13),transparent 25%),
+    radial-gradient(circle at 88% 18%,rgba(19,138,61,.14),transparent 28%),
+    linear-gradient(135deg,#fbfdff 0%,#f7fafc 44%,#eef8f3 100%);
+  background-attachment:fixed;
+}
+.hb-homepage-background-overlay:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(120deg,rgba(6,40,77,.035),rgba(255,106,0,.025),rgba(19,138,61,.035));
+}
