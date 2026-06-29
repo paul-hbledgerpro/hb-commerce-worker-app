@@ -2305,3 +2305,17 @@ V201 AUTHORIZE.NET AUTH DIAGNOSTICS
 ## v204 visual contrast update
 
 Create Quote and Create Invoice now include a page-level checkout-style contrast override. The form background uses the secure checkout navy theme, while inputs/selects/textareas use high-contrast white fields with dark text so values remain readable in Chrome, Edge, Safari, and mobile browsers.
+
+---
+
+## v205 live ZipTax + checkout payment notices update
+
+- Billing ZIP on Create Quote / Create Invoice now performs a live city/state lookup and automatically applies destination sales tax from ZipTax without clicking the destination-tax button.
+- Changing the billing ZIP again triggers a fresh lookup and updates the tax rate from the new ZIP.
+- Shipping ZIP still performs live destination tax lookup and auto shipping rate calculation.
+- Checkout payment method section now shows black-background instructions when the customer selects Check or Zelle.
+- Check instructions tell the customer to make the check out to HANSABIJAL LLC and message a copy of the check to 229-485-6236.
+- Zelle instructions show PAULCAMERASYSTEMS@GMAIL.COM and the requested payment-email disclaimer.
+- Place Order / Pay & Place Order now shows an OK-only final-sale notice before the order/payment submission continues.
+- The final-sale notice acknowledgement is stored inside the online order JSON and is shown in the Admin Online Order detail view.
+- No database migration required.
