@@ -14914,12 +14914,27 @@ function buildMerchantApplicationPdfBytes(app) {
   const pages = [];
   let ops = [], y = 742;
 
+  function textWidthEstimate(s, size) {
+    const clean = pdfSanitize(s);
+    let units = 0;
+    for (const ch of clean) {
+      if (ch === " ") units += 0.28;
+      else if ("ilI.,:;|!\'".includes(ch)) units += 0.25;
+      else if ("mwMW@#%&".includes(ch)) units += 0.76;
+      else if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(ch)) units += 0.58;
+      else if ("0123456789$".includes(ch)) units += 0.52;
+      else units += 0.46;
+    }
+    return units * size;
+  }
   function text(x, yy, s, size=9, font="F1", color=ink, align="left") {
-    s = pdfEscape(s);
+    const raw = String(s ?? "");
+    const escaped = pdfEscape(raw);
     let tx = x;
-    if (align === "right") tx = x - (pdfSanitize(s).length * size * 0.45);
-    if (align === "center") tx = x - (pdfSanitize(s).length * size * 0.225);
-    ops.push(`BT /${font} ${size} Tf ${color} rg 1 0 0 1 ${tx.toFixed(2)} ${yy.toFixed(2)} Tm (${s}) Tj ET`);
+    const w = textWidthEstimate(raw, size);
+    if (align === "right") tx = x - w;
+    if (align === "center") tx = x - (w / 2);
+    ops.push(`BT /${font} ${size} Tf ${color} rg 1 0 0 1 ${tx.toFixed(2)} ${yy.toFixed(2)} Tm (${escaped}) Tj ET`);
   }
   function rect(x, yy, w, h, fill, stroke="") { ops.push(`q ${fill ? fill + " rg" : ""} ${stroke ? stroke + " RG 0.6 w" : ""} ${x} ${yy} ${w} ${h} re ${fill && stroke ? "B" : fill ? "f" : "S"} Q`); }
   function line(x1,y1,x2,y2,color=gray,w=1){ops.push(`q ${color} RG ${w} w ${x1} ${y1} m ${x2} ${y2} l S Q`);}
@@ -18829,6 +18844,8 @@ function excelStyleMoney(n) {
 
 function reportExcelHtml(report) {
   const logo = `data:${LOGO_MIME};base64,${LOGO_B64}`;
+  const reportLogoWidth = 150;
+  const reportLogoHeight = Math.round(reportLogoWidth * HB_PDF_LOGO_ALPHA_HEIGHT / HB_PDF_LOGO_ALPHA_WIDTH);
   const title = reportTitle(report);
   const showBreakdown = report.mode === "year" && report.showBreakdown;
   const values = report.monthly || [];
@@ -18853,9 +18870,9 @@ function reportExcelHtml(report) {
   .sheet{background:#07152a;border:2px solid #ff6a00;border-radius:18px;padding:20px;}
   .report-head{width:100%;border-collapse:collapse;margin:0 auto 18px auto;}
   .report-head td{text-align:center!important;border:0!important;padding:0!important;background:transparent!important;}
-  .logo-center{text-align:center!important;margin:4px auto 12px auto;width:100%;}
-  .logo-center img{height:92px;max-width:420px;object-fit:contain;display:inline-block;margin:0 auto;}
-  .title{text-align:center!important;font-size:30px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin-top:4px;width:100%;}
+  .logo-center{text-align:center!important;margin:4px auto 10px auto;width:100%;}
+  .logo-center img{width:150px;height:118px;max-width:150px;max-height:118px;object-fit:contain;display:block;margin:0 auto;}
+  .title{text-align:center!important;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin:2px auto 0 auto;width:100%;}
   .subtitle{text-align:center!important;font-size:13px;color:#dbe7f5;margin:8px 0 18px;width:100%;}
   .summary{width:100%;border-collapse:separate;border-spacing:10px;margin:10px 0 18px;}
   .summary td{background:#0b1f38;border:1px solid #ff8c21;border-radius:12px;padding:14px;color:#ffffff;min-width:130px;}
@@ -18872,7 +18889,7 @@ function reportExcelHtml(report) {
 <body>
 <div class="sheet">
   <table class="report-head" width="100%">
-    <tr><td colspan="9" align="center"><div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions"></div></td></tr>
+    <tr><td colspan="9" align="center" style="text-align:center;"><div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions" width="${reportLogoWidth}" height="${reportLogoHeight}" style="width:${reportLogoWidth}px;height:${reportLogoHeight}px;display:block;margin:0 auto;object-fit:contain;"></div></td></tr>
     <tr><td colspan="9" align="center"><div class="title">${escapeHtml(title)}</div></td></tr>
     <tr><td colspan="9" align="center"><div class="subtitle">Period: ${escapeHtml(report.periodLabel || report.month || report.year || "")} &nbsp; | &nbsp; Generated: ${escapeHtml(formatDateTime(now()))}</div></td></tr>
   </table>
@@ -18893,11 +18910,26 @@ function buildReportPdfBytes(report) {
   const title = reportTitle(report);
   const pnl = isPnlReport(report);
 
+  function pdfTextWidthApprox(raw, size) {
+    const safe = pdfSanitize(String(raw || ""));
+    let units = 0;
+    for (const ch of safe) {
+      if (ch === " ") units += 0.28;
+      else if ("ilI1.,:'!|".includes(ch)) units += 0.26;
+      else if ("MW@#%&".includes(ch)) units += 0.78;
+      else if (/[A-Z0-9$]/.test(ch)) units += 0.59;
+      else if (/[a-z]/.test(ch)) units += 0.52;
+      else units += 0.42;
+    }
+    return units * size;
+  }
   function text(x, yy, s, size=9, font="F1", color=ink, align="left") {
-    s = pdfEscape(s);
+    const raw = String(s ?? "");
+    s = pdfEscape(raw);
     let tx = x;
-    if (align === "right") tx = x - (pdfSanitize(s).length * size * 0.45);
-    if (align === "center") tx = x - (pdfSanitize(s).length * size * 0.225);
+    const w = pdfTextWidthApprox(raw, size);
+    if (align === "right") tx = x - w;
+    if (align === "center") tx = x - (w / 2);
     ops.push(`BT /${font} ${size} Tf ${color} rg 1 0 0 1 ${tx.toFixed(2)} ${yy.toFixed(2)} Tm (${s}) Tj ET`);
   }
   function rect(x, yy, w, h, fill, stroke="") { ops.push(`q ${fill ? fill + " rg" : ""} ${stroke ? stroke + " RG 0.6 w" : ""} ${x} ${yy} ${w} ${h} re ${fill && stroke ? "B" : fill ? "f" : "S"} Q`); }
@@ -18910,11 +18942,13 @@ function buildReportPdfBytes(report) {
     rect(0, 0, 612, 792, white);
     rect(0, 782, 612, 10, orange);
     rect(420, 782, 192, 10, green);
-    image("Logo", 176, 724, 260, 58);
-    text(306, 698, title.toUpperCase(), 18, "F2", navy, "center");
-    text(306, 682, `Period: ${report.periodLabel || report.month || report.year || ""}   |   Generated: ${formatDateTime(now())}`, 8, "F1", muted, "center");
-    line(46, 668, 566, 668, orange, 2);
-    y = 648;
+    const reportLogoW = 150;
+    const reportLogoH = reportLogoW * HB_PDF_LOGO_ALPHA_HEIGHT / HB_PDF_LOGO_ALPHA_WIDTH;
+    image("Logo", (612 - reportLogoW) / 2, 660, reportLogoW, reportLogoH);
+    text(306, 633, title.toUpperCase(), 18, "F2", navy, "center");
+    text(306, 616, `Period: ${report.periodLabel || report.month || report.year || ""}   |   Generated: ${formatDateTime(now())}`, 8, "F1", muted, "center");
+    line(46, 598, 566, 598, orange, 2);
+    y = 578;
   }
   function check(h){ if (y - h < 54) newPage(); }
   function summaryBox(x, yy, label, value, color=navy) {

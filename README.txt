@@ -2385,3 +2385,6 @@ V215 REPORT ALIGNMENT UPDATE
 - Kept report exports free of graph images.
 - Expanded the Sales Reports page chart to full available width so it starts and ends with the summary KPI row width.
 - Kept the P&L Reports page two-chart layout unchanged on desktop.
+
+
+Version v216: report PDF/Excel export header logo resized proportionally and centered; Sales/P&L report titles centered under the logo. No report data, graph, invoice PDF, or email-flow changes.
