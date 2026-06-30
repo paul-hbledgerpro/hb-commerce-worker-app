@@ -1,13 +1,3 @@
-HB Commerce Cloudflare Worker App v210 - Responsive online invoice buttons, no customer PDF design mismatch
-
-Changes in v210:
-- Customer email buttons no longer open the separate PDF template as the primary invoice/quote view.
-- View Invoice, View Paid Invoice, and View Quote now open the responsive online quote/invoice design on phones, tablets, and computers.
-- Paid invoice emails keep the paid status wording but open the online paid invoice view instead of the generated PDF.
-- Public customer review pages no longer show Open / Print 1-Page PDF or Download PDF action buttons above the invoice. This prevents customers from seeing a different PDF design.
-- PDF routes remain in the app for admin/manual use only, and PDF email attachments remain disabled by default unless EMAIL_ATTACH_DOCUMENT_PDF=1 is intentionally set.
-- No database migration is required.
-
 HB Commerce Cloudflare Worker App v209 - Paid invoice PDF button and mobile print fix
 
 Changes in v209:
@@ -2372,3 +2362,9 @@ Create Quote and Create Invoice now include a page-level checkout-style contrast
 - PDF filenames are generated safely from the document type and number.
 - Billing ZIP live lookup from v205 remains active: changing the billing ZIP triggers city/state lookup and destination tax refresh.
 - No database migration required.
+
+v211 update - canonical one-page invoice/quote PDF divider fix
+- Restored the customer email flow to the one-page PDF invoice/quote design instead of using the webpage as the primary customer view.
+- Email view links with ?email_view=1 now redirect directly to the one-page PDF for phone, tablet, and desktop.
+- The PDF sidebar now uses the uploaded HB divider artwork, flattened over the navy sidebar and cleaned to remove the white artifact, so the divider between the blue section and white invoice body matches the admin invoice design more closely.
+- PDF attachments remain disabled by default unless EMAIL_ATTACH_DOCUMENT_PDF=1 is intentionally set in Cloudflare.
