@@ -2401,3 +2401,19 @@ v219 update:
 - Made Approved Quotes, Open Invoices, and Paid Invoices admin sections responsive on phone/tablet by converting record tables into readable cards.
 - Added stronger responsive public quote/invoice review styles for phone/tablet/desktop.
 - Kept one-page PDF, invoice/quote design, paid status, report exports, and email button flow unchanged.
+
+
+---
+
+## v220 Apple Pay domain verification
+
+This version serves the Apple Pay merchant-domain association file publicly at both routes below:
+
+- /.well-known/apple-developer-merchantid-domain-association.txt
+- /.well-known/apple-developer-merchantid-domain-association
+
+The route is handled directly by the Cloudflare Worker and returns text/plain without requiring admin login. After deploying, open:
+
+https://www.hbcommercesolution.com/.well-known/apple-developer-merchantid-domain-association.txt
+
+Then return to Apple Developer / Authorize.Net Apple Pay setup and click Verify for the domain.
