@@ -5817,9 +5817,17 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card in
 }
 .report-chart-grid{
   display:grid!important;
-  grid-template-columns:1fr 1fr!important;
+  grid-template-columns:1fr!important;
   gap:18px!important;
   margin:18px 0!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+.report-chart-grid.report-chart-grid-two{
+  grid-template-columns:1fr 1fr!important;
+}
+.report-chart-grid.report-chart-grid-full{
+  grid-template-columns:minmax(0,1fr)!important;
 }
 .report-chart{
   background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96))!important;
@@ -5827,6 +5835,14 @@ html body .admin-app-topbar ~ main.admin-document-page #items .line-item-card in
   border-radius:24px!important;
   padding:18px!important;
   box-shadow:0 20px 54px rgba(0,0,0,.28)!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+.report-chart-grid-full .report-chart{
+  grid-column:1 / -1!important;
+}
+.report-chart-grid-full .chart-bars{
+  width:100%!important;
 }
 .report-chart .chart-head{
   display:flex!important;
@@ -18835,10 +18851,12 @@ function reportExcelHtml(report) {
 <style>
   body{font-family:Arial,Helvetica,sans-serif;background:#06101f;color:#ffffff;margin:0;padding:24px;}
   .sheet{background:#07152a;border:2px solid #ff6a00;border-radius:18px;padding:20px;}
-  .logo-center{text-align:center;margin:4px 0 12px;}
-  .logo-center img{height:78px;max-width:380px;object-fit:contain;}
-  .title{text-align:center;font-size:30px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin-top:4px;}
-  .subtitle{text-align:center;font-size:13px;color:#dbe7f5;margin:8px 0 18px;}
+  .report-head{width:100%;border-collapse:collapse;margin:0 auto 18px auto;}
+  .report-head td{text-align:center!important;border:0!important;padding:0!important;background:transparent!important;}
+  .logo-center{text-align:center!important;margin:4px auto 12px auto;width:100%;}
+  .logo-center img{height:92px;max-width:420px;object-fit:contain;display:inline-block;margin:0 auto;}
+  .title{text-align:center!important;font-size:30px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin-top:4px;width:100%;}
+  .subtitle{text-align:center!important;font-size:13px;color:#dbe7f5;margin:8px 0 18px;width:100%;}
   .summary{width:100%;border-collapse:separate;border-spacing:10px;margin:10px 0 18px;}
   .summary td{background:#0b1f38;border:1px solid #ff8c21;border-radius:12px;padding:14px;color:#ffffff;min-width:130px;}
   .summary .label{font-size:11px;text-transform:uppercase;color:#cbd5e1;font-weight:800;}
@@ -18853,9 +18871,11 @@ function reportExcelHtml(report) {
 </head>
 <body>
 <div class="sheet">
-  <div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions"></div>
-  <div class="title">${escapeHtml(title)}</div>
-  <div class="subtitle">Period: ${escapeHtml(report.periodLabel || report.month || report.year || "")} &nbsp; | &nbsp; Generated: ${escapeHtml(formatDateTime(now()))}</div>
+  <table class="report-head" width="100%">
+    <tr><td colspan="9" align="center"><div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions"></div></td></tr>
+    <tr><td colspan="9" align="center"><div class="title">${escapeHtml(title)}</div></td></tr>
+    <tr><td colspan="9" align="center"><div class="subtitle">Period: ${escapeHtml(report.periodLabel || report.month || report.year || "")} &nbsp; | &nbsp; Generated: ${escapeHtml(formatDateTime(now()))}</div></td></tr>
+  </table>
   <table class="summary"><tr>${summaryCells}</tr></table>
   ${monthlyBreakdown}
   <h2>${isPnlReport(report) ? "P&L Invoice Detail" : "Paid Invoice Sales Detail"}</h2>
@@ -18890,11 +18910,11 @@ function buildReportPdfBytes(report) {
     rect(0, 0, 612, 792, white);
     rect(0, 782, 612, 10, orange);
     rect(420, 782, 192, 10, green);
-    image("Logo", 206, 724, 200, 50);
-    text(306, 704, title.toUpperCase(), 18, "F2", navy, "center");
-    text(306, 688, `Period: ${report.periodLabel || report.month || report.year || ""}   |   Generated: ${formatDateTime(now())}`, 8, "F1", muted, "center");
-    line(46, 674, 566, 674, orange, 2);
-    y = 654;
+    image("Logo", 176, 724, 260, 58);
+    text(306, 698, title.toUpperCase(), 18, "F2", navy, "center");
+    text(306, 682, `Period: ${report.periodLabel || report.month || report.year || ""}   |   Generated: ${formatDateTime(now())}`, 8, "F1", muted, "center");
+    line(46, 668, 566, 668, orange, 2);
+    y = 648;
   }
   function check(h){ if (y - h < 54) newPage(); }
   function summaryBox(x, yy, label, value, color=navy) {
@@ -19071,7 +19091,7 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
       : `<div class="table-panel"><div class="section-title"><h2>${escapeHtml(report.year)} Monthly Sales Breakdown</h2><p>Total taxable sales, non-taxable sales, tax collected, and paid invoice totals by month.</p></div><div class="table-wrap"><table><thead><tr><th>Month</th><th>Invoices</th><th>Sales Before Tax</th><th>Taxable Sales</th><th>Non-Taxable Sales</th><th>Tax Collected</th><th>Total Collected</th></tr></thead><tbody>${monthlyRows}</tbody></table></div></div>`)
     : "";
   const federalField = kind === "pnl" ? `<div class="field report-federal-field"><label>Federal Estimate Rate (%)</label><input type="number" step="0.001" name="federal_rate" value="${escapeHtml(federalRate)}"></div>` : "";
-  const charts = kind === "pnl" ? `<div class="report-chart-grid">${reportChartHtml(report, "subtotal", "Sales")}${reportChartHtml(report, "profit", "Gross Profit")}</div>` : `<div class="report-chart-grid">${reportChartHtml(report, "subtotal", "Sales")}</div>`;
+  const charts = kind === "pnl" ? `<div class="report-chart-grid report-chart-grid-two">${reportChartHtml(report, "subtotal", "Sales")}${reportChartHtml(report, "profit", "Gross Profit")}</div>` : `<div class="report-chart-grid report-chart-grid-full">${reportChartHtml(report, "subtotal", "Sales")}</div>`;
   const detailHead = kind === "pnl"
     ? `<tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Sales Before Tax</th><th>Internal Cost</th><th>Gross Profit</th><th>Tax</th><th>Total</th><th>Payment</th></tr>`
     : `<tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Sales Before Tax</th><th>Taxable</th><th>Non-Taxable</th><th>Tax</th><th>Total</th><th>Payment</th></tr>`;

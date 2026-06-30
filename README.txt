@@ -2375,3 +2375,13 @@ v211 update - canonical one-page invoice/quote PDF divider fix
 V213 PDF CLEANUP
 - Removed the POS SOFTWARE FOR RETAIL heading from generated quote/invoice PDFs.
 - Replaced the invoice/quote PDF logo with a transparent logo image so it sits directly on the blue sidebar without an extra logo background box.
+
+
+============================================================
+V215 REPORT ALIGNMENT UPDATE
+============================================================
+- Centered the HB Commerce logo, report title, period, and generated timestamp in Sales/P&L PDF exports.
+- Centered the same header block in Excel/HTML exports using an Excel-friendly table header.
+- Kept report exports free of graph images.
+- Expanded the Sales Reports page chart to full available width so it starts and ends with the summary KPI row width.
+- Kept the P&L Reports page two-chart layout unchanged on desktop.
