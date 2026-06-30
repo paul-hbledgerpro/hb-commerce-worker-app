@@ -2390,3 +2390,9 @@ V215 REPORT ALIGNMENT UPDATE
 
 
 Version v216: report PDF/Excel export header logo resized proportionally and centered; Sales/P&L report titles centered under the logo. No report data, graph, invoice PDF, or email-flow changes.
+
+
+Version v218 update:
+- Centers the Private Admin label under the HB logo in the admin sidebar/login presentation.
+- Adds device classification for phone/tablet/desktop views.
+- Adds final responsive layout overrides for admin portal, reports, document builder, public website pages, and online quote/invoice views.

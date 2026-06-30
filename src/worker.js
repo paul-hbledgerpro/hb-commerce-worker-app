@@ -13904,7 +13904,350 @@ html body .admin-document-page #items .line-item-card input[type="checkbox"]{
 }
 
 
+/* v218: final responsive polish for admin + public website/device sizing */
+.purple-brand-block,
+.hb-template-sidebar .purple-brand-block{
+  justify-items:center!important;
+  text-align:center!important;
+}
+.purple-brand-block img,
+.hb-template-sidebar .purple-brand-block img{
+  display:block!important;
+  margin:0 auto!important;
+}
+.purple-brand-block span,
+.hb-template-sidebar .purple-brand-block span{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  margin:2px auto 0!important;
+  letter-spacing:.18em!important;
+}
+
+html.hb-device-phone,
+html.hb-device-tablet,
+html.hb-device-desktop{
+  text-size-adjust:100%;
+  -webkit-text-size-adjust:100%;
+}
+img,svg,video,canvas{max-width:100%;}
+body{overflow-x:hidden!important;}
+
+/* Admin shell: desktop sidebar, tablet stacked controls, phone single-column controls */
+.admin-app-topbar ~ main,
+.admin-dashboard,
+.admin-dashboard .container,
+.purple-admin-shell,
+.hb-template-dashboard .purple-admin-shell{
+  max-width:100%!important;
+}
+.admin-dashboard .table-wrap,
+.admin-app-topbar ~ main .table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+.admin-dashboard table,
+.admin-app-topbar ~ main table{
+  width:100%!important;
+}
+
+/* Invoice/quote builder: stop phone/tablet from requiring sideways dragging */
+@media(max-width:1180px){
+  .admin-document-page #items .line-item-card,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-card{
+    overflow:visible!important;
+  }
+  .admin-document-page #items .line-item-row,
+  .admin-document-page #items .line-item-row-v36,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row-v36{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    min-width:0!important;
+    width:100%!important;
+    gap:12px!important;
+  }
+  .admin-document-page #items .line-item-row .field,
+  .admin-document-page #items .line-item-row-v36 .field,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row .field,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row-v36 .field{
+    min-width:0!important;
+    width:100%!important;
+  }
+  .admin-document-page #items .calc-strip,
+  .admin-app-topbar ~ main.admin-document-page #items .calc-strip{
+    min-width:0!important;
+    width:100%!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:760px){
+  .admin-document-page #items .line-item-row,
+  .admin-document-page #items .line-item-row-v36,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row,
+  .admin-app-topbar ~ main.admin-document-page #items .line-item-row-v36{
+    grid-template-columns:1fr!important;
+  }
+  .admin-document-page #items .calc-strip,
+  .admin-app-topbar ~ main.admin-document-page #items .calc-strip{
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* Admin dashboard/report sizing by device */
+@media(min-width:761px) and (max-width:1180px){
+  .purple-admin-shell,
+  .hb-template-dashboard .purple-admin-shell{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    width:calc(100% - 28px)!important;
+    max-width:1040px!important;
+    margin:0 auto!important;
+  }
+  .purple-admin-sidebar,
+  .hb-template-sidebar{
+    position:relative!important;
+    top:auto!important;
+    width:100%!important;
+    max-height:none!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  .purple-brand-block,
+  .hb-sidebar-profile{
+    grid-column:1/-1!important;
+  }
+  .hb-kpi-four,
+  .purple-gradient-cards.hb-kpi-four,
+  .reports-dashboard .report-summary-cards{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .report-chart-grid,
+  .hb-template-chart-row,
+  .hb-template-status-todo-grid,
+  .hb-template-lower-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+@media(max-width:760px){
+  .admin-app-topbar ~ main .container,
+  .admin-dashboard .container,
+  .purple-admin-shell,
+  .hb-template-dashboard .purple-admin-shell{
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+    margin:0!important;
+  }
+  .purple-admin-sidebar,
+  .hb-template-sidebar{
+    grid-template-columns:1fr!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .purple-brand-block,
+  .hb-sidebar-profile{
+    grid-column:1/-1!important;
+  }
+  .admin-dashboard .section-title,
+  .admin-app-topbar ~ main .section-title,
+  .hb-template-page-header,
+  .hb-page-title-left,
+  .reports-filter-form .grid-2,
+  .reports-filter-form .grid-3,
+  .reports-filter-form .grid-4,
+  .summary-grid,
+  .grid-2,
+  .grid-3,
+  .grid-4{
+    grid-template-columns:1fr!important;
+  }
+  .admin-dashboard .btn-row,
+  .admin-app-topbar ~ main .btn-row{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    width:100%!important;
+    gap:9px!important;
+  }
+  .admin-dashboard .btn-row .btn,
+  .admin-dashboard .btn-row button,
+  .admin-app-topbar ~ main .btn-row .btn,
+  .admin-app-topbar ~ main .btn-row button{
+    width:100%!important;
+    justify-content:center!important;
+  }
+  .reports-dashboard .report-summary-cards,
+  .report-chart-grid,
+  .hb-template-chart-row,
+  .hb-template-status-todo-grid,
+  .hb-template-lower-grid,
+  .purple-gradient-cards,
+  .hb-kpi-four{
+    grid-template-columns:1fr!important;
+  }
+  .chart-bars,
+  .purple-chart-bars,
+  .hb-template-bars{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+}
+
+/* Public website: device-friendly page width and stacked sections */
+@media(max-width:1180px){
+  .container,
+  .hb-v72-hero .container,
+  .hb-v78-hero-grid,
+  .hb-v78-feature-strip,
+  .hb-v72-card-grid,
+  .hb-v72-bottom-grid{
+    width:min(100% - 28px,1040px)!important;
+    max-width:1040px!important;
+  }
+  .hb-v72-hero-grid,
+  .hb-v78-hero-grid,
+  .hb-v72-card-grid,
+  .hb-v72-bottom-grid,
+  .hb-v75-info-grid,
+  .hb-v75-security-card-grid,
+  .eufy-checkout,
+  .eufy-detail-grid,
+  .v15-info-grid,
+  .v15-contact-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+@media(max-width:760px){
+  .container,
+  .hb-v72-hero .container,
+  .hb-v78-hero-grid,
+  .hb-v78-feature-strip,
+  .hb-v72-card-grid,
+  .hb-v72-bottom-grid{
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  .hb-v72-copy h1,
+  .hb-v78-copy h1,
+  .v15-services-hero h1,
+  .v15-info-hero h1,
+  .eufy-collection-hero h1{
+    font-size:clamp(30px,9vw,38px)!important;
+    line-height:1.08!important;
+  }
+  .hb-v72-copy p,
+  .hb-v78-copy p,
+  .v15-services-hero p,
+  .v15-info-hero p,
+  .eufy-collection-hero p{
+    font-size:16px!important;
+    line-height:1.55!important;
+  }
+  .form-section,
+  .panel,
+  .card,
+  .eufy-shop-card,
+  .eufy-cart-panel,
+  .eufy-checkout-form{
+    max-width:100%!important;
+  }
+  input,select,textarea{
+    max-width:100%!important;
+  }
+}
+
+/* Customer quote/invoice online view: stack on phone/tablet if opened instead of the PDF */
+@media(max-width:900px){
+  .review-document-page #printable-document.hb-side-doc{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    transform:none!important;
+    zoom:1!important;
+  }
+  .review-document-page .hb-doc-side,
+  .review-document-page .hb-doc-main{
+    width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .review-document-page .hb-doc-main{
+    padding:18px!important;
+  }
+  .review-document-page .hb-doc-title-row,
+  .review-document-page .hb-doc-meta,
+  .review-document-page .hb-billship,
+  .review-document-page .hb-lower-grid,
+  .review-document-page .hb-secure-payment{
+    grid-template-columns:1fr!important;
+  }
+  .review-document-page .hb-side-line-table{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+}
+@media(max-width:760px){
+  .review-document-page .hb-doc-side{
+    padding:20px 16px!important;
+  }
+  .review-document-page .side-contact,
+  .review-document-page .side-prepared,
+  .review-document-page .side-payment-methods{
+    display:grid!important;
+    gap:10px!important;
+  }
+  .review-document-page .hb-doc-title-block h1{
+    font-size:34px!important;
+  }
+  .review-document-page .hb-info-card{
+    min-height:0!important;
+  }
+}
+
+
 `;
+
+
+function responsiveDeviceScript(){
+  return `<script>(function(){
+    function classify(){
+      var w=Math.min(window.innerWidth||0, screen && screen.width ? screen.width : window.innerWidth || 0) || 1200;
+      var ua=(navigator.userAgent||'').toLowerCase();
+      var isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+      var phone=w<=760 || /iphone|android.*mobile|windows phone/.test(ua);
+      var tablet=!phone && (w<=1180 || /ipad|tablet|android(?!.*mobile)/.test(ua) || (isTouch && w<=1366));
+      var root=document.documentElement;
+      root.classList.toggle('hb-device-phone', !!phone);
+      root.classList.toggle('hb-device-tablet', !!tablet);
+      root.classList.toggle('hb-device-desktop', !phone && !tablet);
+      root.dataset.hbDevice = phone ? 'phone' : tablet ? 'tablet' : 'desktop';
+    }
+    classify();
+    var t;
+    window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(classify,120);},{passive:true});
+    window.addEventListener('orientationchange',function(){setTimeout(classify,180);},{passive:true});
+  })();</script>`;
+}
 
 function installButtonHtml() {
   return `<div id="hbInstallWidget" class="hb-install-widget" hidden>
@@ -13998,7 +14341,7 @@ function eufyCartHeaderScript() {
 }
 
 function htmlPage(title, body, status = 200, headers = {}) {
-  return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><link rel="icon" href="/assets/hb-favicon-v33.png"><link rel="apple-touch-icon" href="/assets/hb-app-icon-v33-512.png"><link rel="manifest" href="/site-v33.webmanifest"><meta name="theme-color" content="#061b35"><style>${CSS}</style></head><body>${body}${installButtonHtml()}${eufyCartHeaderScript()}</body></html>`, {
+  return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(title)}</title><link rel="icon" href="/assets/hb-favicon-v33.png"><link rel="apple-touch-icon" href="/assets/hb-app-icon-v33-512.png"><link rel="manifest" href="/site-v33.webmanifest"><meta name="theme-color" content="#061b35"><style>${CSS}</style></head><body>${body}${responsiveDeviceScript()}${installButtonHtml()}${eufyCartHeaderScript()}</body></html>`, {
     status,
     headers: { "content-type": "text/html; charset=utf-8", ...headers }
   });
@@ -16776,7 +17119,7 @@ async function loginPage(request, env, error = "", appMode = false) {
   if (isApp) {
     return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HB Commerce Admin Login</title><link rel="manifest" href="/admin-v33.webmanifest"><link rel="icon" href="/assets/hb-favicon-v33.png"><link rel="apple-touch-icon" href="/assets/hb-app-icon-v33-512.png"><meta name="theme-color" content="#061b35"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="HB Admin"><style>
 :root{--navy:#061b35;--orange:#ff6a00;--green:#138a3d;--line:#d9e2ef;--muted:#64748b}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh;background:radial-gradient(circle at 85% 10%,rgba(19,138,61,.35),transparent 30%),linear-gradient(135deg,#061b35,#09264a 65%,#0d4f2f);display:grid;place-items:center;padding:22px;color:#fff}.login-card{width:min(460px,100%);background:rgba(255,255,255,.97);color:#0f172a;border-radius:30px;padding:28px;box-shadow:0 34px 110px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.30)}.logo-wrap{background:#fff;border:1px solid var(--line);border-radius:22px;padding:12px;margin-bottom:18px}img{display:block;width:260px;max-width:100%;margin:auto}.kicker{color:var(--green);font-weight:950;letter-spacing:.14em;text-transform:uppercase;font-size:12px}h1{color:var(--navy);font-size:34px;line-height:1;margin:8px 0 10px;letter-spacing:-.045em}p{margin:0 0 18px;color:#475569;line-height:1.5}.field{margin:0 0 14px}.field label{display:block;color:#1f2937;font-weight:900;font-size:13px;margin-bottom:7px}input{width:100%;height:50px;border:1px solid #cbd5e1;border-radius:14px;padding:0 14px;font-size:16px}button{width:100%;height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--orange),#ff8c21);color:#fff;font-weight:950;font-size:15px;cursor:pointer}.app-notice{background:#eef4fb;color:#06284d;border:1px solid #cbd5e1;border-radius:14px;padding:10px 12px;margin-bottom:14px;font-weight:800}.app-notice.success{background:#eaf8ef;color:#0f7a37}.app-notice.error{background:#fff1f1;color:#b64242;border-color:#f0caca}.install-row{margin-top:14px;font-size:12px;color:#64748b;text-align:center}.install-btn{display:none;margin-top:12px;background:#eef4fb;color:#061b35}.lock{display:inline-flex;gap:8px;align-items:center;color:#cbd5e1;font-size:13px;margin-top:12px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh;background:radial-gradient(circle at 85% 10%,rgba(19,138,61,.35),transparent 30%),linear-gradient(135deg,#061b35,#09264a 65%,#0d4f2f);display:grid;place-items:center;padding:22px;color:#fff}.login-card{width:min(460px,100%);background:rgba(255,255,255,.97);color:#0f172a;border-radius:30px;padding:28px;box-shadow:0 34px 110px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.30)}.logo-wrap{background:#fff;border:1px solid var(--line);border-radius:22px;padding:12px;margin-bottom:18px}img{display:block;width:260px;max-width:100%;margin:auto}.kicker{color:var(--green);font-weight:950;letter-spacing:.14em;text-transform:uppercase;font-size:12px;text-align:center;display:block;width:100%}h1{color:var(--navy);font-size:34px;line-height:1;margin:8px 0 10px;letter-spacing:-.045em}p{margin:0 0 18px;color:#475569;line-height:1.5}.field{margin:0 0 14px}.field label{display:block;color:#1f2937;font-weight:900;font-size:13px;margin-bottom:7px}input{width:100%;height:50px;border:1px solid #cbd5e1;border-radius:14px;padding:0 14px;font-size:16px}button{width:100%;height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--orange),#ff8c21);color:#fff;font-weight:950;font-size:15px;cursor:pointer}.app-notice{background:#eef4fb;color:#06284d;border:1px solid #cbd5e1;border-radius:14px;padding:10px 12px;margin-bottom:14px;font-weight:800}.app-notice.success{background:#eaf8ef;color:#0f7a37}.app-notice.error{background:#fff1f1;color:#b64242;border-color:#f0caca}.install-row{margin-top:14px;font-size:12px;color:#64748b;text-align:center}.install-btn{display:none;margin-top:12px;background:#eef4fb;color:#061b35}.lock{display:inline-flex;gap:8px;align-items:center;color:#cbd5e1;font-size:13px;margin-top:12px}
 body{background:radial-gradient(circle at 78% 12%,rgba(255,106,0,.18),transparent 30%),radial-gradient(circle at 12% 18%,rgba(19,138,61,.22),transparent 34%),linear-gradient(135deg,#06101f,#07152a 68%,#06101f)!important}
 .login-card{background:rgba(5,18,34,.92)!important;color:#f8fafc!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 34px 110px rgba(0,0,0,.46)!important}
 .logo-wrap{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important}
@@ -16788,7 +17131,7 @@ input:focus{outline:2px solid rgba(255,106,0,.45)!important;border-color:#ff8c21
 </style></head><body><main class="login-card"><div class="logo-wrap"><img src="${HB_DOC_TEMPLATE_LOGO_SRC}" alt="HB Commerce Solutions"></div><div class="kicker">Private Admin Portal</div><h1>Admin Login</h1><p>Sign in to manage quotes, invoices, approvals, reports, and accounting records.</p>${msg}${error ? `<div class="app-notice error">${escapeHtml(error)}</div>` : ""}<form method="post" action="/admin-app/login"><div class="field"><label>Email / Username</label><input name="email" type="email" autocomplete="username" required></div><div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div><button>Login to Dashboard</button></form><button class="install-btn" id="installBtn" type="button">Install Admin App</button><div class="install-row">For one-click access on mobile, use your browser menu and choose <strong>Add to Home Screen</strong>.</div><div class="lock">🔒 Customer website and admin records are separated by login.</div></main><script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/admin-sw.js').catch(()=>{});}
 let promptEvent=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;const b=document.getElementById('installBtn');b.style.display='block';b.onclick=async()=>{promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;b.style.display='none';};});
-</script>${installButtonHtml()}</body></html>`, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
+</script>${responsiveDeviceScript()}${installButtonHtml()}</body></html>`, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
   }
   const body = `<main class="section"><div class="container"><div class="form-section" style="max-width:520px;margin:auto"><div class="form-title">Admin Portal Login</div>${msg}${error ? `<div class="notice error">${escapeHtml(error)}</div>` : ""}<form method="post" action="/admin/login"><div class="field"><label>Email / Username</label><input name="email" type="email" required></div><div class="field"><label>Password</label><input name="password" type="password" required></div><button class="primary">Login</button></form></div></div></main>`;
   return htmlPage("Admin Login | HB Commerce Solutions", layout(env, "Login", body));
