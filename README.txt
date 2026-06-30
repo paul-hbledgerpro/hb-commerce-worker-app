@@ -1,3 +1,15 @@
+HB Commerce Cloudflare Worker App v209 - Paid invoice PDF button and mobile print fix
+
+Changes in v209:
+- Paid invoice emails now make the View Paid Invoice button open the generated one-page PDF directly.
+- Paid invoice emails also keep a separate View Online Copy button for the responsive webpage view.
+- Unpaid invoice emails still keep Pay Secure Online, responsive View Invoice, and Open 1-Page PDF actions.
+- The public review page no longer uses the browser window.print() action for the main PDF button. It opens the server-generated one-page PDF route directly.
+- Download PDF now uses ?download=1 so the PDF can be downloaded instead of only displayed inline.
+- Added print-safe CSS so browser/native print from the public review page does not create a tiny invoice plus a blank second page.
+- PDF email attachments remain disabled by default. Use EMAIL_ATTACH_DOCUMENT_PDF=1 only if you intentionally want attachments again.
+- No database migration is required.
+
 HB Commerce Cloudflare Worker App v208 - Responsive invoice view and no default PDF email attachments
 
 Changes in v208:

@@ -12878,6 +12878,60 @@ html body .admin-document-page #items .line-item-card input[type="checkbox"]{
 
 
 
+/* v209: customer review print safety. The page button opens the generated one-page PDF,
+   but this keeps iPhone/Android browser print from producing a tiny invoice plus blank page. */
+@media print{
+  @page{size:Letter portrait;margin:0}
+  body:has(.review-document-page){background:#fff!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body:has(.review-document-page) .topbar,
+  body:has(.review-document-page) .footer,
+  body:has(.review-document-page) .no-print,
+  body:has(.review-document-page) #hbInstallWidget{display:none!important}
+  body:has(.review-document-page) main.review-document-page,
+  body:has(.review-document-page) main.review-document-page>.container{
+    width:8.5in!important;
+    max-width:8.5in!important;
+    height:11in!important;
+    max-height:11in!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+  body:has(.review-document-page) #printable-document.hb-side-doc{
+    width:1080px!important;
+    max-width:1080px!important;
+    min-width:1080px!important;
+    height:1260px!important;
+    min-height:1260px!important;
+    max-height:1260px!important;
+    margin:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    display:grid!important;
+    grid-template-columns:280px 800px!important;
+    transform:scale(.755)!important;
+    transform-origin:top left!important;
+    zoom:1!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+    page-break-after:avoid!important;
+    overflow:hidden!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  body:has(.review-document-page) #printable-document.hb-side-doc *,
+  body:has(.review-document-page) #printable-document.hb-side-doc *:before,
+  body:has(.review-document-page) #printable-document.hb-side-doc *:after{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+}
+
+
+
+
+
+
 .permission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 .perm-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px;color:#fff;font-weight:850}
 .perm-card input{width:18px;height:18px}
@@ -13756,6 +13810,68 @@ html body .admin-document-page #items .line-item-card input[type="checkbox"]{
   .review-document-page .hb-lower-grid{grid-template-columns:1fr 300px!important;gap:20px!important;padding-top:36px!important;}
   .review-document-page .hb-side-totals .grand span:last-child{font-size:22px!important;}
 }
+
+
+/* v209: phone/tablet print fix for public quote/invoice review pages.
+   The online view remains responsive, but the Print / PDF action now opens the
+   server-generated one-page PDF. These print rules also prevent blank second
+   pages if a customer uses the browser's native Print command from the webpage. */
+@media print{
+  @page{size:Letter portrait;margin:0!important;}
+  html,body{margin:0!important;padding:0!important;width:8.5in!important;min-width:8.5in!important;height:11in!important;min-height:11in!important;max-height:11in!important;overflow:hidden!important;background:#fff!important;}
+  body{display:block!important;}
+  body>.topbar,body>.footer,#hbInstallWidget,.no-print,.btn-row.no-print{display:none!important;}
+  main.section.review-document-page{display:block!important;margin:0!important;padding:0!important;width:8.5in!important;max-width:8.5in!important;height:11in!important;max-height:11in!important;min-height:0!important;overflow:hidden!important;background:#fff!important;page-break-after:avoid!important;break-after:avoid-page!important;}
+  .review-document-page .container{display:block!important;margin:0!important;padding:0!important;width:8.5in!important;max-width:8.5in!important;height:11in!important;max-height:11in!important;min-height:0!important;overflow:hidden!important;background:#fff!important;page-break-after:avoid!important;break-after:avoid-page!important;}
+  .review-document-page #printable-document.hb-side-doc{position:absolute!important;left:0!important;top:0!important;margin:0!important;width:1080px!important;max-width:none!important;height:1260px!important;min-height:1260px!important;max-height:1260px!important;display:grid!important;grid-template-columns:280px 800px!important;overflow:hidden!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:scale(.7555556)!important;transform-origin:top left!important;page-break-inside:avoid!important;break-inside:avoid-page!important;page-break-after:avoid!important;break-after:avoid-page!important;}
+  .review-document-page .hb-doc-side{height:1260px!important;min-height:1260px!important;max-height:1260px!important;display:block!important;overflow:hidden!important;}
+  .review-document-page .hb-doc-main{height:1260px!important;min-height:1260px!important;max-height:1260px!important;display:block!important;overflow:hidden!important;padding:28px!important;}
+  .review-document-page .hb-lower-grid{padding-top:20px!important;}
+  .review-document-page .hb-secure-payment{margin-top:18px!important;}
+  .review-document-page .notice,.review-document-page form,.review-document-page #approve,.review-document-page #decline{display:none!important;}
+}
+
+/* v209: customer invoice review actions and phone/PDF safety */
+.review-document-page .hb-review-actions{
+  position:sticky!important;
+  top:82px!important;
+  z-index:40!important;
+  background:rgba(248,250,252,.94)!important;
+  border:1px solid #d9e2ef!important;
+  border-radius:18px!important;
+  padding:10px!important;
+  box-shadow:0 12px 28px rgba(6,40,77,.10)!important;
+  backdrop-filter:blur(8px)!important;
+}
+.review-document-page .hb-review-actions .btn,
+.review-document-page .hb-review-actions button{min-height:44px!important;}
+@media screen and (max-width:760px){
+  .review-document-page{padding-top:14px!important;background:#eef4fb!important;}
+  .review-document-page>.container{width:100%!important;max-width:100%!important;padding:0 10px!important;margin:0 auto!important;overflow-x:hidden!important;}
+  .review-document-page .hb-review-actions{
+    position:sticky!important;
+    top:8px!important;
+    margin:0 0 10px!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+  .review-document-page .hb-review-actions .btn{width:100%!important;padding:11px 10px!important;font-size:12.5px!important;border-radius:14px!important;}
+}
+@media print{
+  @page{size:Letter portrait;margin:0!important}
+  html,body{margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important;}
+  .topbar,.footer,.admin-app-topbar,.admin-app-footer,.no-print,.btn-row.no-print,#hbInstallWidget{display:none!important;}
+  main.section.review-document-page{padding:0!important;margin:0!important;background:#fff!important;overflow:hidden!important;width:8.5in!important;height:11in!important;max-height:11in!important;}
+  main.section.review-document-page>.container{padding:0!important;margin:0!important;width:8.5in!important;max-width:8.5in!important;height:11in!important;max-height:11in!important;overflow:hidden!important;}
+  main.section.review-document-page #printable-document.hb-side-doc{
+    width:1080px!important;min-width:1080px!important;max-width:1080px!important;height:1260px!important;min-height:1260px!important;max-height:1260px!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;display:grid!important;grid-template-columns:280px 800px!important;zoom:.755555!important;transform:none!important;transform-origin:top left!important;page-break-before:avoid!important;page-break-after:avoid!important;page-break-inside:avoid!important;break-after:avoid!important;break-inside:avoid!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+  }
+  main.section.review-document-page #printable-document.hb-side-doc *,
+  main.section.review-document-page #printable-document.hb-side-doc *:before,
+  main.section.review-document-page #printable-document.hb-side-doc *:after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+
 
 `;
 
@@ -19989,7 +20105,9 @@ async function publicReviewPdf(request, env, id, token) {
   const doc = await getDoc(env, id);
   if (!doc || doc.token !== token) return htmlPage("PDF Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found or link expired.</div></div></section>`), 404);
   await attachOpenInvoiceBalance(env, doc);
-  return documentPdfResponse(doc, env, "inline");
+  const url = new URL(request.url);
+  const disposition = url.searchParams.get("download") === "1" ? "attachment" : "inline";
+  return documentPdfResponse(doc, env, disposition);
 }
 
 
@@ -20398,6 +20516,7 @@ function documentEmailHtml(env, doc) {
   const isPaidInvoice = isInvoice && !!doc.paid;
   const title = isQuote ? "QUOTE" : "INVOICE";
   const link = absoluteReviewUrl(env, doc);
+  const smartViewLink = `${link}?email_view=1`;
   const pdfLink = `${link}.pdf`;
   const payLink = isInvoice ? absoluteInvoicePayUrl(env, doc) : "";
   const approveLink = isQuote ? `${link}#approve` : "";
@@ -20414,12 +20533,12 @@ function documentEmailHtml(env, doc) {
   const actionHtml = isQuote
     ? `<a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Approve Quote</a><a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Decline Quote</a>`
     : isPaidInvoice
-      ? `<a href="${link}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Paid Invoice</a>`
-      : `<a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Pay Secure Online</a><a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Invoice</a>`;
+      ? `<a href="${pdfLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Paid Invoice</a><a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Online Copy</a>`
+      : `<a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Pay Secure Online</a><a href="${smartViewLink}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Invoice</a>`;
   const moreItems = (doc.items || []).length > 10 ? `<p style="margin:8px 0 0;color:#64748b;font-size:12px">Additional line items are included in the online invoice view.</p>` : "";
   const introText = isPaidInvoice
-    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. You can view the paid invoice online using the button below.`
-    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. Use the secure buttons below to open the responsive online view or download a PDF copy.`;
+    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. The main button opens the clean one-page paid invoice PDF, and the online copy button opens the responsive web view.`
+    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. Use the secure buttons below to open the smart view or download a PDF copy.`;
   const paidSummary = isPaidInvoice
     ? `<div style="margin-top:20px;padding:16px;border-radius:16px;background:#ecfdf3;color:#14532d;border:1px solid #bbf7d0;border-left:6px solid #138a3d"><strong style="font-size:16px;color:#14532d">PAID INVOICE</strong><br><span style="color:#166534">This invoice has been marked paid${doc.payment_method ? " by " + escapeHtml(doc.payment_method) : ""}${doc.paid_at ? " on " + escapeHtml(formatDateTime(doc.paid_at)) : ""}.</span></div>`
     : `<div style="margin-top:20px;padding:14px;border-radius:16px;background:#06101f;color:#fff;border-left:6px solid #ff6a00"><strong style="color:#fff">Other payment methods</strong><br><span style="color:#eaf2ff">Check payable to HANSABIJAL LLC. Zelle: PAULCAMERASYSTEMS@GMAIL.COM.</span></div>`;
@@ -20435,7 +20554,7 @@ function documentEmailHtml(env, doc) {
       <tr><td style="padding:24px 28px">
         <p style="margin:0 0 14px;font-size:16px;line-height:1.55;color:#10233d">Hello ${escapeHtml(doc.customer_name || "Customer")},</p>
         <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#334155">${introText}</p>
-        <div style="margin:0 0 18px">${actionHtml}<a href="${pdfLink}" style="display:inline-block;background:#ff6a00;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Download PDF</a></div>
+        <div style="margin:0 0 18px">${actionHtml}${isPaidInvoice ? "" : `<a href="${pdfLink}" style="display:inline-block;background:#ff6a00;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Open 1-Page PDF</a>`}</div>
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:10px;margin:0 0 14px"><tr>
           <td style="background:#f8fafc;border:1px solid #d9e2ef;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#06284d;font-weight:950;margin-bottom:8px">Bill To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${billTo}</span></td>
           <td style="background:#fff7ed;border:1px solid #ffd6ad;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b45309;font-weight:950;margin-bottom:8px">Ship To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${shipTo}</span></td>
@@ -20900,13 +21019,29 @@ async function attachOpenInvoiceBalance(env, doc){
   return doc;
 }
 
+function isMobileOrTabletRequest(request) {
+  const ua = String(request.headers.get("user-agent") || "");
+  return /(iphone|ipad|ipod|android|mobile|tablet|kindle|silk|windows phone)/i.test(ua);
+}
+
+function publicDocumentPdfHref(doc, download = false) {
+  const base = `/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}.pdf`;
+  return download ? `${base}?download=1` : base;
+}
+
 async function reviewPage(request, env, id, token, message = "") {
   const doc = await getDoc(env, id);
   if (!doc || doc.token !== token) return htmlPage("Document Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found or link expired.</div></div></section>`), 404);
   await attachOpenInvoiceBalance(env, doc);
-  const wantsDecline = new URL(request.url).searchParams.get("action") === "decline";
+  const url = new URL(request.url);
+  if (url.searchParams.get("email_view") === "1" && isMobileOrTabletRequest(request)) {
+    return redirect(publicDocumentPdfHref(doc));
+  }
+  const wantsDecline = url.searchParams.get("action") === "decline";
   const action = doc.type === "Quote" ? (wantsDecline ? declineBlock(doc) : approvalBlock(doc)) : `<div class="notice no-print" style="margin-top:18px">Invoices are view-only and do not require customer approval.</div>`;
-  const body = `<main class="section review-document-page"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button><a class="btn orange" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}.pdf">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
+  const pdfHref = publicDocumentPdfHref(doc);
+  const pdfDownloadHref = publicDocumentPdfHref(doc, true);
+  const body = `<main class="section review-document-page"><div class="container">${message}<div class="btn-row hb-review-actions no-print" style="margin-bottom:16px"><a class="btn primary" target="_blank" rel="noopener" href="${pdfHref}">Open / Print 1-Page PDF</a><a class="btn orange" href="${pdfDownloadHref}">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
   return htmlPage(`${doc.type} ${doc.number}`, layout(env, "Review", body));
 }
 
