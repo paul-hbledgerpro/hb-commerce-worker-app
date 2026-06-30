@@ -2396,3 +2396,8 @@ Version v218 update:
 - Centers the Private Admin label under the HB logo in the admin sidebar/login presentation.
 - Adds device classification for phone/tablet/desktop views.
 - Adds final responsive layout overrides for admin portal, reports, document builder, public website pages, and online quote/invoice views.
+
+v219 update:
+- Made Approved Quotes, Open Invoices, and Paid Invoices admin sections responsive on phone/tablet by converting record tables into readable cards.
+- Added stronger responsive public quote/invoice review styles for phone/tablet/desktop.
+- Kept one-page PDF, invoice/quote design, paid status, report exports, and email button flow unchanged.

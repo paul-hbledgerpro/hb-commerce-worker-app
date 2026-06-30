@@ -14225,6 +14225,529 @@ body{overflow-x:hidden!important;}
 }
 
 
+
+
+/* v219: responsive Approved Quotes / Open Invoices / Paid Invoices sections and public document views.
+   This only affects screen layout. PDF generation, email button flow, invoice/quote design, and paid status remain unchanged. */
+@media screen and (max-width:1180px){
+  .admin-popup-page .hb-selected-records,
+  .admin-dashboard .hb-selected-records{
+    width:100%!important;
+    max-width:100%!important;
+    overflow:visible!important;
+  }
+  .admin-popup-page .hb-selected-records .table-wrap,
+  .admin-dashboard .hb-selected-records .table-wrap{
+    overflow:visible!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  .admin-popup-page .hb-selected-records table,
+  .admin-popup-page .hb-selected-records thead,
+  .admin-popup-page .hb-selected-records tbody,
+  .admin-popup-page .hb-selected-records tr,
+  .admin-popup-page .hb-selected-records td,
+  .admin-dashboard .hb-selected-records table,
+  .admin-dashboard .hb-selected-records thead,
+  .admin-dashboard .hb-selected-records tbody,
+  .admin-dashboard .hb-selected-records tr,
+  .admin-dashboard .hb-selected-records td{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  .admin-popup-page .hb-selected-records thead,
+  .admin-dashboard .hb-selected-records thead{
+    display:none!important;
+  }
+  .admin-popup-page .hb-selected-records tbody,
+  .admin-dashboard .hb-selected-records tbody{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:14px!important;
+  }
+  .admin-popup-page .hb-selected-records tbody tr,
+  .admin-dashboard .hb-selected-records tbody tr{
+    display:grid!important;
+    gap:0!important;
+    padding:14px!important;
+    border-radius:20px!important;
+    background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98))!important;
+    border:1.6px solid rgba(255,106,0,.42)!important;
+    box-shadow:0 7px 0 rgba(95,38,0,.34),0 20px 48px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.10)!important;
+    color:#eaf3ff!important;
+  }
+  .admin-popup-page .hb-selected-records tbody tr.converted-quote-row,
+  .admin-dashboard .hb-selected-records tbody tr.converted-quote-row{
+    border-color:rgba(16,185,129,.58)!important;
+  }
+  .admin-popup-page .hb-selected-records td,
+  .admin-dashboard .hb-selected-records td{
+    display:grid!important;
+    grid-template-columns:112px minmax(0,1fr)!important;
+    gap:10px!important;
+    align-items:start!important;
+    padding:9px 0!important;
+    border:0!important;
+    border-bottom:1px solid rgba(255,255,255,.10)!important;
+    background:transparent!important;
+    color:#eaf3ff!important;
+    white-space:normal!important;
+    word-break:break-word!important;
+  }
+  .admin-popup-page .hb-selected-records td:last-child,
+  .admin-dashboard .hb-selected-records td:last-child{
+    border-bottom:0!important;
+  }
+  .admin-popup-page .hb-selected-records td:before,
+  .admin-dashboard .hb-selected-records td:before{
+    content:attr(data-label)!important;
+    color:#ffb14f!important;
+    -webkit-text-fill-color:#ffb14f!important;
+    font-size:11px!important;
+    font-weight:1000!important;
+    line-height:1.2!important;
+    text-transform:uppercase!important;
+    letter-spacing:.06em!important;
+  }
+  .admin-popup-page .hb-selected-records td strong,
+  .admin-dashboard .hb-selected-records td strong{
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+  }
+  .admin-popup-page .hb-selected-records td .hint,
+  .admin-dashboard .hb-selected-records td .hint,
+  .admin-popup-page .hb-selected-records td small,
+  .admin-dashboard .hb-selected-records td small{
+    color:#dbe7f5!important;
+    -webkit-text-fill-color:#dbe7f5!important;
+  }
+  .admin-popup-page .hb-selected-records td[data-label="Actions"],
+  .admin-dashboard .hb-selected-records td[data-label="Actions"]{
+    display:block!important;
+    padding-top:12px!important;
+  }
+  .admin-popup-page .hb-selected-records td[data-label="Actions"]:before,
+  .admin-dashboard .hb-selected-records td[data-label="Actions"]:before{
+    display:block!important;
+    margin-bottom:9px!important;
+  }
+  .admin-popup-page .hb-selected-records td[data-label="Actions"] .btn-row,
+  .admin-dashboard .hb-selected-records td[data-label="Actions"] .btn-row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    width:100%!important;
+  }
+  .admin-popup-page .hb-selected-records td[data-label="Actions"] .btn,
+  .admin-dashboard .hb-selected-records td[data-label="Actions"] .btn{
+    width:100%!important;
+    min-height:42px!important;
+    justify-content:center!important;
+    white-space:normal!important;
+    text-align:center!important;
+  }
+}
+@media screen and (max-width:640px){
+  .admin-popup-page .hb-selected-records tbody,
+  .admin-dashboard .hb-selected-records tbody{
+    grid-template-columns:1fr!important;
+  }
+  .admin-popup-page .hb-selected-records td,
+  .admin-dashboard .hb-selected-records td{
+    grid-template-columns:96px minmax(0,1fr)!important;
+    gap:8px!important;
+    font-size:13px!important;
+  }
+  .admin-popup-page .hb-selected-records td[data-label="Actions"] .btn-row,
+  .admin-dashboard .hb-selected-records td[data-label="Actions"] .btn-row{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media screen and (max-width:1180px){
+  main.section.review-document-page{
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    padding:16px 0 28px!important;
+    background:linear-gradient(180deg,#06101f 0%,#eef4fb 145px,#f8fafc 100%)!important;
+  }
+  main.section.review-document-page>.container,
+  .review-document-page>.container{
+    width:min(100% - 24px,980px)!important;
+    max-width:980px!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    padding:0!important;
+    margin:0 auto!important;
+    overflow:visible!important;
+    background:transparent!important;
+  }
+  .review-document-page #printable-document.hb-side-doc{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:hidden!important;
+    transform:none!important;
+    zoom:1!important;
+    position:relative!important;
+    left:auto!important;
+    top:auto!important;
+    margin:0 auto!important;
+    display:grid!important;
+    grid-template-columns:minmax(210px,260px) minmax(0,1fr)!important;
+    border-radius:22px!important;
+    box-shadow:0 18px 50px rgba(6,40,77,.20)!important;
+  }
+  .review-document-page .hb-doc-side,
+  .review-document-page .hb-doc-main{
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .review-document-page .hb-doc-side{
+    padding:24px 18px!important;
+  }
+  .review-document-page .hb-doc-main{
+    padding:24px 20px 26px!important;
+  }
+  .review-document-page .hb-doc-title-row{
+    grid-template-columns:1fr!important;
+    min-height:0!important;
+    gap:12px!important;
+  }
+  .review-document-page .hb-doc-title-block{
+    justify-self:start!important;
+    width:100%!important;
+  }
+  .review-document-page .hb-doc-title-block h1{
+    font-size:clamp(36px,7vw,48px)!important;
+  }
+  .review-document-page .hb-doc-meta{
+    grid-template-columns:116px minmax(0,1fr)!important;
+  }
+  .review-document-page .hb-billship,
+  .review-document-page .hb-lower-grid{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+    padding-top:14px!important;
+  }
+  .review-document-page .hb-secure-payment,
+  .review-document-page .hb-approval-panel{
+    grid-template-columns:1fr!important;
+    text-align:center!important;
+  }
+  .review-document-page .hb-secure-payment:before{
+    display:none!important;
+  }
+  .review-document-page .hb-secure-payment .secure-shield{
+    margin:0 auto!important;
+  }
+  .review-document-page .approval-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+    width:100%!important;
+  }
+  .review-document-page .approval-actions .pay-btn{
+    width:100%!important;
+    min-width:0!important;
+  }
+}
+@media screen and (max-width:760px){
+  main.section.review-document-page{
+    padding:12px 0 22px!important;
+    background:linear-gradient(180deg,#06101f 0%,#06101f 96px,#eef4fb 96px,#f8fafc 100%)!important;
+  }
+  main.section.review-document-page>.container,
+  .review-document-page>.container{
+    width:100%!important;
+    max-width:100%!important;
+    padding:0 10px!important;
+  }
+  .review-document-page .hb-review-actions{
+    position:relative!important;
+    top:auto!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+    margin:0 0 10px!important;
+    border-radius:18px!important;
+    background:rgba(255,255,255,.94)!important;
+  }
+  .review-document-page .hb-review-actions .btn{
+    width:100%!important;
+    min-height:44px!important;
+  }
+  .review-document-page #printable-document.hb-side-doc{
+    display:block!important;
+    border-radius:20px!important;
+  }
+  .review-document-page .hb-doc-side{
+    border-right:0!important;
+    border-bottom:5px solid #ff6a00!important;
+    padding:18px 15px!important;
+  }
+  .review-document-page .hb-panel-divider-img,
+  .review-document-page .hb-doc-side:before,
+  .review-document-page .hb-doc-side:after{
+    display:none!important;
+    content:none!important;
+  }
+  .review-document-page .hb-side-doc .side-logo.hb-logo-exact{
+    margin:0 auto 14px!important;
+  }
+  .review-document-page .hb-side-doc .hb-full-logo-img,
+  .review-document-page .hb-side-doc .side-logo img{
+    width:174px!important;
+    max-width:72vw!important;
+  }
+  .review-document-page .side-contact{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .review-document-page .side-info-row{
+    grid-template-columns:30px minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:center!important;
+  }
+  .review-document-page .side-info-row .side-circle-icon{
+    width:28px!important;
+    height:28px!important;
+  }
+  .review-document-page .side-info-row p,
+  .review-document-page .method-row p{
+    font-size:11.5px!important;
+    line-height:1.32!important;
+  }
+  .review-document-page .side-prepared{
+    display:none!important;
+  }
+  .review-document-page .side-divider{
+    margin:12px 0!important;
+  }
+  .review-document-page .side-payment-methods .green-title{
+    font-size:12px!important;
+    margin-bottom:8px!important;
+  }
+  .review-document-page .payment-method-card{
+    padding:9px 10px!important;
+    border-radius:12px!important;
+  }
+  .review-document-page .method-row{
+    min-height:40px!important;
+    grid-template-columns:32px minmax(0,1fr)!important;
+    padding:6px 0!important;
+  }
+  .review-document-page .method-icon{
+    width:30px!important;
+    height:30px!important;
+    font-size:17px!important;
+  }
+  .review-document-page .hb-doc-main{
+    padding:16px 13px 20px!important;
+  }
+  .review-document-page .hb-doc-title-block h1{
+    font-size:34px!important;
+  }
+  .review-document-page .title-line{
+    width:100%!important;
+    max-width:220px!important;
+  }
+  .review-document-page .hb-doc-meta{
+    grid-template-columns:102px minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+  .review-document-page .hb-doc-meta b{
+    font-size:10.5px!important;
+  }
+  .review-document-page .hb-doc-meta span{
+    font-size:12.5px!important;
+    word-break:break-word!important;
+  }
+  .review-document-page .hb-billship{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:11px!important;
+  }
+  .review-document-page .hb-info-card{
+    min-height:0!important;
+    padding:47px 14px 13px!important;
+    border-radius:14px!important;
+  }
+  .review-document-page .card-tag{
+    height:28px!important;
+    min-width:112px!important;
+    top:12px!important;
+    font-size:12px!important;
+    padding:0 13px!important;
+  }
+  .review-document-page .hb-info-card h3{
+    font-size:15px!important;
+    line-height:1.18!important;
+  }
+  .review-document-page .hb-info-card p{
+    font-size:12px!important;
+    line-height:1.34!important;
+    word-break:break-word!important;
+  }
+  .review-document-page .hb-side-line-table,
+  .review-document-page .hb-side-line-table thead,
+  .review-document-page .hb-side-line-table tbody,
+  .review-document-page .hb-side-line-table tr,
+  .review-document-page .hb-side-line-table td{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+  .review-document-page .hb-side-line-table{
+    border:0!important;
+    border-radius:0!important;
+    overflow:visible!important;
+    background:transparent!important;
+  }
+  .review-document-page .hb-side-line-table thead{
+    display:none!important;
+  }
+  .review-document-page .hb-side-line-table tbody tr{
+    margin:0 0 11px!important;
+    border:1px solid #d9e2ef!important;
+    border-radius:14px!important;
+    overflow:hidden!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(6,40,77,.07)!important;
+  }
+  .review-document-page .hb-side-line-table td{
+    display:grid!important;
+    grid-template-columns:96px minmax(0,1fr)!important;
+    align-items:start!important;
+    gap:8px!important;
+    min-height:auto!important;
+    padding:10px 12px!important;
+    border:0!important;
+    border-bottom:1px solid #edf2f7!important;
+    text-align:left!important;
+    white-space:normal!important;
+    word-break:break-word!important;
+  }
+  .review-document-page .hb-side-line-table td:last-child{
+    border-bottom:0!important;
+  }
+  .review-document-page .hb-side-line-table td::before{
+    display:block!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:10.5px!important;
+    line-height:1.2!important;
+    letter-spacing:.05em!important;
+    text-transform:uppercase!important;
+    font-weight:900!important;
+    color:#06284d!important;
+    -webkit-text-fill-color:#06284d!important;
+  }
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(1)::before{content:"Qty"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(2)::before{content:"Item"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(3)::before{content:"Description"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(4)::before{content:"Unit Price"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(5)::before{content:"Amount"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(1)::before{content:"Qty"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(2)::before{content:"Item"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(3)::before{content:"Description"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(4)::before{content:"Unit Price"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(5)::before{content:"Discounted"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(6)::before{content:"Amount"!important;}
+  .review-document-page .hb-side-line-table .qty-cell,
+  .review-document-page .hb-side-line-table .price-cell,
+  .review-document-page .hb-side-line-table .amount-cell{
+    text-align:left!important;
+    white-space:normal!important;
+  }
+  .review-document-page .hb-lower-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+    margin-top:12px!important;
+    padding-top:0!important;
+  }
+  .review-document-page .hb-terms-box{
+    padding:13px!important;
+    border:1px solid #d9e2ef!important;
+    border-radius:14px!important;
+    background:#f8fafc!important;
+  }
+  .review-document-page .hb-terms-box li{
+    font-size:10.8px!important;
+    line-height:1.34!important;
+  }
+  .review-document-page .hb-side-totals .total-row{
+    min-height:38px!important;
+    padding:8px 13px!important;
+  }
+  .review-document-page .hb-side-totals .total-row span{
+    font-size:12.5px!important;
+  }
+  .review-document-page .hb-side-totals .grand span:last-child{
+    font-size:20px!important;
+  }
+  .review-document-page .hb-secure-payment,
+  .review-document-page .hb-approval-panel{
+    padding:14px!important;
+    margin-top:14px!important;
+  }
+  .review-document-page .hb-secure-payment .pay-btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:280px!important;
+  }
+  .review-document-page .approval-actions{
+    grid-template-columns:1fr!important;
+  }
+  .review-document-page #approve,
+  .review-document-page #decline,
+  .review-document-page .signature-proof{
+    width:100%!important;
+    max-width:100%!important;
+    border-radius:18px!important;
+    padding:16px!important;
+    margin-top:12px!important;
+  }
+  .review-document-page #approve form,
+  .review-document-page #decline form{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  .review-document-page .signature-pad{
+    width:100%!important;
+    max-width:100%!important;
+    height:150px!important;
+  }
+  .review-document-page .hb-doc-thanks{
+    display:flex!important;
+    justify-content:center!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+  }
+  .review-document-page .hb-doc-thanks i{
+    display:none!important;
+  }
+  .review-document-page .hb-doc-thanks em{
+    font-size:18px!important;
+    white-space:normal!important;
+  }
+}
 `;
 
 
@@ -18382,7 +18905,7 @@ function dashboardRow(row, view = "overview") {
     actions = `<a class="btn small" href="/admin/document?id=${encodeURIComponent(row.id)}">Edit</a><a class="btn small" target="_blank" href="${viewUrl}">View</a>${cloneButton}<a class="btn small green" href="/admin/email?id=${encodeURIComponent(row.id)}">Email</a>${convertButton}${paymentButton}${cancelButton}`;
   }
 
-  return `<tr class="${row.type === "Quote" && convertedInvoiceNumber ? "converted-quote-row" : ""}"><td><strong>${escapeHtml(row.number)}</strong></td><td>${typeCell}</td><td>${escapeHtml(row.customer_name || "")}<br><span class="hint">${escapeHtml(row.email || "")}</span></td><td><strong>${money(row.total)}</strong></td><td>${statusCell}</td><td>${paidCell}</td><td>${formatDateTime(row.updated_at)}</td><td><div class="btn-row">${actions}</div></td></tr>`;
+  return `<tr class="${row.type === "Quote" && convertedInvoiceNumber ? "converted-quote-row" : ""}"><td data-label="Number"><strong>${escapeHtml(row.number)}</strong></td><td data-label="Type">${typeCell}</td><td data-label="Customer">${escapeHtml(row.customer_name || "")}<br><span class="hint">${escapeHtml(row.email || "")}</span></td><td data-label="Total"><strong>${money(row.total)}</strong></td><td data-label="Status">${statusCell}</td><td data-label="Payment">${paidCell}</td><td data-label="Updated">${formatDateTime(row.updated_at)}</td><td data-label="Actions"><div class="btn-row">${actions}</div></td></tr>`;
 }
 
 function paymentModalHtml() {
