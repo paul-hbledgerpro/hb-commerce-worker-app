@@ -18872,7 +18872,7 @@ function reportExcelHtml(report) {
   .report-head td{text-align:center!important;border:0!important;padding:0!important;background:transparent!important;}
   .logo-center{text-align:center!important;margin:4px auto 10px auto;width:100%;}
   .logo-center img{width:150px;height:118px;max-width:150px;max-height:118px;object-fit:contain;display:block;margin:0 auto;}
-  .title{text-align:center!important;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin:2px auto 0 auto;width:100%;}
+  .title{text-align:center!important;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:.02em;margin:2px auto 0 auto;width:100%;box-sizing:border-box;padding-right:14px;}
   .subtitle{text-align:center!important;font-size:13px;color:#dbe7f5;margin:8px 0 18px;width:100%;}
   .summary{width:100%;border-collapse:separate;border-spacing:10px;margin:10px 0 18px;}
   .summary td{background:#0b1f38;border:1px solid #ff8c21;border-radius:12px;padding:14px;color:#ffffff;min-width:130px;}
@@ -18916,8 +18916,9 @@ function buildReportPdfBytes(report) {
     for (const ch of safe) {
       if (ch === " ") units += 0.28;
       else if ("ilI1.,:'!|".includes(ch)) units += 0.26;
-      else if ("MW@#%&".includes(ch)) units += 0.78;
-      else if (/[A-Z0-9$]/.test(ch)) units += 0.59;
+      else if ("MW@#%&".includes(ch)) units += 0.82;
+      else if (/[A-Z]/.test(ch)) units += 0.68;
+      else if (/[0-9$]/.test(ch)) units += 0.56;
       else if (/[a-z]/.test(ch)) units += 0.52;
       else units += 0.42;
     }
@@ -19145,7 +19146,7 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
         ${federalField}
         <div class="field report-breakdown-field"><label>Yearly Table Option</label><label class="hb-report-check"><input type="checkbox" name="show_breakdown" value="1" ${showBreakdown ? "checked" : ""}> Show Monthly Breakdown Table</label></div>
       </div>
-      <div class="btn-row"><button class="primary">View Report</button><a class="btn orange" href="${base}.xls?${query}">Export Excel</a><a class="btn" href="${base}.csv?${query}">Raw CSV</a><a class="btn primary" href="${base}.pdf?${query}">Export PDF</a></div>
+      <div class="btn-row"><button class="primary">View Report</button><a class="btn orange" href="${base}.xls?${query}">Export Excel</a><a class="btn" href="${base}.csv?${query}">Raw CSV</a><a class="btn primary hb-report-pdf-download" href="${base}.pdf?${query}" download="${reportFilePrefix(report)}-${reportSafeLabel(report)}.pdf" data-download-name="${reportFilePrefix(report)}-${reportSafeLabel(report)}.pdf">Export PDF</a></div>
     </form>
 
     <div class="report-summary-cards">${summaryCards}</div>
@@ -19162,6 +19163,31 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
         document.querySelectorAll('.report-year-field,.report-breakdown-field').forEach(el=>el.style.display=mode==='year'?'grid':'none');
       }
       toggleReportFields();
+      document.querySelectorAll('.hb-report-pdf-download').forEach(function(link){
+        link.addEventListener('click', async function(ev){
+          ev.preventDefault();
+          const originalText = link.textContent;
+          link.textContent = 'Preparing PDF...';
+          link.setAttribute('aria-busy','true');
+          try {
+            const res = await fetch(link.href, { credentials: 'same-origin', cache: 'no-store' });
+            if (!res.ok) throw new Error('PDF download failed');
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = link.dataset.downloadName || link.getAttribute('download') || 'HB-Commerce-Report.pdf';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 1500);
+          } catch (err) {
+            window.location.href = link.href;
+          } finally {
+            link.textContent = originalText;
+            link.removeAttribute('aria-busy');
+          }
+        });
+      });
     </script>
   </div></main>`;
   return htmlPage(`${title} | HB Commerce Solutions`, layout(env, "Dashboard", body));
@@ -19215,7 +19241,7 @@ async function adminReportsPdf(request, env) {
   const report = await reportFromRequest(env, new URL(request.url), "sales");
   const label = reportSafeLabel(report);
   const pdf = buildReportPdfBytes(report);
-  return new Response(pdf, { headers: { "content-type": "application/pdf", "content-disposition": `attachment; filename="${reportFilePrefix(report)}-${label}.pdf"` } });
+  return new Response(pdf, { headers: { "content-type": "application/octet-stream", "content-disposition": `attachment; filename="${reportFilePrefix(report)}-${label}.pdf"`, "cache-control": "no-store", "x-content-type-options": "nosniff", "x-download-options": "noopen" } });
 }
 
 async function adminPnlReportsPdf(request, env) {
@@ -19224,7 +19250,7 @@ async function adminPnlReportsPdf(request, env) {
   const report = await reportFromRequest(env, new URL(request.url), "pnl");
   const label = reportSafeLabel(report);
   const pdf = buildReportPdfBytes(report);
-  return new Response(pdf, { headers: { "content-type": "application/pdf", "content-disposition": `attachment; filename="${reportFilePrefix(report)}-${label}.pdf"` } });
+  return new Response(pdf, { headers: { "content-type": "application/octet-stream", "content-disposition": `attachment; filename="${reportFilePrefix(report)}-${label}.pdf"`, "cache-control": "no-store", "x-content-type-options": "nosniff", "x-download-options": "noopen" } });
 }
 
 async function adminReportsEmailBase(request, env, kind = "sales") {

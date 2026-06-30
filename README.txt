@@ -1,3 +1,5 @@
+HB Commerce Cloudflare Worker App v217 - Report title centering and PDF download fix
+
 HB Commerce Cloudflare Worker App v212 - no-blue-bleed PDF divider fix
 
 HB Commerce Cloudflare Worker App v209 - Paid invoice PDF button and mobile print fix
