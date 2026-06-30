@@ -13482,6 +13482,281 @@ html body .admin-document-page #items .line-item-card input[type="checkbox"]{
 .hb-side-totals .balance-grand span{color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:1000!important}
 .hb-side-totals .balance-grand span:last-child{font-size:28px!important}
 
+
+
+/* v208: responsive public quote/invoice view for phone, tablet, and desktop.
+   Keeps the desktop MY DESIGN layout, but changes the customer View Invoice page to a single-column mobile invoice with no horizontal dragging. */
+.review-document-page .container{
+  max-width:1200px!important;
+}
+.review-document-page .btn-row.no-print{
+  align-items:stretch!important;
+}
+@media screen and (max-width:760px){
+  html,body{max-width:100%!important;overflow-x:hidden!important;}
+  .review-document-page{padding:14px 0 24px!important;background:linear-gradient(180deg,#06101f 0%,#eef4fb 110px,#f8fafc 100%)!important;}
+  .review-document-page .container{width:100%!important;max-width:100%!important;padding:0 10px!important;margin:0 auto!important;}
+  .review-document-page .btn-row.no-print{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin:0 0 10px!important;}
+  .review-document-page .btn-row.no-print .btn,
+  .review-document-page .btn-row.no-print button{width:100%!important;min-height:44px!important;border-radius:13px!important;}
+  .review-document-page .notice{font-size:13px!important;}
+
+  .review-document-page .hb-side-doc{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-height:auto!important;
+    display:block!important;
+    border-radius:18px!important;
+    overflow:hidden!important;
+    box-shadow:0 16px 42px rgba(6,40,77,.20)!important;
+    border:1px solid #d9e2ef!important;
+    background:#fff!important;
+  }
+  .review-document-page .hb-side-doc .paid-watermark{
+    left:50%!important;
+    top:54%!important;
+    font-size:54px!important;
+    letter-spacing:.04em!important;
+    opacity:.72!important;
+  }
+  .review-document-page .hb-side-doc:before,
+  .review-document-page .hb-side-doc:after{display:none!important;content:none!important;}
+
+  .review-document-page .hb-doc-side{
+    display:block!important;
+    min-height:auto!important;
+    padding:18px 16px!important;
+    overflow:hidden!important;
+    border-right:0!important;
+    border-bottom:5px solid #ff6a00!important;
+    background:linear-gradient(145deg,#06101f 0%,#062a5b 70%,#06101f 100%)!important;
+  }
+  .review-document-page .hb-panel-divider-img,
+  .review-document-page .hb-doc-side:before,
+  .review-document-page .hb-doc-side:after{display:none!important;content:none!important;}
+  .review-document-page .hb-side-doc .side-logo.hb-logo-exact{margin:0 auto 14px!important;}
+  .review-document-page .hb-side-doc .hb-full-logo-img,
+  .review-document-page .hb-side-doc .side-logo img{width:176px!important;max-width:72vw!important;margin:0 auto!important;}
+  .review-document-page .side-contact{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;margin-top:10px!important;}
+  .review-document-page .side-info-row{grid-template-columns:30px minmax(0,1fr)!important;gap:9px!important;align-items:center!important;margin:0!important;}
+  .review-document-page .side-info-row .side-circle-icon{width:28px!important;height:28px!important;}
+  .review-document-page .side-info-row .side-circle-icon svg{width:15px!important;height:15px!important;}
+  .review-document-page .side-info-row p{font-size:12px!important;line-height:1.32!important;}
+  .review-document-page .side-divider{margin:13px 0!important;}
+  .review-document-page .side-prepared{display:none!important;}
+  .review-document-page .side-payment-methods{margin-top:8px!important;}
+  .review-document-page .side-payment-methods .green-title{font-size:12px!important;margin-bottom:8px!important;}
+  .review-document-page .payment-method-card{padding:9px 10px!important;border-radius:12px!important;}
+  .review-document-page .method-row{min-height:42px!important;padding:6px 0!important;grid-template-columns:34px minmax(0,1fr)!important;gap:8px!important;}
+  .review-document-page .method-icon{width:30px!important;height:30px!important;border-radius:8px!important;font-size:18px!important;}
+  .review-document-page .method-icon.check svg{width:18px!important;height:18px!important;}
+  .review-document-page .method-icon.zelle:before,
+  .review-document-page .method-icon.zelle:after{left:8px!important;right:8px!important;height:2px!important;}
+  .review-document-page .method-icon.zelle:before{top:7px!important;}
+  .review-document-page .method-icon.zelle:after{bottom:7px!important;}
+  .review-document-page .method-row b{font-size:12px!important;}
+  .review-document-page .method-row p{font-size:10.5px!important;line-height:1.25!important;}
+
+  .review-document-page .hb-doc-main{
+    min-height:auto!important;
+    display:block!important;
+    padding:18px 14px 22px!important;
+    background:#fff!important;
+  }
+  .review-document-page .hb-doc-title-row{
+    display:block!important;
+    min-height:auto!important;
+    margin-bottom:14px!important;
+  }
+  .review-document-page .hb-doc-title-block{
+    width:100%!important;
+    justify-self:stretch!important;
+  }
+  .review-document-page .hb-doc-title-block h1{
+    font-size:36px!important;
+    line-height:1.02!important;
+    letter-spacing:-.03em!important;
+  }
+  .review-document-page .title-line{width:100%!important;max-width:220px!important;margin:8px 0 12px!important;}
+  .review-document-page .hb-doc-meta{
+    grid-template-columns:104px minmax(0,1fr)!important;
+    gap:8px!important;
+    margin:7px 0!important;
+  }
+  .review-document-page .hb-doc-meta b{font-size:11px!important;}
+  .review-document-page .hb-doc-meta span{font-size:12.5px!important;word-break:break-word!important;}
+  .review-document-page .status-pill{justify-self:start!important;min-width:74px!important;padding:5px 10px!important;font-size:11px!important;}
+
+  .review-document-page .hb-billship{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+    padding-top:12px!important;
+    margin-bottom:14px!important;
+  }
+  .review-document-page .hb-info-card{
+    min-height:auto!important;
+    padding:48px 16px 14px!important;
+    border-radius:14px!important;
+  }
+  .review-document-page .card-tag{
+    height:28px!important;
+    min-width:112px!important;
+    top:12px!important;
+    font-size:12px!important;
+    padding:0 13px!important;
+  }
+  .review-document-page .card-tag:after{border-top-width:14px!important;border-bottom-width:14px!important;right:-14px!important;}
+  .review-document-page .navy-tag:after{border-left-width:14px!important;}
+  .review-document-page .orange-tag:after{border-left-width:14px!important;}
+  .review-document-page .card-tag svg{width:15px!important;height:15px!important;}
+  .review-document-page .hb-info-card h3{font-size:15px!important;line-height:1.18!important;}
+  .review-document-page .hb-info-card p{font-size:12.5px!important;line-height:1.34!important;word-break:break-word!important;}
+
+  .review-document-page .hb-side-line-table,
+  .review-document-page .hb-side-line-table thead,
+  .review-document-page .hb-side-line-table tbody,
+  .review-document-page .hb-side-line-table tr,
+  .review-document-page .hb-side-line-table td{
+    display:block!important;
+    width:100%!important;
+  }
+  .review-document-page .hb-side-line-table{
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    overflow:visible!important;
+  }
+  .review-document-page .hb-side-line-table thead{display:none!important;}
+  .review-document-page .hb-side-line-table tbody tr{
+    margin:0 0 12px!important;
+    border:1px solid #d9e2ef!important;
+    border-radius:14px!important;
+    overflow:hidden!important;
+    background:#fff!important;
+    box-shadow:0 8px 22px rgba(6,40,77,.07)!important;
+  }
+  .review-document-page .hb-side-line-table td{
+    display:grid!important;
+    grid-template-columns:98px minmax(0,1fr)!important;
+    align-items:start!important;
+    gap:8px!important;
+    min-height:auto!important;
+    padding:10px 12px!important;
+    border:0!important;
+    border-bottom:1px solid #edf2f7!important;
+    color:#111827!important;
+    -webkit-text-fill-color:#111827!important;
+    font-size:12.5px!important;
+    line-height:1.35!important;
+    text-align:left!important;
+    white-space:normal!important;
+  }
+  .review-document-page .hb-side-line-table td:last-child{border-bottom:0!important;}
+  .review-document-page .hb-side-line-table td::before{
+    display:block!important;
+    font-family:Arial,Helvetica,sans-serif!important;
+    font-size:10.5px!important;
+    line-height:1.2!important;
+    letter-spacing:.05em!important;
+    text-transform:uppercase!important;
+    font-weight:900!important;
+    color:#06284d!important;
+    -webkit-text-fill-color:#06284d!important;
+  }
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(1)::before{content:"Qty"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(2)::before{content:"Item"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(3)::before{content:"Description"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(4)::before{content:"Unit Price"!important;}
+  .review-document-page .hb-side-line-table.no-discount-column td:nth-child(5)::before{content:"Amount"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(1)::before{content:"Qty"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(2)::before{content:"Item"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(3)::before{content:"Description"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(4)::before{content:"Unit Price"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(5)::before{content:"Discounted"!important;}
+  .review-document-page .hb-side-line-table.has-discount-column td:nth-child(6)::before{content:"Amount"!important;}
+  .review-document-page .hb-side-line-table .qty-cell,
+  .review-document-page .hb-side-line-table .price-cell,
+  .review-document-page .hb-side-line-table .amount-cell{text-align:left!important;white-space:normal!important;}
+  .review-document-page .hb-side-line-table .code{font-size:12.5px!important;word-break:break-word!important;}
+  .review-document-page .hb-side-line-table .desc{font-size:12px!important;line-height:1.34!important;word-break:break-word!important;}
+  .review-document-page .hb-side-line-table .regular-price,
+  .review-document-page .hb-side-line-table .discounted-price,
+  .review-document-page .hb-side-line-table .no-discount-price,
+  .review-document-page .hb-side-line-table .amount-cell{font-size:12.5px!important;}
+
+  .review-document-page .hb-lower-grid{
+    display:block!important;
+    margin-top:16px!important;
+    padding-top:0!important;
+  }
+  .review-document-page .hb-terms-box{
+    margin:0 0 14px!important;
+    padding:14px!important;
+    border:1px solid #d9e2ef!important;
+    border-radius:14px!important;
+    background:#f8fafc!important;
+  }
+  .review-document-page .terms-title{font-size:12px!important;margin-bottom:10px!important;}
+  .review-document-page .terms-title span{width:25px!important;height:25px!important;}
+  .review-document-page .terms-title svg{width:14px!important;height:14px!important;}
+  .review-document-page .hb-terms-box ul{padding-left:16px!important;}
+  .review-document-page .hb-terms-box li{font-size:11px!important;line-height:1.35!important;margin-bottom:4px!important;}
+  .review-document-page .hb-side-totals{width:100%!important;border-radius:14px!important;}
+  .review-document-page .hb-side-totals .total-row{
+    min-height:38px!important;
+    padding:8px 13px!important;
+  }
+  .review-document-page .hb-side-totals .total-row span{font-size:12.5px!important;}
+  .review-document-page .hb-side-totals .grand{min-height:50px!important;}
+  .review-document-page .hb-side-totals .grand span{font-size:15px!important;}
+  .review-document-page .hb-side-totals .grand span:last-child{font-size:20px!important;}
+
+  .review-document-page .hb-secure-payment{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    min-height:auto!important;
+    padding:14px!important;
+    margin-top:16px!important;
+    text-align:center!important;
+  }
+  .review-document-page .hb-secure-payment:before{display:none!important;content:none!important;}
+  .review-document-page .hb-secure-payment .secure-shield{margin:0 auto!important;width:58px!important;height:64px!important;}
+  .review-document-page .hb-secure-payment .secure-shield svg{width:34px!important;height:34px!important;}
+  .review-document-page .hb-secure-payment .secure-title{gap:9px!important;}
+  .review-document-page .hb-secure-payment .secure-title h4{font-size:15px!important;white-space:nowrap!important;}
+  .review-document-page .hb-secure-payment p{font-size:11.5px!important;}
+  .review-document-page .hb-secure-payment .pay-btn{width:100%!important;min-width:0!important;max-width:260px!important;}
+  .review-document-page .hb-secure-payment .card-marks{gap:10px!important;flex-wrap:wrap!important;}
+  .review-document-page .hb-secure-payment .card-marks .visa{font-size:15px!important;}
+  .review-document-page .hb-secure-payment .card-marks .amex{font-size:9.5px!important;}
+  .review-document-page .hb-secure-payment .card-marks .discover{font-size:12px!important;}
+  .review-document-page .hb-doc-thanks{
+    display:flex!important;
+    justify-content:center!important;
+    gap:6px!important;
+    flex-wrap:wrap!important;
+    margin-top:16px!important;
+  }
+  .review-document-page .hb-doc-thanks i{display:none!important;}
+  .review-document-page .hb-doc-thanks em{font-size:18px!important;white-space:normal!important;}
+}
+@media screen and (min-width:761px) and (max-width:1024px){
+  .review-document-page .container{width:min(100% - 24px, 980px)!important;}
+  .review-document-page .hb-side-doc{grid-template-columns:240px minmax(0,1fr)!important;width:100%!important;}
+  .review-document-page .hb-doc-side{padding:28px 18px!important;}
+  .review-document-page .hb-side-doc .hb-full-logo-img{width:200px!important;}
+  .review-document-page .hb-doc-main{padding:28px 24px 26px!important;}
+  .review-document-page .hb-doc-title-row{grid-template-columns:1fr 260px!important;min-height:148px!important;}
+  .review-document-page .hb-doc-title-block{width:260px!important;}
+  .review-document-page .hb-doc-title-block h1{font-size:48px!important;}
+  .review-document-page .hb-billship{gap:18px!important;}
+  .review-document-page .hb-lower-grid{grid-template-columns:1fr 300px!important;gap:20px!important;padding-top:36px!important;}
+  .review-document-page .hb-side-totals .grand span:last-child{font-size:22px!important;}
+}
+
 `;
 
 function installButtonHtml() {
@@ -19323,7 +19598,7 @@ html body main.admin-document-page #docForm .btn-row .btn{
 <section class="form-section"><div class="form-title">Shipping Address</div><div class="grid-2"><div class="field"><label>Shipping Street Address</label><input name="shipping_street" id="shipping_street" value="${escapeHtml(ship.street || "")}" autocomplete="shipping street-address"></div><div class="field"><label>Shipping ZIP <span class="hint">auto city/state + rate</span></label><input name="shipping_zip" id="shipping_zip" value="${escapeHtml(ship.zip || "")}" maxlength="10" autocomplete="shipping postal-code"></div></div><div class="grid-3"><div class="field"><label>Shipping City</label><input name="shipping_city" id="shipping_city" value="${escapeHtml(ship.city || "")}" autocomplete="shipping address-level2"></div><div class="field"><label>Shipping State</label><input name="shipping_state" id="shipping_state" value="${escapeHtml(ship.state || "")}" maxlength="2" autocomplete="shipping address-level1" placeholder="IL"></div><div class="field"><label>Destination Tax</label><button type="button" class="orange" onclick="lookupDestinationTax()">Refresh Destination Tax</button></div></div><div class="notice" id="taxNote">${doc.tax_source ? `Tax source: ${escapeHtml(doc.tax_source)}${doc.tax_lookup_address ? " • " + escapeHtml(doc.tax_lookup_address) : ""}` : "Default tax rate is 10.000%. Destination ZIP/city/state fills automatically from the shipping ZIP."}</div></section>
 <section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground / Home Delivery</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals();markManualShippingOverride()"></div><div class="field"><label>Auto Rate Status</label><div class="auto-rate-pill" id="autoRateStatus">Waiting for ZIP and carrier</div></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Auto shipping:</strong> choose UPS or FedEx and enter a 5-digit shipping ZIP. The rate calculates automatically when the carrier, ZIP, address, package weight, or line items change. Choose Manual Entry to type your own shipping cost.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
 <section class="form-section"><div class="form-title">Terms, Conditions & Payment Link</div><div class="grid-2"><div class="field"><label>Terms & Conditions</label><textarea name="terms_conditions" rows="5" placeholder="Example: Quote valid for 30 days. Hardware ships after approval and payment is received.">${escapeHtml(doc.terms_conditions || "")}</textarea></div><div class="field"><label>Invoice Payment Link <span class="hint">optional / future Authorize.Net</span></label><input name="payment_link" value="${escapeHtml(doc.payment_link || "")}" placeholder="https://..."><p class="hint">When Authorize.Net is ready, this field can display a Pay Invoice Online link on invoices.</p></div></div></section>
-<section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link</a><a class="btn orange" target="_blank" href="/admin/document.pdf?id=${encodeURIComponent(doc.id)}">Download PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client PDF</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
+<section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link</a><a class="btn orange" target="_blank" href="/admin/document.pdf?id=${encodeURIComponent(doc.id)}">Download PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
 <script>
 const stateNames=${JSON.stringify(STATE_NAMES)};
 const stateRates=${JSON.stringify(STATE_RATES)};
@@ -19801,7 +20076,7 @@ async function sendReminderEmail(env, doc, kind, days = 0) {
     const pay = doc.payment_link ? `<p><a href="${escapeHtml(doc.payment_link)}">Pay securely online by card</a></p>` : "";
     html = `<p>Hello ${escapeHtml(doc.customer_name || "Customer")},</p><p>Invoice <strong>${escapeHtml(doc.number || "")}</strong> is past due by <strong>${days} day${days === 1 ? "" : "s"}</strong>.</p><p><strong>Amount Due:</strong> ${money(totals.total)}</p>${pay}<p>Please make payment as soon as possible or contact us if you have any questions.</p><p>Invoice link: <a href="${link}">${link}</a></p><p>Thank you,<br>HB Commerce Solutions</p>`;
   }
-  html = `<div style="margin:0;padding:0;background:#eef4fb;font-family:Arial,Helvetica,sans-serif;color:#10233d"><div style="max-width:720px;margin:0 auto;padding:22px"><div style="background:#ffffff;border:1px solid #d9e2ef;border-radius:24px;overflow:hidden"><div style="background:#06101f;color:#ffffff;padding:24px 28px;border-bottom:6px solid #ff6a00"><div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div><h1 style="margin:8px 0 0;color:#ffffff;font-size:26px;line-height:1.15">${escapeHtml(subject)}</h1></div><div style="padding:24px 28px;color:#10233d;font-size:15px;line-height:1.6">${html}<div style="margin-top:18px;padding:14px;border-radius:16px;background:#06101f;color:#ffffff;border-left:6px solid #ff6a00"><strong style="color:#ffffff">PDF attached:</strong> <span style="color:#eaf2ff">${escapeHtml(documentPdfFileName(doc))}</span></div></div></div></div></div>`;
+  html = `<div style="margin:0;padding:0;background:#eef4fb;font-family:Arial,Helvetica,sans-serif;color:#10233d"><div style="max-width:720px;margin:0 auto;padding:22px"><div style="background:#ffffff;border:1px solid #d9e2ef;border-radius:24px;overflow:hidden"><div style="background:#06101f;color:#ffffff;padding:24px 28px;border-bottom:6px solid #ff6a00"><div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div><h1 style="margin:8px 0 0;color:#ffffff;font-size:26px;line-height:1.15">${escapeHtml(subject)}</h1></div><div style="padding:24px 28px;color:#10233d;font-size:15px;line-height:1.6">${html}<div style="margin-top:18px;padding:14px;border-radius:16px;background:#06101f;color:#ffffff;border-left:6px solid #ff6a00"><strong style="color:#ffffff">Online document:</strong> <span style="color:#eaf2ff">Use the secure link above to open the latest responsive copy.</span></div></div></div></div></div>`;
   const attachments = documentEmailAttachments(doc, env);
   const ok = await sendEmail(env, { to: doc.email, subject, html, attachments });
   if (ok) await addReminderEmailLog(env, { kind, doc_type: doc.type, doc_id: doc.id, number: doc.number, customer_name: doc.customer_name, email: doc.email, subject, amount: totals.total, days });
@@ -20103,7 +20378,15 @@ function documentPdfAttachment(doc, env = {}) {
   }
 }
 
+function emailPdfAttachmentsEnabled(env = {}) {
+  const v = String(env.EMAIL_ATTACH_DOCUMENT_PDF || "").trim().toLowerCase();
+  return ["1", "true", "yes", "on"].includes(v);
+}
+
 function documentEmailAttachments(doc, env = {}) {
+  // v208: Customer emails no longer attach invoice/quote PDFs by default.
+  // The email keeps online action buttons, and PDF download routes remain available.
+  if (!emailPdfAttachmentsEnabled(env)) return [];
   const attachment = documentPdfAttachment(doc, env);
   return attachment ? [attachment] : [];
 }
@@ -20133,10 +20416,10 @@ function documentEmailHtml(env, doc) {
     : isPaidInvoice
       ? `<a href="${link}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Paid Invoice</a>`
       : `<a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Pay Secure Online</a><a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Invoice</a>`;
-  const moreItems = (doc.items || []).length > 10 ? `<p style="margin:8px 0 0;color:#64748b;font-size:12px">Additional line items are included in the attached PDF.</p>` : "";
+  const moreItems = (doc.items || []).length > 10 ? `<p style="margin:8px 0 0;color:#64748b;font-size:12px">Additional line items are included in the online invoice view.</p>` : "";
   const introText = isPaidInvoice
-    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. You can view the paid invoice online or open the attached PDF copy.`
-    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. You can use the secure buttons below, view it online, or open the attached PDF copy.`;
+    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. You can view the paid invoice online using the button below.`
+    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. Use the secure buttons below to open the responsive online view or download a PDF copy.`;
   const paidSummary = isPaidInvoice
     ? `<div style="margin-top:20px;padding:16px;border-radius:16px;background:#ecfdf3;color:#14532d;border:1px solid #bbf7d0;border-left:6px solid #138a3d"><strong style="font-size:16px;color:#14532d">PAID INVOICE</strong><br><span style="color:#166534">This invoice has been marked paid${doc.payment_method ? " by " + escapeHtml(doc.payment_method) : ""}${doc.paid_at ? " on " + escapeHtml(formatDateTime(doc.paid_at)) : ""}.</span></div>`
     : `<div style="margin-top:20px;padding:14px;border-radius:16px;background:#06101f;color:#fff;border-left:6px solid #ff6a00"><strong style="color:#fff">Other payment methods</strong><br><span style="color:#eaf2ff">Check payable to HANSABIJAL LLC. Zelle: PAULCAMERASYSTEMS@GMAIL.COM.</span></div>`;
@@ -20146,7 +20429,7 @@ function documentEmailHtml(env, doc) {
       <tr><td style="background:#06101f;padding:26px 28px;color:#fff;border-bottom:6px solid #ff6a00">
         <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div>
         <div style="font-size:30px;line-height:1.1;font-weight:950;margin-top:6px;color:#fff">${escapeHtml(title)} ${escapeHtml(doc.number || "")}</div>
-        <div style="font-size:14px;color:#dbe7f5;margin-top:8px">${isPaidInvoice ? "Paid invoice copy attached." : "Your updated-design PDF copy is attached to this email."}</div>
+        <div style="font-size:14px;color:#dbe7f5;margin-top:8px">${isPaidInvoice ? "Paid invoice - online copy available." : "Open the online copy or PDF using the buttons below."}</div>
         <div style="display:inline-block;margin-top:14px;background:${statusBg};color:#fff;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase">Status: ${escapeHtml(statusLabel)}</div>
       </td></tr>
       <tr><td style="padding:24px 28px">
@@ -20623,7 +20906,7 @@ async function reviewPage(request, env, id, token, message = "") {
   await attachOpenInvoiceBalance(env, doc);
   const wantsDecline = new URL(request.url).searchParams.get("action") === "decline";
   const action = doc.type === "Quote" ? (wantsDecline ? declineBlock(doc) : approvalBlock(doc)) : `<div class="notice no-print" style="margin-top:18px">Invoices are view-only and do not require customer approval.</div>`;
-  const body = `<main class="section"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button><a class="btn orange" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}.pdf">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
+  const body = `<main class="section review-document-page"><div class="container">${message}<div class="btn-row no-print" style="margin-bottom:16px"><button class="primary" onclick="window.print()">Print / Save PDF</button><a class="btn orange" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${encodeURIComponent(doc.token)}.pdf">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
   return htmlPage(`${doc.type} ${doc.number}`, layout(env, "Review", body));
 }
 

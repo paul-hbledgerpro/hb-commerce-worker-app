@@ -1,3 +1,12 @@
+HB Commerce Cloudflare Worker App v208 - Responsive invoice view and no default PDF email attachments
+
+Changes in v208:
+- Customer quote/invoice emails no longer attach PDF files by default.
+- Email body keeps the main action buttons, including View Invoice / View Paid Invoice and Download PDF.
+- View Invoice / View Paid Invoice public pages now use responsive phone, tablet, and desktop layouts.
+- Phone layout removes horizontal dragging by converting the line-item table into readable mobile cards.
+- PDF attachment can be re-enabled later only by setting EMAIL_ATTACH_DOCUMENT_PDF=1 as a Worker variable/secret.
+
 HB Commerce Worker App v206 - Website Final Notice Modal + PDF Quote/Invoice Emails
 
 Changes in v206:
