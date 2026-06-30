@@ -19512,6 +19512,33 @@ function invoiceCostTotal(doc) {
   }, 0);
 }
 
+function reportInvoiceState(doc = {}) {
+  const shipLegacy = doc.shipping_address && typeof doc.shipping_address === "object" ? doc.shipping_address : {};
+  const billLegacy = doc.billing_address && typeof doc.billing_address === "object" ? doc.billing_address : {};
+  const eufyOrder = doc.eufy_order && typeof doc.eufy_order === "object" ? doc.eufy_order : {};
+  const eufyShip = eufyOrder.shipping && typeof eufyOrder.shipping === "object" ? eufyOrder.shipping : {};
+  const eufyBill = eufyOrder.billing && typeof eufyOrder.billing === "object" ? eufyOrder.billing : {};
+  return cleanStateCode(
+    doc.shipping_state || shipLegacy.state || eufyShip.state ||
+    doc.state || doc.billing_state || billLegacy.state || eufyBill.state || ""
+  );
+}
+
+function reportStateLabel(state) {
+  return cleanStateCode(state) || "N/A";
+}
+
+function sortReportRowsByState(rows = []) {
+  return [...(rows || [])].sort((a, b) => {
+    const as = cleanStateCode(a.state || "ZZ");
+    const bs = cleanStateCode(b.state || "ZZ");
+    return as.localeCompare(bs)
+      || String(a.date || "").localeCompare(String(b.date || ""))
+      || String(a.customer || "").localeCompare(String(b.customer || ""))
+      || String(a.number || "").localeCompare(String(b.number || ""));
+  });
+}
+
 async function paidInvoiceReportRows(env, year = "") {
   const docs = await env.DB.prepare("SELECT id,type,number,customer_name,status,paid,total,updated_at,data_json FROM documents WHERE type='Invoice' ORDER BY updated_at DESC LIMIT 2000").all();
   const rows = [];
@@ -19528,8 +19555,10 @@ async function paidInvoiceReportRows(env, year = "") {
     const taxable = Number(c.taxable || 0);
     const nonTaxable = Math.max(0, subtotal - taxable);
     const profit = subtotal - cost;
+    const state = reportInvoiceState(doc);
     rows.push({
       id: row.id,
+      state,
       date,
       month: date.slice(0, 7),
       number: row.number || doc.number || "",
@@ -19702,15 +19731,15 @@ function reportCsv(report) {
     for (const r of report.rows) lines.push([r.date, r.number, r.customer, r.subtotal.toFixed(2), r.cost.toFixed(2), r.profit.toFixed(2), r.tax.toFixed(2), r.total.toFixed(2), r.method].map(csvEscape).join(","));
     if (!report.rows.length) lines.push(["No paid invoices found for this period.","","","","","","","",""] .map(csvEscape).join(","));
   } else {
-    lines.push(["Date","Invoice #","Customer","Sales Before Tax","Taxable Sales","Non-Taxable Sales","Sales Tax","Invoice Total","Payment Method"].map(csvEscape).join(","));
-    for (const r of report.rows) lines.push([r.date, r.number, r.customer, r.subtotal.toFixed(2), r.taxable.toFixed(2), r.nonTaxable.toFixed(2), r.tax.toFixed(2), r.total.toFixed(2), r.method].map(csvEscape).join(","));
-    if (!report.rows.length) lines.push(["No paid invoices found for this period.","","","","","","","",""] .map(csvEscape).join(","));
+    lines.push(["State","Date","Invoice #","Customer","Sales Before Tax","Taxable Sales","Non-Taxable Sales","Sales Tax","Invoice Total","Payment Method"].map(csvEscape).join(","));
+    for (const r of report.rows) lines.push([reportStateLabel(r.state), r.date, r.number, r.customer, r.subtotal.toFixed(2), r.taxable.toFixed(2), r.nonTaxable.toFixed(2), r.tax.toFixed(2), r.total.toFixed(2), r.method].map(csvEscape).join(","));
+    if (!report.rows.length) lines.push(["No paid invoices found for this period.","","","","","","","","",""] .map(csvEscape).join(","));
   }
   lines.push([]);
   lines.push(["NOTES"].map(csvEscape).join(","));
   lines.push([(isPnlReport(report)
     ? "P&L report includes internal cost and gross profit for owner/internal financial review. Verify final filing amounts with your accountant."
-    : "Sales report is accountant-friendly and intentionally excludes internal cost and gross profit. Sales tax is based on tax collected on paid invoices."
+    : "Sales report is sorted by destination state and is accountant-friendly, intentionally excluding internal cost and gross profit. Sales tax is based on tax collected on paid invoices."
   )].map(csvEscape).join(","));
   return lines.join("\r\n");
 }
@@ -19738,11 +19767,12 @@ function reportExcelHtml(report) {
   ) : "";
   const detailHead = isPnlReport(report)
     ? `<tr><th>Date</th><th>Invoice #</th><th>Customer</th><th>Sales Before Tax</th><th>Internal Cost</th><th>Gross Profit</th><th>Sales Tax</th><th>Invoice Total</th><th>Payment Method</th></tr>`
-    : `<tr><th>Date</th><th>Invoice #</th><th>Customer</th><th>Sales Before Tax</th><th>Taxable Sales</th><th>Non-Taxable Sales</th><th>Sales Tax</th><th>Invoice Total</th><th>Payment Method</th></tr>`;
+    : `<tr><th>State</th><th>Date</th><th>Invoice #</th><th>Customer</th><th>Sales Before Tax</th><th>Taxable Sales</th><th>Non-Taxable Sales</th><th>Sales Tax</th><th>Invoice Total</th><th>Payment Method</th></tr>`;
+  const detailColspan = isPnlReport(report) ? 9 : 10;
   const detailRows = report.rows.map(r => isPnlReport(report)
     ? `<tr><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${excelStyleMoney(r.subtotal)}</td><td>${excelStyleMoney(r.cost)}</td><td>${excelStyleMoney(r.profit)}</td><td>${excelStyleMoney(r.tax)}</td><td>${excelStyleMoney(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
-    : `<tr><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${excelStyleMoney(r.subtotal)}</td><td>${excelStyleMoney(r.taxable)}</td><td>${excelStyleMoney(r.nonTaxable)}</td><td>${excelStyleMoney(r.tax)}</td><td>${excelStyleMoney(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
-  ).join("") || `<tr><td colspan="9">No paid invoices found for this period.</td></tr>`;
+    : `<tr><td>${escapeHtml(reportStateLabel(r.state))}</td><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${excelStyleMoney(r.subtotal)}</td><td>${excelStyleMoney(r.taxable)}</td><td>${excelStyleMoney(r.nonTaxable)}</td><td>${excelStyleMoney(r.tax)}</td><td>${excelStyleMoney(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
+  ).join("") || `<tr><td colspan="${detailColspan}">No paid invoices found for this period.</td></tr>`;
   return `<!doctype html>
 <html>
 <head>
@@ -19771,15 +19801,15 @@ function reportExcelHtml(report) {
 <body>
 <div class="sheet">
   <table class="report-head" width="100%">
-    <tr><td colspan="9" align="center" style="text-align:center;"><div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions" width="${reportLogoWidth}" height="${reportLogoHeight}" style="width:${reportLogoWidth}px;height:${reportLogoHeight}px;display:block;margin:0 auto;object-fit:contain;"></div></td></tr>
-    <tr><td colspan="9" align="center"><div class="title">${escapeHtml(title)}</div></td></tr>
-    <tr><td colspan="9" align="center"><div class="subtitle">Period: ${escapeHtml(report.periodLabel || report.month || report.year || "")} &nbsp; | &nbsp; Generated: ${escapeHtml(formatDateTime(now()))}</div></td></tr>
+    <tr><td colspan="${detailColspan}" align="center" style="text-align:center;"><div class="logo-center"><img src="${logo}" alt="HB Commerce Solutions" width="${reportLogoWidth}" height="${reportLogoHeight}" style="width:${reportLogoWidth}px;height:${reportLogoHeight}px;display:block;margin:0 auto;object-fit:contain;"></div></td></tr>
+    <tr><td colspan="${detailColspan}" align="center"><div class="title">${escapeHtml(title)}</div></td></tr>
+    <tr><td colspan="${detailColspan}" align="center"><div class="subtitle">Period: ${escapeHtml(report.periodLabel || report.month || report.year || "")} &nbsp; | &nbsp; Generated: ${escapeHtml(formatDateTime(now()))}</div></td></tr>
   </table>
   <table class="summary"><tr>${summaryCells}</tr></table>
   ${monthlyBreakdown}
   <h2>${isPnlReport(report) ? "P&L Invoice Detail" : "Paid Invoice Sales Detail"}</h2>
   <table class="data-table"><thead>${detailHead}</thead><tbody>${detailRows}</tbody></table>
-  <div class="note">${isPnlReport(report) ? "P&L report includes internal cost and gross profit for owner/internal financial review." : "Sales report is accountant-friendly and intentionally excludes internal cost and gross profit."} Export intentionally contains no graph; the report logo appears at the top center.</div>
+  <div class="note">${isPnlReport(report) ? "P&L report includes internal cost and gross profit for owner/internal financial review." : "Sales report is sorted by destination state and intentionally excludes internal cost and gross profit."} Export intentionally contains no graph; the report logo appears at the top center.</div>
 </div>
 </body>
 </html>`;
@@ -19896,7 +19926,7 @@ function buildReportPdfBytes(report) {
   text(46, y, pnl ? "P&L Invoice Detail" : "Paid Invoice Sales Detail", 12, "F2", navy); y -= 18;
   const detailColumns = pnl
     ? [{l:"Date",w:50},{l:"Invoice",w:80},{l:"Customer",w:130},{l:"Sales",w:58,a:"right"},{l:"Cost",w:56,a:"right"},{l:"Profit",w:56,a:"right"},{l:"Tax",w:48,a:"right"},{l:"Total",w:42,a:"right"}]
-    : [{l:"Date",w:50},{l:"Invoice",w:80},{l:"Customer",w:130},{l:"Sales",w:58,a:"right"},{l:"Taxable",w:58,a:"right"},{l:"Tax",w:48,a:"right"},{l:"Total",w:58,a:"right"},{l:"Pay",w:38}];
+    : [{l:"State",w:30},{l:"Date",w:48},{l:"Invoice",w:78},{l:"Customer",w:118},{l:"Sales",w:55,a:"right"},{l:"Taxable",w:55,a:"right"},{l:"Tax",w:45,a:"right"},{l:"Total",w:55,a:"right"},{l:"Pay",w:36}];
   drawTableHeader(detailColumns);
   if (!report.rows.length) {
     text(56, y-14, "No paid invoices found for this period.", 9, "F1", muted); y -= 24;
@@ -19905,13 +19935,13 @@ function buildReportPdfBytes(report) {
     check(23);
     const vals = pnl
       ? [r.date, r.number, r.customer, money(r.subtotal), money(r.cost), money(r.profit), money(r.tax), money(r.total)]
-      : [r.date, r.number, r.customer, money(r.subtotal), money(r.taxable), money(r.tax), money(r.total), r.method || ""];
+      : [reportStateLabel(r.state), r.date, r.number, r.customer, money(r.subtotal), money(r.taxable), money(r.tax), money(r.total), r.method || ""];
     drawTableRow(detailColumns, vals);
   }
   y -= 14;
   check(58);
   text(46, y, "Notes", 10, "F2", navy); y -= 14;
-  const note = pnl ? "P&L report includes internal cost and gross profit for owner/internal financial review. Verify final accounting and filing amounts." : "Sales report is accountant-friendly and intentionally excludes internal cost and gross profit. Sales tax is based on tax collected on paid invoices.";
+  const note = pnl ? "P&L report includes internal cost and gross profit for owner/internal financial review. Verify final accounting and filing amounts." : "Sales report is sorted by destination state and is accountant-friendly, intentionally excluding internal cost and gross profit. Sales tax is based on tax collected on paid invoices.";
   for (const l of wrapPdfText(note, 100).slice(0, 4)) { text(46, y, l, 8, "F1", muted); y -= 11; }
 
   pages.push(ops.join("\n"));
@@ -19971,6 +20001,7 @@ async function reportFromRequest(env, url, kind = "sales") {
   const report = mode === "year" ? await buildYearlyReport(env, year, federalRate) : await buildMonthlyReport(env, month, federalRate);
   report.showBreakdown = showBreakdown;
   report.reportKind = kind === "pnl" ? "pnl" : "sales";
+  if (report.reportKind === "sales") report.rows = sortReportRowsByState(report.rows);
   return report;
 }
 
@@ -19996,8 +20027,8 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
   const summaryCards = reportSummaryRows(report).slice(0, kind === "pnl" ? 6 : 6).map(([label, value]) => `<div class="report-card ${label.toLowerCase().includes("profit") ? "profit" : ""}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
   const rowHtml = report.rows.map(r => kind === "pnl"
     ? `<tr><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${money(r.subtotal)}</td><td>${money(r.cost)}</td><td><strong>${money(r.profit)}</strong></td><td>${money(r.tax)}</td><td>${money(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
-    : `<tr><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${money(r.subtotal)}</td><td>${money(r.taxable)}</td><td>${money(r.nonTaxable)}</td><td>${money(r.tax)}</td><td>${money(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
-  ).join("") || `<tr><td colspan="9">No paid invoices found for this period.</td></tr>`;
+    : `<tr><td><strong>${escapeHtml(reportStateLabel(r.state))}</strong></td><td>${escapeHtml(r.date)}</td><td>${escapeHtml(r.number)}</td><td>${escapeHtml(r.customer)}</td><td>${money(r.subtotal)}</td><td>${money(r.taxable)}</td><td>${money(r.nonTaxable)}</td><td>${money(r.tax)}</td><td>${money(r.total)}</td><td>${escapeHtml(r.method)}</td></tr>`
+  ).join("") || `<tr><td colspan="${kind === "pnl" ? 9 : 10}">No paid invoices found for this period.</td></tr>`;
   const monthlyRows = (report.monthly || []).map(m => kind === "pnl"
     ? `<tr><td>${escapeHtml(m.month)}</td><td>${m.count}</td><td>${money(m.subtotal)}</td><td>${money(m.cost)}</td><td><strong>${money(m.profit)}</strong></td><td>${money(m.tax)}</td><td>${money(m.total)}</td></tr>`
     : `<tr><td>${escapeHtml(m.month)}</td><td>${m.count}</td><td>${money(m.subtotal)}</td><td>${money(m.taxable)}</td><td>${money(m.nonTaxable)}</td><td>${money(m.tax)}</td><td>${money(m.total)}</td></tr>`
@@ -20011,10 +20042,10 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
   const charts = kind === "pnl" ? `<div class="report-chart-grid report-chart-grid-two">${reportChartHtml(report, "subtotal", "Sales")}${reportChartHtml(report, "profit", "Gross Profit")}</div>` : `<div class="report-chart-grid report-chart-grid-full">${reportChartHtml(report, "subtotal", "Sales")}</div>`;
   const detailHead = kind === "pnl"
     ? `<tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Sales Before Tax</th><th>Internal Cost</th><th>Gross Profit</th><th>Tax</th><th>Total</th><th>Payment</th></tr>`
-    : `<tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Sales Before Tax</th><th>Taxable</th><th>Non-Taxable</th><th>Tax</th><th>Total</th><th>Payment</th></tr>`;
+    : `<tr><th>State</th><th>Date</th><th>Invoice</th><th>Customer</th><th>Sales Before Tax</th><th>Taxable</th><th>Non-Taxable</th><th>Tax</th><th>Total</th><th>Payment</th></tr>`;
   const note = kind === "pnl"
     ? `P&amp;L Reports include internal cost and gross profit for owner/internal financial review.`
-    : `Sales Reports are based on <strong>paid invoices only</strong> and intentionally exclude internal cost and gross profit so they can be shared with your accountant.`;
+    : `Sales Reports are based on <strong>paid invoices only</strong>, sorted by destination state, and intentionally exclude internal cost and gross profit so they can be shared with your accountant.`;
   const emailLabel = kind === "pnl" ? "Email P&L Report" : "Email Sales Report to Accountant";
   const body = `<main class="section admin-dashboard reports-dashboard"><div class="container">
     <div class="section-title"><h2>${escapeHtml(title)}</h2><div class="btn-row">${switchButtons}<a class="btn" href="/admin/dashboard">Back to Dashboard</a></div></div>
@@ -20035,7 +20066,7 @@ async function adminReportsPageBase(request, env, kind = "sales", message = "") 
     ${charts}
     ${monthlyBreakdownHtml}
 
-    <div class="table-panel"><div class="section-title"><h2>${escapeHtml(report.periodLabel)} ${kind === "pnl" ? "P&L" : "Sales"} Detail</h2><p>${kind === "pnl" ? "Internal cost and gross profit are shown per paid invoice." : "Internal cost and gross profit are not shown in Sales Reports."}</p></div><div class="table-wrap"><table><thead>${detailHead}</thead><tbody>${rowHtml}</tbody></table></div></div>
+    <div class="table-panel"><div class="section-title"><h2>${escapeHtml(report.periodLabel)} ${kind === "pnl" ? "P&L" : "Sales"} Detail</h2><p>${kind === "pnl" ? "Internal cost and gross profit are shown per paid invoice." : "Paid invoices are sorted by destination state, then date, customer, and invoice number. Internal cost and gross profit are not shown in Sales Reports."}</p></div><div class="table-wrap"><table><thead>${detailHead}</thead><tbody>${rowHtml}</tbody></table></div></div>
 
     <form class="form-section" method="post" action="${base}/email"><div class="form-title">${escapeHtml(emailLabel)}</div><input type="hidden" name="mode" value="${escapeHtml(mode)}"><input type="hidden" name="month" value="${escapeHtml(month)}"><input type="hidden" name="year" value="${escapeHtml(year)}"><input type="hidden" name="federal_rate" value="${escapeHtml(federalRate)}"><input type="hidden" name="show_breakdown" value="${showBreakdown ? "1" : "0"}"><div class="grid-2"><div class="field"><label>${kind === "pnl" ? "Recipient Email" : "Accountant Email"}</label><input type="email" name="accountant_email" value="${escapeHtml(savedEmail)}" required></div><div class="field"><label>&nbsp;</label><button class="green">Save Email and Send Report</button></div></div></form>
     <script>
