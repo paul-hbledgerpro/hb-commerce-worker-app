@@ -2370,3 +2370,8 @@ v211 update - canonical one-page invoice/quote PDF divider fix
 - Email view links with ?email_view=1 now redirect directly to the one-page PDF for phone, tablet, and desktop.
 - The PDF sidebar now uses the uploaded HB divider artwork, flattened over the navy sidebar and cleaned to remove the white artifact, so the divider between the blue section and white invoice body matches the admin invoice design more closely.
 - PDF attachments remain disabled by default unless EMAIL_ATTACH_DOCUMENT_PDF=1 is intentionally set in Cloudflare.
+
+
+V213 PDF CLEANUP
+- Removed the POS SOFTWARE FOR RETAIL heading from generated quote/invoice PDFs.
+- Replaced the invoice/quote PDF logo with a transparent logo image so it sits directly on the blue sidebar without an extra logo background box.
