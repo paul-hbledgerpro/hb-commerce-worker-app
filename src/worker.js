@@ -13831,6 +13831,11 @@ html body .admin-document-page #items .line-item-card input[type="checkbox"]{
   .review-document-page .notice,.review-document-page form,.review-document-page #approve,.review-document-page #decline{display:none!important;}
 }
 
+
+/* v210: public customer view uses the responsive online invoice as the primary design.
+   PDF links are no longer shown as customer email/view actions, preventing customers from seeing a separate template. */
+.review-document-page .hb-review-paid-badge{cursor:default!important;pointer-events:none!important;}
+.review-document-page .hb-review-actions:empty{display:none!important;}
 /* v209: customer invoice review actions and phone/PDF safety */
 .review-document-page .hb-review-actions{
   position:sticky!important;
@@ -20517,7 +20522,7 @@ function documentEmailHtml(env, doc) {
   const title = isQuote ? "QUOTE" : "INVOICE";
   const link = absoluteReviewUrl(env, doc);
   const smartViewLink = `${link}?email_view=1`;
-  const pdfLink = `${link}.pdf`;
+  const pdfLink = `${link}.pdf`; // kept for admin/manual PDF route only; customer email buttons use the responsive online view.
   const payLink = isInvoice ? absoluteInvoicePayUrl(env, doc) : "";
   const approveLink = isQuote ? `${link}#approve` : "";
   const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
@@ -20531,14 +20536,14 @@ function documentEmailHtml(env, doc) {
     return `<tr><td style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d;font-weight:800;white-space:nowrap">${escapeHtml(item.qty || 0)}</td><td style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d"><strong>${escapeHtml(item.name || "Item")}</strong><br><span style="color:#526173;font-size:12px;line-height:1.4">${escapeHtml(String(item.desc || "").slice(0, 150))}</span></td><td align="right" style="padding:10px 8px;border-bottom:1px solid #dbe4f0;color:#10233d;font-weight:800;white-space:nowrap">${money(amount)}</td></tr>`;
   }).join("") || `<tr><td colspan="3" style="padding:16px;color:#64748b;text-align:center">No line items.</td></tr>`;
   const actionHtml = isQuote
-    ? `<a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Approve Quote</a><a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Decline Quote</a>`
+    ? `<a href="${smartViewLink}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Quote</a><a href="${approveLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Approve Quote</a><a href="${declineLink}" style="display:inline-block;background:#b64242;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Decline Quote</a>`
     : isPaidInvoice
-      ? `<a href="${pdfLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Paid Invoice</a><a href="${link}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Online Copy</a>`
+      ? `<a href="${smartViewLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Paid Invoice</a>`
       : `<a href="${payLink}" style="display:inline-block;background:#138a3d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Pay Secure Online</a><a href="${smartViewLink}" style="display:inline-block;background:#06284d;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">View Invoice</a>`;
   const moreItems = (doc.items || []).length > 10 ? `<p style="margin:8px 0 0;color:#64748b;font-size:12px">Additional line items are included in the online invoice view.</p>` : "";
   const introText = isPaidInvoice
-    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. The main button opens the clean one-page paid invoice PDF, and the online copy button opens the responsive web view.`
-    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. Use the secure buttons below to open the smart view or download a PDF copy.`;
+    ? `Your HB Commerce Solutions invoice is marked <strong style="color:#138a3d">PAID</strong>. The button opens the responsive online paid invoice view so it fits phones, tablets, and computers.`
+    : `Your HB Commerce Solutions ${escapeHtml((doc.type || "document").toLowerCase())} is ready. Use the secure buttons below to open the responsive online view.`;
   const paidSummary = isPaidInvoice
     ? `<div style="margin-top:20px;padding:16px;border-radius:16px;background:#ecfdf3;color:#14532d;border:1px solid #bbf7d0;border-left:6px solid #138a3d"><strong style="font-size:16px;color:#14532d">PAID INVOICE</strong><br><span style="color:#166534">This invoice has been marked paid${doc.payment_method ? " by " + escapeHtml(doc.payment_method) : ""}${doc.paid_at ? " on " + escapeHtml(formatDateTime(doc.paid_at)) : ""}.</span></div>`
     : `<div style="margin-top:20px;padding:14px;border-radius:16px;background:#06101f;color:#fff;border-left:6px solid #ff6a00"><strong style="color:#fff">Other payment methods</strong><br><span style="color:#eaf2ff">Check payable to HANSABIJAL LLC. Zelle: PAULCAMERASYSTEMS@GMAIL.COM.</span></div>`;
@@ -20548,13 +20553,13 @@ function documentEmailHtml(env, doc) {
       <tr><td style="background:#06101f;padding:26px 28px;color:#fff;border-bottom:6px solid #ff6a00">
         <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9df0b3;font-weight:900">HB Commerce Solutions</div>
         <div style="font-size:30px;line-height:1.1;font-weight:950;margin-top:6px;color:#fff">${escapeHtml(title)} ${escapeHtml(doc.number || "")}</div>
-        <div style="font-size:14px;color:#dbe7f5;margin-top:8px">${isPaidInvoice ? "Paid invoice - online copy available." : "Open the online copy or PDF using the buttons below."}</div>
+        <div style="font-size:14px;color:#dbe7f5;margin-top:8px">${isPaidInvoice ? "Paid invoice - responsive online copy available." : "Open the responsive online copy using the buttons below."}</div>
         <div style="display:inline-block;margin-top:14px;background:${statusBg};color:#fff;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase">Status: ${escapeHtml(statusLabel)}</div>
       </td></tr>
       <tr><td style="padding:24px 28px">
         <p style="margin:0 0 14px;font-size:16px;line-height:1.55;color:#10233d">Hello ${escapeHtml(doc.customer_name || "Customer")},</p>
         <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#334155">${introText}</p>
-        <div style="margin:0 0 18px">${actionHtml}${isPaidInvoice ? "" : `<a href="${pdfLink}" style="display:inline-block;background:#ff6a00;color:#fff;text-decoration:none;border-radius:12px;padding:13px 18px;font-weight:900;margin:0 8px 10px 0">Open 1-Page PDF</a>`}</div>
+        <div style="margin:0 0 18px">${actionHtml}</div>
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:10px;margin:0 0 14px"><tr>
           <td style="background:#f8fafc;border:1px solid #d9e2ef;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#06284d;font-weight:950;margin-bottom:8px">Bill To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${billTo}</span></td>
           <td style="background:#fff7ed;border:1px solid #ffd6ad;border-radius:16px;padding:14px;vertical-align:top;width:50%"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b45309;font-weight:950;margin-bottom:8px">Ship To</div><strong>${escapeHtml(doc.customer_name || "")}</strong><br><span style="color:#475569;font-size:13px;line-height:1.45">${shipTo}</span></td>
@@ -21034,14 +21039,16 @@ async function reviewPage(request, env, id, token, message = "") {
   if (!doc || doc.token !== token) return htmlPage("Document Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found or link expired.</div></div></section>`), 404);
   await attachOpenInvoiceBalance(env, doc);
   const url = new URL(request.url);
-  if (url.searchParams.get("email_view") === "1" && isMobileOrTabletRequest(request)) {
-    return redirect(publicDocumentPdfHref(doc));
-  }
+  // v210: email "View Invoice" links now always open the responsive online invoice/quote.
+  // Do not redirect mobile customers to the separate PDF template.
   const wantsDecline = url.searchParams.get("action") === "decline";
   const action = doc.type === "Quote" ? (wantsDecline ? declineBlock(doc) : approvalBlock(doc)) : `<div class="notice no-print" style="margin-top:18px">Invoices are view-only and do not require customer approval.</div>`;
-  const pdfHref = publicDocumentPdfHref(doc);
-  const pdfDownloadHref = publicDocumentPdfHref(doc, true);
-  const body = `<main class="section review-document-page"><div class="container">${message}<div class="btn-row hb-review-actions no-print" style="margin-bottom:16px"><a class="btn primary" target="_blank" rel="noopener" href="${pdfHref}">Open / Print 1-Page PDF</a><a class="btn orange" href="${pdfDownloadHref}">Download PDF</a>${doc.type === "Quote" ? `<a class="btn green" href="#approve">Approve</a><a class="btn danger" href="?action=decline#decline">Decline</a>` : ""}</div>${renderDocument(doc)}${action}</div></main>`;
+  const topActions = doc.type === "Quote"
+    ? `<a class="btn green" href="#approve">Approve Quote</a><a class="btn danger" href="?action=decline#decline">Decline Quote</a>`
+    : (doc.paid
+      ? `<span class="btn green hb-review-paid-badge" aria-label="Paid invoice status">Paid Invoice</span>`
+      : `<a class="btn green" href="/pay/invoice/${encodeURIComponent(doc.id || "")}/${encodeURIComponent(doc.token || "")}">Pay Secure Online</a>`);
+  const body = `<main class="section review-document-page"><div class="container">${message}<div class="btn-row hb-review-actions no-print" style="margin-bottom:16px">${topActions}</div>${renderDocument(doc)}${action}</div></main>`;
   return htmlPage(`${doc.type} ${doc.number}`, layout(env, "Review", body));
 }
 
