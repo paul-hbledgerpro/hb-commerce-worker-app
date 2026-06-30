@@ -1,3 +1,5 @@
+HB Commerce Cloudflare Worker App v212 - no-blue-bleed PDF divider fix
+
 HB Commerce Cloudflare Worker App v209 - Paid invoice PDF button and mobile print fix
 
 Changes in v209:
