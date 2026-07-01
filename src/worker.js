@@ -21524,11 +21524,28 @@ async function publicApplePayValidateMerchant(request, env) {
   try { body = await request.json(); } catch { body = {}; }
   const validationURL = String(body.validationURL || "");
   const host = new URL(request.url).hostname;
+  const standardValidationURL = "https://apple-pay-gateway.apple.com/paymentservices/startSession";
+  const firstDebug = applePayValidationUrlDebug(validationURL);
   try {
     const out = await fetchApplePayMerchantSession(env, validationURL, host);
-    return jsonResponse({ ok:true, merchantSession: out.session, initiativeContext: out.payload.initiativeContext });
-  } catch (err) {
-    return jsonResponse({ ok:false, error: String(err && err.message || err), validationURL: applePayValidationUrlDebug(validationURL) }, 502);
+    return jsonResponse({ ok:true, merchantSession: out.session, initiativeContext: out.payload.initiativeContext, validationURL: firstDebug, fallbackUsed:false });
+  } catch (firstErr) {
+    const firstMsg = String(firstErr && firstErr.message || firstErr);
+    // Some Apple Pay QR / handoff sessions can provide a gateway-pod validation URL
+    // that returns "not registered for domain" even after the same merchant/domain
+    // passes against Apple's standard gateway. Since the admin live validation test
+    // uses the standard gateway, retry it here before failing the checkout session.
+    const shouldRetryStandard = validationURL && validationURL !== standardValidationURL && /not registered for domain|Payment Services Exception|merchant validation failed/i.test(firstMsg);
+    if (shouldRetryStandard) {
+      try {
+        const out2 = await fetchApplePayMerchantSession(env, standardValidationURL, host);
+        return jsonResponse({ ok:true, merchantSession: out2.session, initiativeContext: out2.payload.initiativeContext, validationURL: firstDebug, fallbackValidationURL: standardValidationURL, fallbackUsed:true, firstError:firstMsg.slice(0, 320) });
+      } catch (secondErr) {
+        const secondMsg = String(secondErr && secondErr.message || secondErr);
+        return jsonResponse({ ok:false, error:`Apple Pay merchant validation failed. First: ${firstMsg} | Fallback: ${secondMsg}`, validationURL:firstDebug, fallbackValidationURL:standardValidationURL }, 502);
+      }
+    }
+    return jsonResponse({ ok:false, error:firstMsg, validationURL: firstDebug }, 502);
   }
 }
 
