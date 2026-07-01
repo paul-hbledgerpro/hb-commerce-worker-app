@@ -67,14 +67,16 @@ const STATE_RATES = {"AL":4,"AK":0,"AZ":5.6,"AR":6.5,"CA":7.25,"CO":2.9,"CT":6.3
 const TAX_OVERRIDES_DEFAULT = {
   "60107": { zip: "60107", city: "Streamwood", state: "IL", rate: 10.000, source: "Built-in IL override. Verify with MyTax Illinois Tax Rate Finder for the exact ship-to address." },
   "60016": { zip: "60016", city: "Des Plaines", state: "IL", rate: 10.000, source: "Built-in IL override based on current local combined general merchandise rate reference." },
-  "60007": { zip: "60007", city: "Elk Grove Village", state: "IL", rate: 10.000, source: "Built-in IL override for local combined general merchandise rate reference." }
+  "60007": { zip: "60007", city: "Elk Grove Village", state: "IL", rate: 10.000, source: "Built-in IL override for local combined general merchandise rate reference." },
+  "60110": { zip: "60110", city: "Carpentersville", state: "IL", rate: 10.000, source: "Built-in IL override for Carpentersville area fallback when live ZipTax is unavailable." }
 };
 const CITY_COMBINED_TAX_RATES_DEFAULT = {
   "IL|ELGIN": { city: "Elgin", state: "IL", rate: 8.500, state_rate: 6.250, local_rate: 2.250, source: "Built-in city combined fallback: IL state 6.25% + Elgin/RTA/local components. Verify exact address if county boundary applies." },
   "IL|STREAMWOOD": { city: "Streamwood", state: "IL", rate: 10.000, state_rate: 6.250, local_rate: 3.750, source: "Built-in city combined fallback: IL state + village/county/RTA local components." },
   "IL|DES PLAINES": { city: "Des Plaines", state: "IL", rate: 10.000, state_rate: 6.250, local_rate: 3.750, source: "Built-in city combined fallback: IL state + city/county/RTA local components." },
   "IL|ELK GROVE VILLAGE": { city: "Elk Grove Village", state: "IL", rate: 10.000, state_rate: 6.250, local_rate: 3.750, source: "Built-in city combined fallback: IL state + village/county/RTA local components." },
-  "IL|CHICAGO": { city: "Chicago", state: "IL", rate: 10.250, state_rate: 6.250, local_rate: 4.000, source: "Built-in city combined fallback for Chicago general merchandise." }
+  "IL|CHICAGO": { city: "Chicago", state: "IL", rate: 10.250, state_rate: 6.250, local_rate: 4.000, source: "Built-in city combined fallback for Chicago general merchandise." },
+  "IL|CARPENTERSVILLE": { city: "Carpentersville", state: "IL", rate: 10.000, state_rate: 6.250, local_rate: 3.750, source: "Built-in city combined fallback for Carpentersville area. Verify exact address when live ZipTax is available." }
 };
 
 
@@ -18883,7 +18885,7 @@ async function adminDashboard(request, env) {
   const sidebarHtml = await adminSidebarHtml(env, view);
   const dashboardOrderStyle = await adminDashboardOrderStyle(env);
 
-  const body = `<main class="section admin-dashboard purple-admin-dashboard hb-template-dashboard"><div class="container purple-admin-shell">
+  const body = `<main class="section admin-dashboard purple-admin-dashboard hb-template-dashboard"><style>.hb-centered-admin-topbar .admin-global-back{display:none!important}.hb-centered-admin-topbar .hb-centered-admin-nav{grid-template-columns:1fr auto!important}.hb-centered-admin-topbar .admin-centered-logo{justify-self:start!important}</style><div class="container purple-admin-shell">
     <aside class="purple-admin-sidebar hb-template-sidebar">
       <div class="purple-brand-block">
         <img src="/assets/logo-v182.webp" alt="HB Commerce Solutions">
@@ -19509,16 +19511,19 @@ async function adminTaxLookup(request, env) {
       return { ok: false, needs_review: true, message: "ZipTax lookup failed. Check API key and address.", source: "ZipTax error" };
     });
     if (z.ok) return jsonResponse({ ...z, city: z.city || city, state: z.state || state, zip, street });
+    const fb = fixedTaxInfo(zip, city, state, street, 0);
     return jsonResponse({
+      ...fb,
       ok: true,
-      needs_review: true,
+      exact: false,
+      fallback: true,
+      needs_review: false,
       city,
       state,
       zip,
       street,
-      rate: 0,
-      source: z.source || "ZipTax lookup unavailable",
-      message: z.message || z.error || "ZipTax lookup unavailable. Enter the rate manually or check API setup."
+      source: "HB Commerce fallback rate — ZipTax unavailable",
+      message: (z.message || z.error || "ZipTax lookup unavailable.") + " Using HB Commerce fallback rate so quote/invoice totals can continue."
     });
   }
 
@@ -19652,7 +19657,7 @@ async function itemFromForm(fd, existing = null) {
     size: itemText(fd.get('size')).slice(0, 60),
     pack: itemText(fd.get('pack')).slice(0, 60),
     price: itemNum(fd.get('price')),
-    quantity: itemNum(fd.get('quantity')),
+    quantity: itemNum(fd.get('instore_qty') || fd.get('quantity')),
     instore_qty: itemNum(fd.get('instore_qty')),
     cost: itemNum(fd.get('cost')),
     msrp: itemNum(fd.get('msrp')),
@@ -20001,238 +20006,201 @@ function itemManagerStyle() {
   .item-manager-shell .im-grid{width:1680px!important;min-width:1680px!important;}
 }
 
-/* v237 final Item Manager layout: compact full-width grid, no page overflow, readable editor fields */
-body:has(.item-manager-shell),
-body:has(.item-editor-page){overflow-x:hidden!important;}
+
+
+/* v237 Item Manager final fit/readability pass */
 .admin-app-topbar ~ main:has(.item-manager-shell) .container,
 .admin-dashboard:has(.item-manager-shell) .container{
-  width:calc(100% - 28px)!important;
+  width:min(1920px,calc(100% - 24px))!important;
   max-width:1920px!important;
 }
 .item-manager-shell{
   width:100%!important;
   max-width:100%!important;
-  overflow:hidden!important;
-  border-radius:18px!important;
-}
-.item-manager-shell .item-manager-titlebar{
-  min-height:46px!important;
-  padding:10px 14px!important;
-}
-.item-manager-shell .im-title-actions{
   min-width:0!important;
-  white-space:nowrap!important;
-}
-.item-manager-shell .im-note{
-  max-width:52vw!important;
   overflow:hidden!important;
-  text-overflow:ellipsis!important;
 }
+.item-manager-shell .item-manager-titlebar{gap:10px!important;flex-wrap:wrap!important;}
+.item-manager-shell .im-title-actions{margin-left:auto!important;}
 .item-manager-shell .im-searchbar{
-  grid-template-columns:minmax(150px,.78fr) minmax(190px,1fr) minmax(220px,1.08fr) minmax(200px,1fr) minmax(244px,auto)!important;
+  display:grid!important;
+  grid-template-columns:minmax(155px,220px) minmax(190px,1fr) minmax(190px,1fr) minmax(190px,1fr) minmax(260px,max-content)!important;
   gap:10px!important;
-  padding:14px 12px!important;
-  overflow:hidden!important;
-}
-.item-manager-shell .im-searchbar .im-group{
-  min-width:0!important;
-  padding:17px 9px 9px!important;
-}
-.item-manager-shell .im-searchbar .im-field input,
-.item-manager-shell .im-searchbar .im-field select{
-  min-height:36px!important;
-  font-size:13px!important;
+  overflow:visible!important;
 }
 .item-manager-shell .im-search-actions{
-  min-width:244px!important;
   display:grid!important;
-  grid-template-columns:repeat(3,1fr)!important;
-  gap:7px!important;
+  grid-template-columns:repeat(3,minmax(72px,1fr))!important;
+  gap:8px!important;
+  min-width:250px!important;
 }
-.item-manager-shell .im-search-actions .im-classic-btn{
-  min-width:0!important;
-  padding:0 10px!important;
-  font-size:13px!important;
-}
-.item-manager-shell .im-filter-row{
-  flex-wrap:wrap!important;
-  gap:14px 22px!important;
-  min-height:38px!important;
-  padding:8px 12px!important;
-}
-.item-manager-shell .im-main-area{display:block!important;width:100%!important;min-width:0!important;}
+.item-manager-shell .im-search-actions .im-classic-btn{padding:0 10px!important;min-height:38px!important;}
 .item-manager-shell .im-grid-wrap{
   width:100%!important;
-  height:clamp(340px,calc(100vh - 520px),540px)!important;
-  max-height:none!important;
+  height:clamp(560px,68vh,790px)!important;
+  max-height:calc(100vh - 265px)!important;
   overflow:auto!important;
-  overflow-x:auto!important;
-  border-top:3pt solid #c4d1e1!important;
-  border-bottom:3pt solid #c4d1e1!important;
-  background:#fff!important;
-}
-.item-manager-shell.lookup-mode .im-grid-wrap{
-  height:clamp(420px,calc(100vh - 400px),680px)!important;
+  overscroll-behavior:contain!important;
+  border-left:3pt solid #c5d4e6!important;
+  border-right:3pt solid #c5d4e6!important;
 }
 .item-manager-shell .im-grid{
   table-layout:fixed!important;
   width:100%!important;
-  min-width:1420px!important;
+  min-width:1500px!important;
   max-width:none!important;
-  border-collapse:collapse!important;
 }
-.item-manager-shell .im-grid col.im-col-select{width:50px!important}
+.item-manager-shell .im-grid col.im-col-select{width:58px!important}
 .item-manager-shell .im-grid col.im-col-image{width:58px!important}
-.item-manager-shell .im-grid col.im-col-sku{width:105px!important}
-.item-manager-shell .im-grid col.im-col-name{width:320px!important}
-.item-manager-shell .im-grid col.im-col-cost{width:82px!important}
-.item-manager-shell .im-grid col.im-col-sale{width:90px!important}
-.item-manager-shell .im-grid col.im-col-qty{width:64px!important}
-.item-manager-shell .im-grid col.im-col-instore{width:76px!important}
-.item-manager-shell .im-grid col.im-col-size{width:56px!important}
-.item-manager-shell .im-grid col.im-col-pack{width:56px!important}
-.item-manager-shell .im-grid col.im-col-reorder{width:82px!important}
-.item-manager-shell .im-grid col.im-col-dept{width:110px!important}
-.item-manager-shell .im-grid col.im-col-cat{width:110px!important}
-.item-manager-shell .im-grid col.im-col-brand{width:72px!important}
-.item-manager-shell .im-grid col.im-col-website{width:70px!important}
-.item-manager-shell .im-grid col.im-col-status{width:70px!important}
+.item-manager-shell .im-grid col.im-col-sku{width:120px!important}
+.item-manager-shell .im-grid col.im-col-name{width:360px!important}
+.item-manager-shell .im-grid col.im-col-cost{width:90px!important}
+.item-manager-shell .im-grid col.im-col-sale{width:100px!important}
+.item-manager-shell .im-grid col.im-col-qty{display:none!important;width:0!important}
+.item-manager-shell .im-grid col.im-col-instore{width:90px!important}
+.item-manager-shell .im-grid col.im-col-size{width:66px!important}
+.item-manager-shell .im-grid col.im-col-pack{width:66px!important}
+.item-manager-shell .im-grid col.im-col-reorder{width:96px!important}
+.item-manager-shell .im-grid col.im-col-dept{width:132px!important}
+.item-manager-shell .im-grid col.im-col-cat{width:132px!important}
+.item-manager-shell .im-grid col.im-col-brand{width:100px!important}
+.item-manager-shell .im-grid col.im-col-website{width:82px!important}
+.item-manager-shell .im-grid col.im-col-status{width:78px!important}
 .item-manager-shell .im-grid th,
 .item-manager-shell .im-grid td{
-  border:3pt solid #c4d1e1!important;
-  padding:8px 7px!important;
-  font-size:var(--im-grid-font-size)!important;
-  line-height:1.22!important;
-  vertical-align:middle!important;
-  color:var(--im-grid-font-color)!important;
-  -webkit-text-fill-color:var(--im-grid-font-color)!important;
+  border:3pt solid #c8d5e6!important;
+  padding:8px 8px!important;
+  font-size:var(--im-grid-font-size,13px)!important;
+  line-height:1.18!important;
   overflow:hidden!important;
   text-overflow:ellipsis!important;
 }
-.item-manager-shell .im-grid th{
-  color:#06284d!important;
-  -webkit-text-fill-color:#06284d!important;
-  white-space:normal!important;
-  word-break:normal!important;
-}
-.item-manager-shell .im-grid td{white-space:nowrap!important;}
-.item-manager-shell .im-grid td:nth-child(4),
-.item-manager-shell .im-grid th:nth-child(4){
-  white-space:normal!important;
-  overflow-wrap:anywhere!important;
-}
-.item-manager-shell .im-grid td:nth-child(5),
-.item-manager-shell .im-grid td:nth-child(6){
-  color:#061b35!important;
-  -webkit-text-fill-color:#061b35!important;
-  font-weight:950!important;
-}
-.item-manager-shell .im-thumb,
-.item-manager-shell .im-thumb-placeholder{
-  width:42px!important;
-  height:34px!important;
-  margin:auto!important;
-}
-.item-manager-shell .im-row-check{
-  width:20px!important;
-  height:20px!important;
-  min-height:20px!important;
-}
+.item-manager-shell .im-grid td:nth-child(4){white-space:normal!important;overflow-wrap:anywhere!important;}
+.item-manager-shell .im-grid td:not(:nth-child(4)){white-space:nowrap!important;}
+.item-manager-shell .im-grid .status{font-size:11px!important;padding:4px 6px!important;}
+.item-manager-shell .im-bottom,
 .item-manager-shell .im-side-toggle,
-.item-manager-shell .im-right-filter,
-.item-manager-shell .im-bottom{
-  display:none!important;
-  visibility:hidden!important;
-  width:0!important;
-  height:0!important;
-  overflow:hidden!important;
-}
+.item-manager-shell .im-right-filter{display:none!important;visibility:hidden!important;width:0!important;height:0!important;overflow:hidden!important;}
 .item-manager-shell .im-bottom-filter{
+  display:grid!important;
   grid-template-columns:repeat(6,minmax(130px,1fr)) minmax(120px,auto)!important;
-  padding:10px 12px!important;
   gap:10px!important;
-  border-top:1px solid rgba(255,106,0,.50)!important;
-}
-.item-manager-shell .im-bottom-filter select{
-  min-height:38px!important;
-  font-size:13px!important;
+  padding:10px 12px!important;
+  background:#07182d!important;
+  border-top:1px solid rgba(255,106,0,.55)!important;
 }
 .item-manager-shell .im-bottom-actions{
   display:grid!important;
-  grid-template-columns:minmax(160px,1fr) minmax(160px,1fr) minmax(160px,1fr) minmax(220px,auto)!important;
+  grid-template-columns:repeat(3,minmax(150px,1fr)) minmax(260px,auto)!important;
   gap:10px!important;
-  padding:10px 12px 12px!important;
-}
-.item-manager-shell .im-bottom-actions .im-classic-btn{
-  min-height:40px!important;
-}
-.item-manager-shell .im-bottom-actions:after{
-  min-height:40px!important;
-  font-size:13px!important;
-  color:#e2e8f0!important;
-}
-.item-manager-shell .im-lookup-actions{
-  display:none;
   padding:10px 12px!important;
+  background:#09182b!important;
 }
-.item-manager-shell.lookup-mode .im-lookup-actions{
-  display:flex!important;
+.item-manager-shell.lookup-mode .im-bottom-actions{display:none!important;}
+.item-manager-shell.lookup-mode .im-grid-wrap{height:clamp(600px,72vh,830px)!important;max-height:calc(100vh - 230px)!important;}
+.item-manager-shell.lookup-mode .im-grid{min-width:1500px!important;}
+/* Add/Edit Item page: force create-invoice readable fields */
+.admin-dashboard .item-editor-page,
+.admin-app-topbar ~ main .item-editor-page{
+  background:linear-gradient(135deg,#071b35,#09264a 66%,#052b25)!important;
+  border:1.8px solid rgba(255,106,0,.70)!important;
+  color:#fff!important;
 }
-.admin-app-topbar ~ main .item-editor-page input,
-.admin-app-topbar ~ main .item-editor-page select,
-.admin-app-topbar ~ main .item-editor-page textarea,
-.admin-dashboard .item-editor-page input,
+.admin-dashboard .item-editor-page label,
+.admin-app-topbar ~ main .item-editor-page label,
+.admin-dashboard .item-editor-page h3,
+.admin-app-topbar ~ main .item-editor-page h3{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.35)!important;
+}
+.admin-dashboard .item-editor-page input:not([type="checkbox"]),
 .admin-dashboard .item-editor-page select,
-.admin-dashboard .item-editor-page textarea{
+.admin-dashboard .item-editor-page textarea,
+.admin-app-topbar ~ main .item-editor-page input:not([type="checkbox"]),
+.admin-app-topbar ~ main .item-editor-page select,
+.admin-app-topbar ~ main .item-editor-page textarea{
   background:#ffffff!important;
   color:#06101f!important;
   -webkit-text-fill-color:#06101f!important;
-  border:1.8px solid #ff8c21!important;
-  box-shadow:0 0 0 3px rgba(255,106,0,.06)!important;
+  border:2px solid rgba(255,106,0,.55)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(255,255,255,.08)!important;
   font-weight:850!important;
   opacity:1!important;
+  filter:none!important;
 }
-.admin-app-topbar ~ main .item-editor-page textarea,
-.admin-dashboard .item-editor-page textarea{
-  min-height:126px!important;
-  line-height:1.45!important;
-}
-.admin-app-topbar ~ main .item-editor-page input::placeholder,
-.admin-app-topbar ~ main .item-editor-page textarea::placeholder,
 .admin-dashboard .item-editor-page input::placeholder,
-.admin-dashboard .item-editor-page textarea::placeholder{
+.admin-dashboard .item-editor-page textarea::placeholder,
+.admin-app-topbar ~ main .item-editor-page input::placeholder,
+.admin-app-topbar ~ main .item-editor-page textarea::placeholder{
   color:#64748b!important;
   -webkit-text-fill-color:#64748b!important;
+  opacity:1!important;
 }
-.admin-app-topbar ~ main .item-editor-page input[type="checkbox"],
-.admin-dashboard .item-editor-page input[type="checkbox"]{
-  background:#fff!important;
+.admin-dashboard .item-editor-page input[type="file"],
+.admin-app-topbar ~ main .item-editor-page input[type="file"]{
+  background:#f8fafc!important;
   color:#06101f!important;
   -webkit-text-fill-color:#06101f!important;
-  min-height:20px!important;
 }
-.admin-app-topbar ~ main .item-editor-page input[type="file"],
-.admin-dashboard .item-editor-page input[type="file"]{
-  padding:10px 12px!important;
+.admin-dashboard .item-editor-page input[type="checkbox"],
+.admin-app-topbar ~ main .item-editor-page input[type="checkbox"]{
+  width:20px!important;height:20px!important;min-height:20px!important;accent-color:#ff6a00!important;
+}
+.admin-dashboard .item-editor-page .same-ship,
+.admin-app-topbar ~ main .item-editor-page .same-ship{
+  background:rgba(255,255,255,.09)!important;
+  border:1.5px solid rgba(255,255,255,.20)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+.admin-dashboard .item-editor-page .im-image-preview,
+.admin-app-topbar ~ main .item-editor-page .im-image-preview{
+  background:rgba(255,255,255,.09)!important;
+  border:1.5px solid rgba(255,255,255,.18)!important;
+}
+.admin-dashboard .item-editor-page .hint,
+.admin-app-topbar ~ main .item-editor-page .hint{
+  color:#dbe7f5!important;
+  -webkit-text-fill-color:#dbe7f5!important;
 }
 @media(max-width:1280px){
-  .item-manager-shell .im-searchbar{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-  .item-manager-shell .im-search-actions{grid-column:1 / -1!important;min-width:0!important;grid-template-columns:repeat(3,minmax(110px,1fr))!important;}
-  .item-manager-shell .im-grid-wrap{height:clamp(360px,calc(100vh - 560px),560px)!important;}
-  .item-manager-shell .im-bottom-filter{grid-template-columns:repeat(3,minmax(140px,1fr))!important;}
-  .item-manager-shell .im-bottom-actions{grid-template-columns:repeat(3,minmax(140px,1fr))!important;}
-  .item-manager-shell .im-bottom-actions:after{grid-column:1 / -1!important;}
+  .item-manager-shell .im-searchbar{grid-template-columns:1fr 1fr!important;}
+  .item-manager-shell .im-search-actions{grid-column:1/-1;grid-template-columns:repeat(3,minmax(90px,1fr))!important;}
+  .item-manager-shell .im-bottom-filter{grid-template-columns:1fr 1fr 1fr!important;}
+  .item-manager-shell .im-bottom-actions{grid-template-columns:repeat(3,1fr)!important;}
+  .item-manager-shell .im-bottom-actions:after{grid-column:1/-1!important;}
 }
 @media(max-width:760px){
-  .item-manager-shell .im-searchbar{grid-template-columns:1fr!important;}
-  .item-manager-shell .im-search-actions{grid-template-columns:1fr!important;}
-  .item-manager-shell .im-filter-row{display:grid!important;grid-template-columns:1fr!important;}
-  .item-manager-shell .im-grid-wrap{height:62vh!important;}
-  .item-manager-shell .im-grid{min-width:1420px!important;width:1420px!important;}
+  .item-manager-shell .im-grid{min-width:1320px!important;}
+  .item-manager-shell .im-grid-wrap{height:68vh!important;max-height:none!important;}
   .item-manager-shell .im-bottom-filter{grid-template-columns:1fr!important;}
   .item-manager-shell .im-bottom-actions{grid-template-columns:1fr!important;}
 }
-
+/* v238 final Item Manager cleanup */
+.item-manager-shell .im-grid col.im-col-qty{display:none!important;width:0!important;}
+.item-manager-shell .im-grid{width:1420px!important;min-width:1420px!important;}
+.item-manager-shell .im-grid th,
+.item-manager-shell .im-grid td{font-weight:950!important;}
+.item-manager-shell .im-searchbar input,
+.item-manager-shell .im-searchbar select,
+.item-manager-shell .im-bottom-filter select{font-weight:950!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important;background:#fff!important;}
+.item-manager-shell .im-note{display:none!important;}
+.item-manager-shell .im-settings-modal.show{display:flex!important;}
+.item-manager-shell .im-settings-card{z-index:2147483647!important;}
+.item-editor-page .same-ship,
+.admin-dashboard .item-editor-page .same-ship,
+.admin-app-topbar ~ main .item-editor-page .same-ship{background:#f8fafc!important;border:1.7px solid #ff8c21!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important;font-weight:950!important;opacity:1!important;}
+.item-editor-page .same-ship *,
+.admin-dashboard .item-editor-page .same-ship *,
+.admin-app-topbar ~ main .item-editor-page .same-ship *{color:#06101f!important;-webkit-text-fill-color:#06101f!important;font-weight:950!important;opacity:1!important;}
+.item-editor-page input[type=checkbox]{accent-color:#ff6a00!important;}
+.item-editor-page input:not([type=checkbox]),
+.item-editor-page select,
+.item-editor-page textarea{font-weight:950!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important;background:#fff!important;opacity:1!important;}
+@media(max-width:760px){
+  .item-manager-shell .im-grid{min-width:1320px!important;width:1320px!important;}
+}
 </style>`;
 }
 
@@ -20250,7 +20218,7 @@ function itemRowHtml(row, lookupMode = false) {
     : `<input class="im-row-check" type="radio" name="im_selected_item" aria-label="Select ${escapeHtml(row.item_name || row.sku)}">`;
   return `<tr data-item='${data}' data-active="${row.active}" data-child="${row.child_item}" data-search="${escapeHtml([row.sku,row.upc,row.item_name,row.department,row.category,row.sub_category,row.brand,row.supplier,row.notes,row.public_description].join(' ').toLowerCase())}">
     <td class="im-select-cell">${selector}</td><td>${itemImageThumb(row)}</td><td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td>
-    <td class="money im-cost-price">${money(row.cost)}</td><td class="money im-sale-price">${money(row.price)}</td><td class="money">${escapeHtml(String(row.quantity))}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td>
+    <td class="money im-cost-price">${money(row.cost)}</td><td class="money im-sale-price">${money(row.price)}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td>
     <td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td><td class="money">${escapeHtml(String(row.reorder_level))}</td><td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.published?'<span class="status approved">Published</span>':'<span class="status canceled">Hidden</span>'}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
   </tr>`;
 }
@@ -20264,7 +20232,7 @@ let selected=null;
 const qs=s=>page.querySelector(s), qsa=s=>[...page.querySelectorAll(s)];
 const total=qs('#imTotal');
 const toast=document.getElementById('imToast');
-const settingsKey='hbItemManagerGridSettings_v237';
+const settingsKey='hbItemManagerGridSettingsV238';
 function money(n){n=Number(n||0);return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)}
 function readItem(tr){try{return JSON.parse(tr?.dataset?.item||'{}')}catch(e){return {}}}
@@ -20287,7 +20255,7 @@ function applyFilter(){
   showVisibleRows();
   if(selected&&(selected.dataset.filterHidden==='1'||selected.dataset.pageHidden==='1'))setSelected(null);
 }
-const defaultSettings={pageSize:500,fontFamily:'Segoe UI, Arial, sans-serif',fontSize:12,fontColor:'#06101f',gridBg:'#ffffff'};
+const defaultSettings={pageSize:200,fontFamily:'Segoe UI, Arial, sans-serif',fontSize:13,fontColor:'#0b1220',gridBg:'#ffffff'};
 let settings={...defaultSettings};
 try{settings={...settings,...JSON.parse(localStorage.getItem(settingsKey)||'{}')}}catch(e){}
 function applySettings(){
@@ -20311,7 +20279,7 @@ function resetSettings(){settings={...defaultSettings};localStorage.setItem(sett
 qsa('input,select').forEach(el=>{el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});
 rows.forEach(tr=>{tr.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('a,button'))return;const pick=tr.querySelector('.im-row-check');if(lookupMode&&pick){if(e.target!==pick)pick.checked=!pick.checked;tr.classList.toggle('lookup-checked',pick.checked);}else setSelected(tr);});const pick=tr.querySelector('.im-row-check');if(pick)pick.addEventListener('click',e=>{e.stopPropagation(); if(lookupMode){tr.classList.toggle('lookup-checked',pick.checked);}else setSelected(tr);});});
 function updateDetail(){const it=getSelected();if(!it){qsa('[data-im-detail]').forEach(el=>el.textContent='');return;}qsa('[data-im-detail]').forEach(el=>{const k=el.dataset.imDetail;let v=it[k]??'';if(['price','cost','msrp'].includes(k))v=money(v);if(k==='margin')v=(Number(it.price)>0&&Number(it.cost)>0?(((Number(it.price)-Number(it.cost))/Number(it.price))*100).toFixed(1)+'%':'0.0%');el.textContent=v});}
-function itemPayload(it){const c=Number(it.cost||0)>0?Number(it.cost||0):(Number(it.msrp||0)>0?Math.round(Number(it.msrp||0)*85)/100:0);const s=Number(it.price||0);return {id:it.id,sku:it.sku||it.upc||it.id,name:it.item_name||it.sku||'',desc:it.public_description||it.notes||[it.department,it.category,it.size,it.pack].filter(Boolean).join(' • '),cost:c,sale_price:s,price:s,markup:c>0&&s>0?Math.round(((s-c)/c)*10000)/100:0,taxable:true,image:it.image_url||'',source:'item-manager'};}
+function itemPayload(it){const c=Number(it.cost||0)>0?Number(it.cost||0):(Number(it.msrp||0)>0?Math.round(Number(it.msrp||0)*85)/100:0);const s=Number(it.price||0);const m=c>0&&s>0?Math.round(((s-c)/c)*10000)/100:0;return {id:it.id,sku:it.sku||it.upc||it.id,name:it.item_name||it.sku||'',desc:it.public_description||it.notes||[it.department,it.category,it.size,it.pack].filter(Boolean).join(' • '),cost:c,cost_price:c,item_cost:c,unit_cost:c,sale_price:s,price:s,unit_price:s,sale:s,regular_price:s,msrp:Number(it.msrp||0),markup:m,taxable:true,image:it.image_url||'',source:'item-manager'};}
 function selectedPayloads(){const checked=lookupMode?qsa('.im-row-check:checked').map(ch=>ch.closest('tr')).filter(Boolean):(selected?[selected]:[]);return checked.map(readItem).filter(it=>it&&it.id).map(itemPayload);}
 function sendSelectedToOpener(){const items=selectedPayloads();if(!items.length){showToast('Select at least one item.');return;}if(window.opener&&!window.opener.closed){window.opener.postMessage({type:'HB_ITEM_MANAGER_SELECTED_ITEMS',items},location.origin);showToast('Adding '+items.length+' item(s) to document...');setTimeout(()=>window.close(),350);}else{showToast('Lookup window is not connected to the document.')}}
 qsa('.im-tab-heads button').forEach(btn=>btn.addEventListener('click',()=>{qsa('.im-tab-heads button').forEach(b=>b.classList.remove('active'));qsa('.im-tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');qs('#'+btn.dataset.tab)?.classList.add('active')}));
@@ -20321,6 +20289,17 @@ qs('#imSettingsBtn')?.addEventListener('click',()=>qs('#imSettingsModal')?.class
 qs('#imSettingsClose')?.addEventListener('click',()=>qs('#imSettingsModal')?.classList.remove('show'));
 qs('#imSettingsSave')?.addEventListener('click',()=>{saveSettings();qs('#imSettingsModal')?.classList.remove('show')});
 qs('#imSettingsReset')?.addEventListener('click',resetSettings);
+document.addEventListener('click',function(e){
+  const open=e.target&&e.target.closest&&e.target.closest('#imSettingsBtn');
+  const close=e.target&&e.target.closest&&e.target.closest('#imSettingsClose');
+  const save=e.target&&e.target.closest&&e.target.closest('#imSettingsSave');
+  const reset=e.target&&e.target.closest&&e.target.closest('#imSettingsReset');
+  const modal=document.getElementById('imSettingsModal');
+  if(open){e.preventDefault(); if(modal)modal.classList.add('show');}
+  if(close){e.preventDefault(); if(modal)modal.classList.remove('show');}
+  if(save){e.preventDefault(); saveSettings(); if(modal)modal.classList.remove('show');}
+  if(reset){e.preventDefault(); resetSettings();}
+},true);
 qs('#imAddSelected')?.addEventListener('click',sendSelectedToOpener);
 qs('#imCancelLookup')?.addEventListener('click',()=>window.close());
 qs('#imAdd')?.addEventListener('click',()=>location.href='/admin/items/new');qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/edit?id='+encodeURIComponent(it.id)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/new?clone='+encodeURIComponent(it.id)});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>lookupMode?window.close():location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>lookupMode?sendSelectedToOpener():(()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)})());qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\\nVendor SKU: '+(it.vendor_sku||'')+'\\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New sale price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Use the Edit page to change Item Group.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Use the Edit page and set Item Type to Set Item / Multi Pack.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));
@@ -20336,13 +20315,13 @@ async function adminItemManagerPage(request, env, message = '') {
   await ensureItemManagerTables(env);
   const rows = await itemManagerRows(env, { includeInactive: true });
   const lists = await itemManagerLookupLists(env, rows);
-  const rowHtml = rows.map(r => itemRowHtml(r, lookupMode)).join('') || `<tr><td colspan="16">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
+  const rowHtml = rows.map(r => itemRowHtml(r, lookupMode)).join('') || `<tr><td colspan="15">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
   const typeOptions = itemOptionList(['Standard','Service','Set Item','Matrix Parent','Matrix Child','Non-Stock','Shipping','Labor'], '', '--All--');
   const lookupClass = lookupMode ? ' lookup-mode' : '';
   const lookupBanner = lookupMode ? `<div class="im-lookup-banner"><strong>Item lookup mode:</strong> check one or more items, then click Add Selected Items to Quote/Invoice.</div><div class="im-lookup-actions"><button type="button" class="im-classic-btn im-btn-green" id="imAddSelected">Add Selected Items</button><button type="button" class="im-classic-btn" id="imCancelLookup">Cancel Lookup</button></div>` : '';
   const settingsModal = `<div class="im-settings-modal" id="imSettingsModal"><div class="im-settings-card"><h3>Item Manager Settings</h3><div class="grid-3"><div class="field"><label>Items shown in grid</label><input id="imSetPageSize" type="number" min="1" step="1"></div><div class="field"><label>Grid font family</label><input id="imSetFontFamily" placeholder="Segoe UI, Arial"></div><div class="field"><label>Grid font size</label><input id="imSetFontSize" type="number" min="10" max="24"></div><div class="field"><label>Grid font color</label><input id="imSetFontColor" type="color"></div><div class="field"><label>Grid background color</label><input id="imSetGridBg" type="color"></div></div><div class="im-settings-actions"><button type="button" class="im-classic-btn im-btn-green" id="imSettingsSave">Save Settings</button><button type="button" class="im-classic-btn" id="imSettingsReset">Reset Defaults</button><button type="button" class="im-classic-btn im-btn-red" id="imSettingsClose">Close</button></div></div></div>`;
   const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist>`;
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell${lookupClass}"><div class="item-manager-titlebar"><span>Items</span><span class="im-title-actions"><span class="im-note">Internal Item Manager v237 • ${rows.length} saved item${rows.length===1?'':'s'}</span><button type="button" class="im-settings-btn" id="imSettingsBtn" title="Item Manager settings">⚙</button></span></div>${lookupBanner}<div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option value="sku/upc">SKU/UPC</option><option value="sku">SKU only</option><option value="upc">UPC only</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><colgroup><col class="im-col-select"><col class="im-col-image"><col class="im-col-sku"><col class="im-col-name"><col class="im-col-cost"><col class="im-col-sale"><col class="im-col-qty"><col class="im-col-instore"><col class="im-col-size"><col class="im-col-pack"><col class="im-col-reorder"><col class="im-col-dept"><col class="im-col-cat"><col class="im-col-brand"><col class="im-col-website"><col class="im-col-status"></colgroup><thead><tr><th class="im-select-col">Select</th><th>Image</th><th>SKU</th><th>Item Name</th><th>Cost</th><th>Sale Price</th><th>Quantity</th><th>InStore Qty</th><th>Size</th><th>Pack</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom-filter"><div class="field"><label>Filter Department</label><select id="imBottomDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Filter Category</label><select id="imBottomCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category</label><select id="imBottomSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Brand</label><select id="imBottomBrand">${itemOptionList(lists.brands,'','--All--')}</select></div><div class="field"><label>Supplier</label><select id="imBottomSupplier">${itemOptionList(lists.suppliers,'','--All--')}</select></div><div class="field"><label>Item Type</label><select id="imBottomType">${typeOptions}</select></div><button type="button" class="im-classic-btn" id="imBottomClear">Clear Filters</button></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${settingsModal}${datalists}${itemManagerScript()}</div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell${lookupClass}"><div class="item-manager-titlebar"><span>Items</span><span class="im-title-actions"><button type="button" class="im-settings-btn" id="imSettingsBtn" title="Item Manager settings">⚙</button></span></div>${lookupBanner}<div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option value="sku/upc">SKU/UPC</option><option value="sku">SKU only</option><option value="upc">UPC only</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><colgroup><col class="im-col-select"><col class="im-col-image"><col class="im-col-sku"><col class="im-col-name"><col class="im-col-cost"><col class="im-col-sale"><col class="im-col-instore"><col class="im-col-size"><col class="im-col-pack"><col class="im-col-reorder"><col class="im-col-dept"><col class="im-col-cat"><col class="im-col-brand"><col class="im-col-website"><col class="im-col-status"></colgroup><thead><tr><th class="im-select-col">Select</th><th>Image</th><th>SKU</th><th>Item Name</th><th>Cost</th><th>Sale Price</th><th>InStore Qty</th><th>Size</th><th>Pack</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom-filter"><div class="field"><label>Filter Department</label><select id="imBottomDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Filter Category</label><select id="imBottomCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category</label><select id="imBottomSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Brand</label><select id="imBottomBrand">${itemOptionList(lists.brands,'','--All--')}</select></div><div class="field"><label>Supplier</label><select id="imBottomSupplier">${itemOptionList(lists.suppliers,'','--All--')}</select></div><div class="field"><label>Item Type</label><select id="imBottomType">${typeOptions}</select></div><button type="button" class="im-classic-btn" id="imBottomClear">Clear Filters</button></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${settingsModal}${datalists}${itemManagerScript()}</div></main>`;
   return htmlPage('Item Manager | HB Commerce', layout(env, 'Dashboard', body));
 }
 
@@ -20387,9 +20366,9 @@ function itemCsvEscape(v) { return '"' + String(v ?? '').replace(/"/g, '""') + '
 async function adminItemManagerCsv(request, env) {
   const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
   const rows = await itemManagerRows(env, { includeInactive: true });
-  const headers = ['SKU','Item Name','Size','Pack','Price','Quantity','InStore Qty','Cost','MSRP','Reorder Level','Department','Category','Sub-Category','Brand','Supplier','Group','Type','Location','UPC','Vendor SKU','Website Published','Active','Child Item','Image URL','Public Description','Notes'];
+  const headers = ['SKU','Item Name','Size','Pack','Price','InStore Qty','Cost','MSRP','Reorder Level','Department','Category','Sub-Category','Brand','Supplier','Group','Type','Location','UPC','Vendor SKU','Website Published','Active','Child Item','Image URL','Public Description','Notes'];
   const lines = [headers.map(itemCsvEscape).join(',')];
-  for (const r of rows) lines.push([r.sku,r.item_name,r.size,r.pack,r.price,r.quantity,r.instore_qty,r.cost,r.msrp,r.reorder_level,r.department,r.category,r.sub_category,r.brand,r.supplier,r.item_group,r.item_type,r.location,r.upc,r.vendor_sku,r.published?'Y':'',r.active?'Active':'Inactive',r.child_item?'Y':'',String(r.image_url||'').startsWith('data:')?'Uploaded image':r.image_url,r.public_description,r.notes].map(itemCsvEscape).join(','));
+  for (const r of rows) lines.push([r.sku,r.item_name,r.size,r.pack,r.price,r.instore_qty,r.cost,r.msrp,r.reorder_level,r.department,r.category,r.sub_category,r.brand,r.supplier,r.item_group,r.item_type,r.location,r.upc,r.vendor_sku,r.published?'Y':'',r.active?'Active':'Inactive',r.child_item?'Y':'',String(r.image_url||'').startsWith('data:')?'Uploaded image':r.image_url,r.public_description,r.notes].map(itemCsvEscape).join(','));
   return new Response(lines.join('\r\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="hb-item-manager-export.csv"', 'cache-control': 'no-store' } });
 }
 
@@ -20622,7 +20601,7 @@ async function adminItemEditPage(request, env, id = '', message = '') {
   const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imTypeList"><option value="Standard"><option value="Service"><option value="Set Item"><option value="Matrix Parent"><option value="Matrix Child"><option value="Non-Stock"><option value="Labor"></datalist>`;
   const title = it.id ? `Edit Item: ${escapeHtml(it.sku || it.item_name)}` : 'Add New Item';
   const preview = it.image_url ? `<img src="${escapeHtml(it.image_url)}" alt="Item image preview">` : `<div class="placeholder">No Image</div>`;
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>${title}</h2><p>Add/edit internal inventory items. Tax fields are intentionally removed because sales tax is handled by ZipTax/destination tax in Quote and Invoice creation.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a></div></div>${message}${itemManagerStyle()}<section class="item-editor-page"><h3>${title}</h3><form method="post" action="/admin/items" enctype="multipart/form-data"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="${escapeHtml(it.id)}"><div class="grid-4">${itemEditorField('sku','SKU / Item Code',it.sku)}${itemEditorField('upc','UPC / Barcode',it.upc)}${itemEditorField('item_name','Item Name',it.item_name)}${itemEditorField('item_type','Item Type',it.item_type,'text','list="imTypeList"')}</div><div class="grid-4">${itemEditorField('size','Size',it.size,'text','list="imSizeList"')}${itemEditorField('pack','Pack',it.pack,'text','list="imPackList"')}${itemEditorField('department','Department',it.department,'text','list="imDeptList"')}${itemEditorField('category','Category',it.category,'text','list="imCatList"')}</div><div class="grid-4">${itemEditorField('sub_category','Sub-Category',it.sub_category,'text','list="imSubCatList"')}${itemEditorField('brand','Brand',it.brand,'text','list="imBrandList"')}${itemEditorField('supplier','Supplier',it.supplier,'text','list="imSupplierList"')}${itemEditorField('item_group','Item Group',it.item_group,'text','list="imGroupList"')}</div><div class="grid-4">${itemEditorField('price','Price',it.price,'number','step="0.01"')}${itemEditorField('cost','Cost',it.cost,'number','step="0.01"')}${itemEditorField('msrp','MSRP',it.msrp,'number','step="0.01"')}${itemEditorField('reorder_level','Reorder Level',it.reorder_level,'number','step="1"')}</div><div class="grid-4">${itemEditorField('quantity','Quantity',it.quantity,'number','step="1"')}${itemEditorField('instore_qty','InStore Qty',it.instore_qty,'number','step="1"')}${itemEditorField('location','Location',it.location,'text','list="imLocList"')}${itemEditorField('vendor_sku','Vendor SKU',it.vendor_sku)}</div><div class="im-image-preview" style="margin:10px 0 14px">${preview}<div><div class="field"><label>Website Product Image URL</label><input name="image_url" value="${escapeHtml(it.image_url && !String(it.image_url).startsWith('data:') ? it.image_url : '')}" placeholder="https://... image URL"></div><div class="field"><label>Upload Product Image</label><input type="file" name="image_file" accept="image/*"></div><p class="hint">Use either an image URL or upload a small image. This image appears on the website product page and department listing.</p></div></div><div class="field"><label>Website Product Description</label><textarea name="public_description" placeholder="Customer-facing product description">${escapeHtml(it.public_description || '')}</textarea></div><div class="field"><label>Internal Notes</label><textarea name="notes">${escapeHtml(it.notes || '')}</textarea></div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="active" ${it.active?'checked':''}> Active</label><label class="same-ship"><input type="checkbox" name="published" ${it.published?'checked':''}> Publish on Website</label><label class="same-ship"><input type="checkbox" name="child_item" ${it.child_item?'checked':''}> Child Item</label></div><div class="notice warning" style="margin-top:12px"><strong>Tax removed from item setup:</strong> Quote/Invoice sales tax is still handled by the billing/shipping ZIP destination tax workflow.</div><div class="btn-row" style="margin-top:16px"><button class="orange" type="submit">Save Item</button><a class="btn" href="/admin/items/new">Clear Form</a><a class="btn" href="/admin/items">Cancel</a></div></form>${datalists}</section></div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>${title}</h2><p>Add/edit internal inventory items. Tax fields are intentionally removed because sales tax is handled by ZipTax/destination tax in Quote and Invoice creation.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a></div></div>${message}${itemManagerStyle()}<section class="item-editor-page"><h3>${title}</h3><form method="post" action="/admin/items" enctype="multipart/form-data"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="${escapeHtml(it.id)}"><div class="grid-4">${itemEditorField('sku','SKU / Item Code',it.sku)}${itemEditorField('upc','UPC / Barcode',it.upc)}${itemEditorField('item_name','Item Name',it.item_name)}${itemEditorField('item_type','Item Type',it.item_type,'text','list="imTypeList"')}</div><div class="grid-4">${itemEditorField('size','Size',it.size,'text','list="imSizeList"')}${itemEditorField('pack','Pack',it.pack,'text','list="imPackList"')}${itemEditorField('department','Department',it.department,'text','list="imDeptList"')}${itemEditorField('category','Category',it.category,'text','list="imCatList"')}</div><div class="grid-4">${itemEditorField('sub_category','Sub-Category',it.sub_category,'text','list="imSubCatList"')}${itemEditorField('brand','Brand',it.brand,'text','list="imBrandList"')}${itemEditorField('supplier','Supplier',it.supplier,'text','list="imSupplierList"')}${itemEditorField('item_group','Item Group',it.item_group,'text','list="imGroupList"')}</div><div class="grid-4">${itemEditorField('price','Price',it.price,'number','step="0.01"')}${itemEditorField('cost','Cost',it.cost,'number','step="0.01"')}${itemEditorField('msrp','MSRP',it.msrp,'number','step="0.01"')}${itemEditorField('reorder_level','Reorder Level',it.reorder_level,'number','step="1"')}</div><div class="grid-4"><input type="hidden" name="quantity" value="${escapeHtml(it.instore_qty || it.quantity || 0)}">${itemEditorField('instore_qty','InStore Qty',it.instore_qty,'number','step="1"')}${itemEditorField('location','Location',it.location,'text','list="imLocList"')}${itemEditorField('vendor_sku','Vendor SKU',it.vendor_sku)}</div><div class="im-image-preview" style="margin:10px 0 14px">${preview}<div><div class="field"><label>Website Product Image URL</label><input name="image_url" value="${escapeHtml(it.image_url && !String(it.image_url).startsWith('data:') ? it.image_url : '')}" placeholder="https://... image URL"></div><div class="field"><label>Upload Product Image</label><input type="file" name="image_file" accept="image/*"></div><p class="hint">Use either an image URL or upload a small image. This image appears on the website product page and department listing.</p></div></div><div class="field"><label>Website Product Description</label><textarea name="public_description" placeholder="Customer-facing product description">${escapeHtml(it.public_description || '')}</textarea></div><div class="field"><label>Internal Notes</label><textarea name="notes">${escapeHtml(it.notes || '')}</textarea></div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="active" ${it.active?'checked':''}> Active</label><label class="same-ship"><input type="checkbox" name="published" ${it.published?'checked':''}> Publish on Website</label><label class="same-ship"><input type="checkbox" name="child_item" ${it.child_item?'checked':''}> Child Item</label></div><div class="notice warning" style="margin-top:12px"><strong>Tax removed from item setup:</strong> Quote/Invoice sales tax is still handled by the billing/shipping ZIP destination tax workflow.</div><div class="btn-row" style="margin-top:16px"><button class="orange" type="submit">Save Item</button><a class="btn" href="/admin/items/new">Clear Form</a><a class="btn" href="/admin/items">Cancel</a></div></form>${datalists}</section></div></main>`;
   return htmlPage(`${it.id ? 'Edit' : 'Add'} Item | HB Commerce`, layout(env, 'Dashboard', body));
 }
 
@@ -22172,11 +22151,14 @@ function matchInventoryItem(i,value){
 function addItem(){items.push({qty:1,name:'',desc:'',cost:0,sale_price:0,markup:40,discount:0,taxable:true});renderItems();setTimeout(()=>{let cards=document.querySelectorAll('.line-item-card');let card=cards[cards.length-1];let input=card&&card.querySelector('input[name^="item_name"]');if(input)input.focus();},0)}
 function addItemFromManager(p){
   p=p||{};
-  let cost=Number(p.cost||0), sale=Number(p.sale_price||p.price||0); if(!(cost>0)&&Number(p.msrp||p.regular_price||0)>0)cost=Math.round(Number(p.msrp||p.regular_price||0)*85)/100;
+  let cost=Number(p.cost||p.cost_price||p.item_cost||p.unit_cost||0);
+  let sale=Number(p.sale_price||p.price||p.unit_price||p.sale||0);
+  if(!(cost>0)&&Number(p.msrp||p.regular_price||0)>0)cost=Math.round(Number(p.msrp||p.regular_price||0)*85)/100;
   let markup=Number(p.markup||0);
   if(!markup && cost>0 && sale>0) markup=Math.round(((sale-cost)/cost)*10000)/100;
   items.push({qty:1,name:p.name||p.sku||'',desc:p.desc||'',cost:cost,sale_price:sale,markup:markup||40,discount:0,taxable:p.taxable!==false,inventory_item_id:p.id||'',image:p.image||''});
   renderItems();
+  renderTotals();
   scheduleShippingRate(550);
 }
 function openItemLookup(){
