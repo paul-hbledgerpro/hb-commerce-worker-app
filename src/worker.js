@@ -281,6 +281,10 @@ async function handleRequest(request, env, ctx) {
   if (method === "POST" && path === "/admin/orders/cancel") return adminCancelOnlineOrderPost(request, env);
   if (method === "GET" && path === "/admin/eufy") return adminEufyPage(request, env);
   if (method === "GET" && path === "/admin/lts") return adminLtsPage(request, env);
+  if (method === "GET" && path === "/admin/items") return adminItemManagerPage(request, env);
+  if (method === "POST" && path === "/admin/items") return adminItemManagerPost(request, env);
+  if (method === "GET" && path === "/admin/items.csv") return adminItemManagerCsv(request, env);
+  if (method === "GET" && path === "/admin/items.json") return adminItemManagerJson(request, env);
   if (method === "GET" && path === "/admin/tax") return adminTaxPage(request, env);
   if (method === "POST" && path === "/admin/tax") return adminTaxPost(request, env);
   if (method === "GET" && path === "/admin/tax-lookup") return adminTaxLookup(request, env);
@@ -16286,7 +16290,14 @@ async function adminInventorySearch(request, env) {
     };
   });
 
-  const items = [...hardware, ...serviceSamples]
+  let itemManagerItems = [];
+  try {
+    itemManagerItems = await itemManagerInventoryForEnv(env);
+  } catch (err) {
+    console.error('item manager inventory search load failed', err);
+  }
+
+  const items = [...itemManagerItems, ...hardware, ...serviceSamples]
     .filter(p => p.name || p.sku)
     .sort((a, b) => String(a.name).localeCompare(String(b.name)));
   return jsonResponse({ ok: true, items });
@@ -18640,6 +18651,7 @@ const ADMIN_SIDEBAR_ITEM_DEFS = [
   ["pos_support","/admin/pos-support","$","POS Support Fees"],
   ["apps_pos","/admin/applications/pos-merchant","◎","POS + MS Apps"],
   ["apps_merchant","/admin/applications/merchant-only","◉","Merchant Apps"],
+  ["item_manager","/admin/items","▦","Item Manager"],
   ["eufy","/admin/eufy","📹","EUFY Manager"],
   ["lts","/admin/lts","🖥️","LTS Manager"],
   ["tax","/admin/tax","%","Tax"],
@@ -18651,7 +18663,7 @@ const ADMIN_DASHBOARD_DEFAULT_ORDER = ["header","kpis","charts","recent"];
 function cleanLayoutOrder(value, allowed, fallback){const arr=String(value||'').split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);const out=[];for(const k of arr)if(allowed.includes(k)&&!out.includes(k))out.push(k);for(const k of fallback)if(!out.includes(k))out.push(k);return out;}
 function cleanHexColor(v,f){v=String(v||'').trim();return /^#[0-9a-fA-F]{6}$/.test(v)?v:f}
 async function adminLayoutSettings(env){return{sidebar:cleanLayoutOrder(await getSetting(env,'admin_sidebar_order',''),ADMIN_SIDEBAR_DEFAULT_ORDER,ADMIN_SIDEBAR_DEFAULT_ORDER),dashboard:cleanLayoutOrder(await getSetting(env,'admin_dashboard_order',''),ADMIN_DASHBOARD_DEFAULT_ORDER,ADMIN_DASHBOARD_DEFAULT_ORDER),buttonBg:cleanHexColor(await getSetting(env,'admin_sidebar_button_bg','#10233d'),'#10233d'),buttonText:cleanHexColor(await getSetting(env,'admin_sidebar_button_text','#ffffff'),'#ffffff')}}
-async function adminSidebarHtml(env,view){const s=await adminLayoutSettings(env),defs=new Map(ADMIN_SIDEBAR_ITEM_DEFS.map(d=>[d[0],d]));const style=`<style>.hb-template-sidebar>a:not(.logout),.hb-sidebar-bottom-actions>a:not(.logout){background:${s.buttonBg}!important}.hb-template-sidebar>a:not(.logout) .hb-sidebar-link-label,.hb-sidebar-bottom-actions>a:not(.logout) .hb-sidebar-link-label{color:${s.buttonText}!important;-webkit-text-fill-color:${s.buttonText}!important}</style>`;const links=s.sidebar.map(k=>{const d=defs.get(k);if(!d)return'';const active=(view==='overview'&&k==='dashboard')||(view==='quotes'&&k==='quotes')||(view==='approved'&&k==='approved')||(view==='invoices'&&k==='open_invoices')||(view==='paid'&&k==='paid_invoices');return `<a class="${active?'active ':''}${d[4]||''}" href="${d[1]}"><i>${d[2]}</i><span class="hb-sidebar-link-label">${escapeHtml(d[3])}</span></a>`}).join('');return `${style}${links}<div class="hb-sidebar-bottom-actions"><a href="/admin/settings"><i>⚙</i><span class="hb-sidebar-link-label">Settings</span></a><a class="logout" href="/admin/logout?force=1"><i>⏻</i> Logout</a></div>`;}
+async function adminSidebarHtml(env,view){const s=await adminLayoutSettings(env),defs=new Map(ADMIN_SIDEBAR_ITEM_DEFS.map(d=>[d[0],d]));const style=`<style>.hb-template-sidebar>a:not(.logout),.hb-sidebar-bottom-actions>a:not(.logout){background:${s.buttonBg}!important}.hb-template-sidebar>a:not(.logout) .hb-sidebar-link-label,.hb-sidebar-bottom-actions>a:not(.logout) .hb-sidebar-link-label{color:${s.buttonText}!important;-webkit-text-fill-color:${s.buttonText}!important}</style>`;const links=s.sidebar.map(k=>{const d=defs.get(k);if(!d)return'';const active=(view==='overview'&&k==='dashboard')||(view==='quotes'&&k==='quotes')||(view==='approved'&&k==='approved')||(view==='invoices'&&k==='open_invoices')||(view==='paid'&&k==='paid_invoices')||(view==='items'&&k==='item_manager');return `<a class="${active?'active ':''}${d[4]||''}" href="${d[1]}"><i>${d[2]}</i><span class="hb-sidebar-link-label">${escapeHtml(d[3])}</span></a>`}).join('');return `${style}${links}<div class="hb-sidebar-bottom-actions"><a href="/admin/settings"><i>⚙</i><span class="hb-sidebar-link-label">Settings</span></a><a class="logout" href="/admin/logout?force=1"><i>⏻</i> Logout</a></div>`;}
 async function adminDashboardOrderStyle(env){const s=await adminLayoutSettings(env);const sel={header:'.hb-template-page-header',kpis:'.hb-template-gradient-cards',charts:'.hb-template-chart-row',recent:'.hb-recent-updates-wide'};return `<style>${s.dashboard.map((k,i)=>`${sel[k]||''}{order:${i+1}!important}`).join('')}</style>`;}
 async function adminLayoutSettingsPage(request,env,message=''){
   const user=await requireAuth(request,env);if(!user)return redirect('/admin-app');
@@ -18789,6 +18801,7 @@ async function adminDashboard(request, env) {
     { href:"/admin/pos-support", icon:"🏦", title:"POS Support Billing", sub:"monthly ACH setup", tone:"green" },
     { href:"/admin/applications/pos-merchant", icon:"🧩", title:"POS + MS Apps", sub:`${counts.posMerchantApps} submitted`, tone:"green" },
     { href:"/admin/applications/merchant-only", icon:"💳", title:"Merchant Apps", sub:`${counts.merchantOnlyApps} submitted`, tone:"blue" },
+    { href:"/admin/items", icon:"▦", title:"Item Manager", sub:"Inventory browsing", tone:"green" },
     { href:"/admin/eufy", icon:"📹", title:"EUFY Manager", sub:"Products & coupons", tone:"orange" },
     { href:"/admin/lts", icon:"🖥️", title:"LTS Manager", sub:"DVR/NVR & cameras", tone:"blue" }
   ];
@@ -19485,6 +19498,274 @@ async function adminTaxLookup(request, env) {
   return jsonResponse({ ...fixedTaxInfo(zip, city, state, street, 0), ok: true });
 }
 
+
+
+// ================================================================
+//  ADMIN ITEM MANAGER — WinForms-style inventory browser
+// ================================================================
+async function ensureItemManagerTables(env) {
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS item_manager_items (
+    id TEXT PRIMARY KEY,
+    sku TEXT NOT NULL UNIQUE,
+    item_name TEXT NOT NULL,
+    size TEXT,
+    pack TEXT,
+    price REAL NOT NULL DEFAULT 0,
+    quantity REAL NOT NULL DEFAULT 0,
+    instore_qty REAL NOT NULL DEFAULT 0,
+    cost REAL NOT NULL DEFAULT 0,
+    msrp REAL NOT NULL DEFAULT 0,
+    tax1 INTEGER NOT NULL DEFAULT 1,
+    tax2 INTEGER NOT NULL DEFAULT 0,
+    tax3 INTEGER NOT NULL DEFAULT 0,
+    reorder_level REAL NOT NULL DEFAULT 0,
+    department TEXT,
+    category TEXT,
+    sub_category TEXT,
+    brand TEXT,
+    supplier TEXT,
+    item_group TEXT,
+    item_type TEXT NOT NULL DEFAULT 'Standard',
+    location TEXT,
+    upc TEXT,
+    vendor_sku TEXT,
+    notes TEXT,
+    active INTEGER NOT NULL DEFAULT 1,
+    child_item INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_name ON item_manager_items(item_name)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_dept_cat ON item_manager_items(department, category)`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_active ON item_manager_items(active)`).run();
+}
+
+function itemBool(v) { return v === true || v === 1 || v === '1' || v === 'on' || v === 'yes' || v === 'Y'; }
+function itemNum(v, fallback = 0) { const n = Number(String(v ?? '').replace(/[$,]/g, '').trim()); return Number.isFinite(n) ? n : fallback; }
+function itemText(v, fallback = '') { return String(v ?? fallback).trim(); }
+function itemCleanSku(v) { return itemText(v).replace(/\s+/g, ' ').slice(0, 80); }
+function itemCleanName(v) { return itemText(v).replace(/\s+/g, ' ').slice(0, 180); }
+function itemRowFromDb(row = {}) {
+  return {
+    id: String(row.id || ''),
+    sku: String(row.sku || ''),
+    item_name: String(row.item_name || ''),
+    size: String(row.size || ''),
+    pack: String(row.pack || ''),
+    price: Number(row.price || 0),
+    quantity: Number(row.quantity || 0),
+    instore_qty: Number(row.instore_qty || 0),
+    cost: Number(row.cost || 0),
+    msrp: Number(row.msrp || 0),
+    tax1: Number(row.tax1 || 0) ? 1 : 0,
+    tax2: Number(row.tax2 || 0) ? 1 : 0,
+    tax3: Number(row.tax3 || 0) ? 1 : 0,
+    reorder_level: Number(row.reorder_level || 0),
+    department: String(row.department || ''),
+    category: String(row.category || ''),
+    sub_category: String(row.sub_category || ''),
+    brand: String(row.brand || ''),
+    supplier: String(row.supplier || ''),
+    item_group: String(row.item_group || ''),
+    item_type: String(row.item_type || 'Standard'),
+    location: String(row.location || ''),
+    upc: String(row.upc || ''),
+    vendor_sku: String(row.vendor_sku || ''),
+    notes: String(row.notes || ''),
+    active: Number(row.active || 0) ? 1 : 0,
+    child_item: Number(row.child_item || 0) ? 1 : 0,
+    created_at: String(row.created_at || ''),
+    updated_at: String(row.updated_at || '')
+  };
+}
+
+function itemFromForm(fd) {
+  return {
+    id: itemText(fd.get('id')) || randomId(),
+    sku: itemCleanSku(fd.get('sku')),
+    item_name: itemCleanName(fd.get('item_name')),
+    size: itemText(fd.get('size')).slice(0, 60),
+    pack: itemText(fd.get('pack')).slice(0, 60),
+    price: itemNum(fd.get('price')),
+    quantity: itemNum(fd.get('quantity')),
+    instore_qty: itemNum(fd.get('instore_qty')),
+    cost: itemNum(fd.get('cost')),
+    msrp: itemNum(fd.get('msrp')),
+    tax1: itemBool(fd.get('tax1')) ? 1 : 0,
+    tax2: itemBool(fd.get('tax2')) ? 1 : 0,
+    tax3: itemBool(fd.get('tax3')) ? 1 : 0,
+    reorder_level: itemNum(fd.get('reorder_level')),
+    department: itemText(fd.get('department')).slice(0, 90),
+    category: itemText(fd.get('category')).slice(0, 90),
+    sub_category: itemText(fd.get('sub_category')).slice(0, 90),
+    brand: itemText(fd.get('brand')).slice(0, 90),
+    supplier: itemText(fd.get('supplier')).slice(0, 120),
+    item_group: itemText(fd.get('item_group')).slice(0, 90),
+    item_type: itemText(fd.get('item_type'), 'Standard').slice(0, 60) || 'Standard',
+    location: itemText(fd.get('location')).slice(0, 90),
+    upc: itemText(fd.get('upc')).slice(0, 90),
+    vendor_sku: itemText(fd.get('vendor_sku')).slice(0, 90),
+    notes: itemText(fd.get('notes')).slice(0, 1200),
+    active: fd.has('active') ? 1 : 0,
+    child_item: fd.has('child_item') ? 1 : 0
+  };
+}
+
+async function itemManagerRows(env, opts = {}) {
+  await ensureItemManagerTables(env);
+  const includeInactive = !!opts.includeInactive;
+  const onlyInactive = !!opts.onlyInactive;
+  let sql = 'SELECT * FROM item_manager_items';
+  const clauses = [];
+  if (onlyInactive) clauses.push('active=0');
+  else if (!includeInactive) clauses.push('active=1');
+  if (clauses.length) sql += ' WHERE ' + clauses.join(' AND ');
+  sql += ' ORDER BY COALESCE(department,\'\'), COALESCE(category,\'\'), item_name COLLATE NOCASE LIMIT 2000';
+  const res = await env.DB.prepare(sql).all();
+  return ((res && res.results) || []).map(itemRowFromDb);
+}
+
+async function itemManagerLookupLists(env, rows = null) {
+  const list = rows || await itemManagerRows(env, { includeInactive: true });
+  const uniq = key => [...new Set(list.map(x => String(x[key] || '').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  return {
+    departments: uniq('department'), categories: uniq('category'), subCategories: uniq('sub_category'),
+    brands: uniq('brand'), sizes: uniq('size'), packs: uniq('pack'), groups: uniq('item_group'),
+    suppliers: uniq('supplier'), types: uniq('item_type'), locations: uniq('location')
+  };
+}
+
+function itemOptionList(values, selected = '', allLabel = '') {
+  const first = allLabel ? `<option value="">${escapeHtml(allLabel)}</option>` : '';
+  return first + (values || []).map(v => `<option value="${escapeHtml(v)}" ${String(v) === String(selected) ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
+}
+
+function itemManagerStyle() {
+  return `<style>
+.item-manager-shell{display:grid;gap:0;background:#cfd9e6;color:#07152a;border:1px solid #7f93ad;border-radius:14px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.34);font-family:"Segoe UI",Arial,sans-serif}.item-manager-titlebar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#e8f0f8,#cdd9e8);border-bottom:1px solid #8aa1ba;padding:8px 12px;color:#09264a;font-weight:950}.im-searchbar{background:#dce8f5;padding:14px 12px;border-bottom:1px solid #9eb2c7;display:grid;grid-template-columns:minmax(210px,.8fr) minmax(210px,.8fr) minmax(210px,.8fr) auto auto auto;gap:12px;align-items:end}.im-group{border:1px solid #9eb2c7;border-radius:4px;padding:16px 10px 10px;position:relative;background:#e8f1fa}.im-group legend,.im-group-label{position:absolute;top:-10px;left:10px;background:#e8f1fa;padding:0 6px;font-size:13px;font-weight:950;color:#8b1111}.im-field label{display:block;font-size:12px;font-weight:950;color:#082b57;margin-bottom:5px}.im-field input,.im-field select,.im-field textarea{width:100%;border:1px solid #8ba3bc;border-radius:3px;background:#fff!important;color:#07152a!important;min-height:30px;padding:5px 7px;font-size:13px}.im-search-actions{display:flex;gap:9px}.im-classic-btn{border:1px solid #556579!important;border-radius:3px!important;min-height:38px!important;padding:0 18px!important;color:#fff!important;background:linear-gradient(#6f7b86,#3d454e)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 rgba(0,0,0,.24)!important;font-weight:950}.im-btn-blue{background:linear-gradient(#2678c8,#0d4f93)!important}.im-btn-green{background:linear-gradient(#25a45b,#11783a)!important}.im-btn-red{background:linear-gradient(#d75b50,#9e2e2e)!important}.im-filter-row{display:flex;align-items:center;gap:24px;background:#cfd9e6;border-bottom:1px solid #9eb2c7;padding:5px 10px;font-size:13px;color:#082b57;font-weight:850}.im-filter-row label{display:inline-flex;gap:7px;align-items:center;color:#082b57}.im-filter-row input{width:auto!important;min-height:auto!important}.im-total{margin-left:auto;font-weight:950;color:#082b57}.im-main-area{display:grid;grid-template-columns:1fr auto;min-height:420px}.im-grid-wrap{overflow:auto;background:#fff;border-bottom:1px solid #9eb2c7}.im-grid{width:100%;min-width:1120px;border-collapse:collapse;background:#fff;color:#111827}.im-grid th{position:sticky;top:0;z-index:3;background:linear-gradient(#eaf3ff,#cbdcf1)!important;color:#082b57!important;border:1px solid #9eb2c7!important;font-size:12px;text-align:left;padding:7px}.im-grid td{border:1px solid #d4dfec!important;color:#111827!important;background:#fff!important;font-size:13px;padding:7px;white-space:nowrap}.im-grid tr:nth-child(even) td{background:#f6faff!important}.im-grid tr.selected td,.im-grid tr:hover td{background:#dff0ff!important}.im-grid .money{text-align:right;font-variant-numeric:tabular-nums}.im-grid .center{text-align:center}.im-side-toggle{writing-mode:vertical-rl;text-orientation:mixed;background:linear-gradient(#e8fbff,#bfe7ee);color:#1337e5;border-left:1px solid #8cb0c0;border-right:0;min-width:30px;font-weight:950;cursor:pointer}.im-right-filter{display:none;width:356px;background:#fff;border-left:1px solid #8ba3bc;padding:14px 16px;overflow:auto}.im-right-filter.show{display:block}.im-right-filter h3{margin:0 0 12px;color:#082b57}.im-right-filter .btn-row{display:grid;grid-template-columns:1fr 1fr}.im-bottom{background:#cfd9e6;display:grid;grid-template-columns:minmax(420px,1fr) 320px 430px;gap:10px;padding:10px;border-top:1px solid #9eb2c7}.im-tabs{border:1px solid #8ba3bc;background:#fff;min-height:152px}.im-tab-heads{display:flex;background:#d5e5f7;border-bottom:1px solid #8ba3bc}.im-tab-heads button{border:0;border-right:1px solid #8ba3bc;border-radius:0!important;background:linear-gradient(#eef6ff,#c6d9ef)!important;color:#082b57!important;min-height:28px!important;padding:0 13px!important;box-shadow:none!important}.im-tab-heads button.active{background:#fff!important}.im-tab-panel{display:none;padding:10px}.im-tab-panel.active{display:block}.im-mini-grid{width:100%;border-collapse:collapse}.im-mini-grid th,.im-mini-grid td{border:1px solid #d4dfec;padding:7px;font-size:12px;color:#111827!important;background:#fff!important}.im-info-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.im-info-card{border:1px solid #8ba3bc;background:#fff;color:#111827}.im-info-card h4{margin:0;padding:4px 8px;background:#c0392b;color:#fff;font-size:12px}.im-info-card.blue h4{background:#2869b5}.im-info-card.purple h4{background:#7d3c98}.im-info-card div{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:7px;font-size:12px}.im-bottom-form{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-content:start}.im-bottom-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}.im-action-cluster{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.item-editor{margin-top:18px;background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96));border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:18px;color:#fff}.item-editor h3{margin:0 0 12px;color:#fff}.item-editor .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.item-editor .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.item-editor label{color:#dbe7f5!important}.item-editor input,.item-editor select,.item-editor textarea{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;color:#fff!important}.item-editor textarea{min-height:70px}.item-editor option{background:#07152a;color:#fff}.im-note{font-size:12px;color:#475569}.im-selected{font-weight:950;color:#082b57}.im-toast{position:fixed;right:18px;bottom:18px;z-index:999999;background:#061b35;color:#fff;border:1px solid #ff6a00;border-radius:14px;padding:12px 14px;box-shadow:0 20px 60px rgba(0,0,0,.34);display:none}.im-toast.show{display:block}@media(max-width:1180px){.im-searchbar{grid-template-columns:1fr 1fr}.im-bottom{grid-template-columns:1fr}.im-main-area{grid-template-columns:1fr}.im-side-toggle{writing-mode:horizontal-tb;min-height:42px}.im-right-filter{width:auto;border-left:0;border-top:1px solid #8ba3bc}.item-editor .grid-4,.item-editor .grid-3{grid-template-columns:1fr 1fr}}@media(max-width:760px){.im-searchbar{grid-template-columns:1fr}.im-filter-row{display:grid;grid-template-columns:1fr;gap:8px}.im-total{margin-left:0}.item-editor .grid-4,.item-editor .grid-3{grid-template-columns:1fr}.im-bottom-actions,.im-action-cluster{grid-template-columns:1fr 1fr}.im-grid{min-width:1080px}}
+</style>`;
+}
+
+function itemRowHtml(row) {
+  const data = escapeHtml(JSON.stringify(row));
+  return `<tr data-item='${data}' data-active="${row.active}" data-child="${row.child_item}" data-search="${escapeHtml([row.sku,row.upc,row.item_name,row.department,row.category,row.brand,row.supplier,row.notes].join(' ').toLowerCase())}">
+    <td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td><td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td>
+    <td class="money">${money(row.price)}</td><td class="money">${escapeHtml(String(row.quantity))}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td><td class="money">${money(row.cost)}</td>
+    <td class="center">${row.tax1?'Y':''}</td><td class="center">${row.tax2?'Y':''}</td><td class="center">${row.tax3?'Y':''}</td><td class="money">${escapeHtml(String(row.reorder_level))}</td>
+    <td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
+  </tr>`;
+}
+
+function itemManagerScript() {
+  return `<script>(function(){
+const page=document.querySelector('.item-manager-shell');if(!page)return;const rows=[...page.querySelectorAll('.im-grid tbody tr')];let selected=null;const qs=s=>page.querySelector(s), qsa=s=>[...page.querySelectorAll(s)];const total=qs('#imTotal');const toast=document.getElementById('imToast');
+function money(n){n=Number(n||0);return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
+function getSelected(){return selected?JSON.parse(selected.dataset.item||'{}'):null}
+function selectedOrAlert(){const it=getSelected();if(!it){showToast('Select an item first.');return null}return it}
+function setSelected(tr){rows.forEach(r=>r.classList.remove('selected'));selected=tr; if(tr)tr.classList.add('selected'); updateDetail();}
+function val(sel){const el=qs(sel);return el?String(el.value||'').toLowerCase().trim():''}
+function matchesSelect(item,key,sel){const v=val(sel);return !v || String(item[key]||'').toLowerCase()===v}
+function applyFilter(){const search=val('#imSearchValue'), name=val('#imSearchName'), kw=val('#imSearchKeyword');const include=qs('#imIncludeInactive')?.checked, only=qs('#imOnlyInactive')?.checked, child=qs('#imIncludeChild')?.checked;let count=0;rows.forEach(tr=>{const it=JSON.parse(tr.dataset.item||'{}');let ok=true;if(only)ok=Number(it.active)===0;else if(!include)ok=Number(it.active)===1;if(ok&&!child)ok=Number(it.child_item)!==1;if(ok&&search)ok=String(it.sku+' '+it.upc).toLowerCase().includes(search);if(ok&&name)ok=String(it.item_name||'').toLowerCase().includes(name);if(ok&&kw)ok=String(tr.dataset.search||'').includes(kw);if(ok)ok=matchesSelect(it,'department','#imBotDept')&&matchesSelect(it,'category','#imBotCat')&&matchesSelect(it,'item_type','#imFiltType')&&matchesSelect(it,'department','#imFiltDept')&&matchesSelect(it,'category','#imFiltCat')&&matchesSelect(it,'sub_category','#imFiltSubCat')&&matchesSelect(it,'size','#imFiltSize')&&matchesSelect(it,'pack','#imFiltPack')&&matchesSelect(it,'item_group','#imFiltGroup')&&matchesSelect(it,'brand','#imFiltBrand')&&matchesSelect(it,'supplier','#imFiltSupplier');tr.style.display=ok?'':'none';if(ok)count++;});if(total)total.textContent='Total: '+count.toLocaleString();if(selected&&selected.style.display==='none')setSelected(null)}
+qsa('input,select').forEach(el=>{if(el.closest('.item-editor'))return;el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});rows.forEach(tr=>tr.addEventListener('click',()=>setSelected(tr)));if(rows[0])setSelected(rows[0]);
+function setEditor(it){const form=document.getElementById('itemEditorForm');if(!form)return;const data=it||{id:'',sku:'',item_name:'',size:'',pack:'',price:0,quantity:0,instore_qty:0,cost:0,msrp:0,tax1:1,tax2:0,tax3:0,reorder_level:0,department:'',category:'',sub_category:'',brand:'',supplier:'',item_group:'',item_type:'Standard',location:'',upc:'',vendor_sku:'',notes:'',active:1,child_item:0};Object.keys(data).forEach(k=>{const el=form.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=!!Number(data[k]);else el.value=data[k]??''});form.elements.action.value=it&&it.id?'save':'save';document.getElementById('itemEditorTitle').textContent=it&&it.id?'Edit Item: '+(it.sku||''):'Add New Item';form.scrollIntoView({behavior:'smooth',block:'start'});}
+function updateDetail(){const it=getSelected();if(!it){qsa('[data-im-detail]').forEach(el=>el.textContent='');return;}qsa('[data-im-detail]').forEach(el=>{const k=el.dataset.imDetail;let v=it[k]??'';if(['price','cost','msrp'].includes(k))v=money(v);if(k==='margin')v=(Number(it.price)>0&&Number(it.cost)>0?(((Number(it.price)-Number(it.cost))/Number(it.price))*100).toFixed(1)+'%':'0.0%');el.textContent=v});}
+qsa('.im-tab-heads button').forEach(btn=>btn.addEventListener('click',()=>{qsa('.im-tab-heads button').forEach(b=>b.classList.remove('active'));qsa('.im-tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');qs('#'+btn.dataset.tab)?.classList.add('active')}));
+qs('#imToggleFilter')?.addEventListener('click',()=>qs('#imRightFilter')?.classList.toggle('show'));qs('#imResetFilters')?.addEventListener('click',()=>{qsa('.im-right-filter select').forEach(s=>s.value='');applyFilter()});qs('#imCustomFilter')?.addEventListener('click',()=>showToast('Use the dropdowns above for custom filtering.'));
+qs('#imAdd')?.addEventListener('click',()=>setEditor(null));qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(it)setEditor(it)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return; setEditor({...it,id:'',sku:(it.sku||'')+'-COPY',item_name:(it.item_name||'')+' Copy'});});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)});qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\nVendor SKU: '+(it.vendor_sku||'')+'\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Edit Item Group in the item editor.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Set Item Type to Set Item / Multi Pack in the editor.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));applyFilter();})();</script>`;
+}
+
+async function adminItemManagerPage(request, env, message = '') {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  await ensureItemManagerTables(env);
+  const rows = await itemManagerRows(env, { includeInactive: true });
+  const lists = await itemManagerLookupLists(env, rows);
+  const rowHtml = rows.map(itemRowHtml).join('') || `<tr><td colspan="16">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
+  const typeOptions = itemOptionList(['Standard','Service','Set Item','Matrix Parent','Matrix Child','Non-Stock','Shipping','Labor'], '', '--All--');
+  const field = (name, label, type='text', extra='') => `<div class="field"><label>${escapeHtml(label)}</label><input ${type ? `type="${type}"` : ''} name="${name}" ${extra}></div>`;
+  const editor = `<section class="item-editor" id="itemEditor"><h3 id="itemEditorTitle">Add / Edit Item</h3><form id="itemEditorForm" method="post" action="/admin/items"><input type="hidden" name="action" value="save"><input type="hidden" name="id"><div class="grid-4">${field('sku','SKU / Item Code')}${field('upc','UPC / Barcode')}${field('item_name','Item Name')}${field('item_type','Item Type','text','list="imTypeList" value="Standard"')}</div><div class="grid-4">${field('size','Size','text','list="imSizeList"')}${field('pack','Pack','text','list="imPackList"')}${field('department','Department','text','list="imDeptList"')}${field('category','Category','text','list="imCatList"')}</div><div class="grid-4">${field('sub_category','Sub-Category','text','list="imSubCatList"')}${field('brand','Brand','text','list="imBrandList"')}${field('supplier','Supplier','text','list="imSupplierList"')}${field('item_group','Item Group','text','list="imGroupList"')}</div><div class="grid-4">${field('price','Price','number','step="0.01"')}${field('cost','Cost','number','step="0.01"')}${field('msrp','MSRP','number','step="0.01"')}${field('reorder_level','Reorder Level','number','step="1"')}</div><div class="grid-4">${field('quantity','Quantity','number','step="1"')}${field('instore_qty','InStore Qty','number','step="1"')}${field('location','Location','text','list="imLocList"')}${field('vendor_sku','Vendor SKU')}</div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="tax1" checked> Tax1</label><label class="same-ship"><input type="checkbox" name="tax2"> Tax2</label><label class="same-ship"><input type="checkbox" name="tax3"> Tax3</label></div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="active" checked> Active</label><label class="same-ship"><input type="checkbox" name="child_item"> Child Item</label><div></div></div><div class="field"><label>Notes</label><textarea name="notes"></textarea></div><div class="btn-row"><button class="orange" type="submit">Save Item</button><button class="btn" type="button" id="imClearEditor" onclick="document.getElementById('itemEditorForm').reset();document.getElementById('itemEditorForm').elements.id.value='';document.getElementById('itemEditorTitle').textContent='Add New Item';">Clear Form</button><a class="btn" href="/admin/items">Cancel</a></div></form></section>`;
+  const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imTypeList"><option value="Standard"><option value="Service"><option value="Set Item"><option value="Matrix Parent"><option value="Matrix Child"><option value="Non-Stock"><option value="Labor"></datalist>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager are unchanged and remain separate.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell"><div class="item-manager-titlebar"><span>Items</span><span class="im-note">Internal Item Manager • ${rows.length} saved item${rows.length===1?'':'s'}</span></div><div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option>SKU/UPC</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><thead><tr><th>SKU</th><th>Item Name</th><th>Size</th><th>Pack</th><th>Price</th><th>Quantity</th><th>InStore Qty</th><th>Cost</th><th>Tax1</th><th>Tax2</th><th>Tax3</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${editor}${datalists}${itemManagerScript()}</div></main>`;
+  return htmlPage('Item Manager | HB Commerce', layout(env, 'Dashboard', body));
+}
+
+async function adminItemManagerPost(request, env) {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  await ensureItemManagerTables(env);
+  const fd = await request.formData();
+  const action = String(fd.get('action') || 'save');
+  const id = itemText(fd.get('id'));
+  try {
+    if (action === 'delete') {
+      if (id) await env.DB.prepare('DELETE FROM item_manager_items WHERE id=?').bind(id).run();
+      return adminItemManagerPage(request, env, '<div class="notice success">Item deleted.</div>');
+    }
+    if (action === 'toggle_active') {
+      if (id) await env.DB.prepare('UPDATE item_manager_items SET active=CASE WHEN active=1 THEN 0 ELSE 1 END, updated_at=? WHERE id=?').bind(now(), id).run();
+      return adminItemManagerPage(request, env, '<div class="notice success">Item active flag updated.</div>');
+    }
+    if (action === 'price') {
+      const price = itemNum(fd.get('value'));
+      if (id) await env.DB.prepare('UPDATE item_manager_items SET price=?, updated_at=? WHERE id=?').bind(price, now(), id).run();
+      return adminItemManagerPage(request, env, '<div class="notice success">Item price updated.</div>');
+    }
+    const it = itemFromForm(fd);
+    if (!it.sku || !it.item_name) return adminItemManagerPage(request, env, '<div class="notice error">SKU and Item Name are required.</div>');
+    const exists = id ? await env.DB.prepare('SELECT id FROM item_manager_items WHERE id=?').bind(id).first() : null;
+    const t = now();
+    if (exists) {
+      await env.DB.prepare(`UPDATE item_manager_items SET sku=?, item_name=?, size=?, pack=?, price=?, quantity=?, instore_qty=?, cost=?, msrp=?, tax1=?, tax2=?, tax3=?, reorder_level=?, department=?, category=?, sub_category=?, brand=?, supplier=?, item_group=?, item_type=?, location=?, upc=?, vendor_sku=?, notes=?, active=?, child_item=?, updated_at=? WHERE id=?`).bind(it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.active,it.child_item,t,id).run();
+      return adminItemManagerPage(request, env, '<div class="notice success">Item updated.</div>');
+    }
+    await env.DB.prepare(`INSERT INTO item_manager_items (id,sku,item_name,size,pack,price,quantity,instore_qty,cost,msrp,tax1,tax2,tax3,reorder_level,department,category,sub_category,brand,supplier,item_group,item_type,location,upc,vendor_sku,notes,active,child_item,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(it.id,it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.active,it.child_item,t,t).run();
+    return adminItemManagerPage(request, env, '<div class="notice success">Item saved.</div>');
+  } catch (err) {
+    const msg = String(err && err.message || err);
+    return adminItemManagerPage(request, env, `<div class="notice error"><strong>Item Manager save failed.</strong><br>${escapeHtml(msg)}</div>`);
+  }
+}
+
+function itemCsvEscape(v) { return '"' + String(v ?? '').replace(/"/g, '""') + '"'; }
+async function adminItemManagerCsv(request, env) {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  const rows = await itemManagerRows(env, { includeInactive: true });
+  const headers = ['SKU','Item Name','Size','Pack','Price','Quantity','InStore Qty','Cost','MSRP','Tax1','Tax2','Tax3','Reorder Level','Department','Category','Sub-Category','Brand','Supplier','Group','Type','Location','UPC','Vendor SKU','Active','Child Item','Notes'];
+  const lines = [headers.map(itemCsvEscape).join(',')];
+  for (const r of rows) lines.push([r.sku,r.item_name,r.size,r.pack,r.price,r.quantity,r.instore_qty,r.cost,r.msrp,r.tax1?'Y':'',r.tax2?'Y':'',r.tax3?'Y':'',r.reorder_level,r.department,r.category,r.sub_category,r.brand,r.supplier,r.item_group,r.item_type,r.location,r.upc,r.vendor_sku,r.active?'Active':'Inactive',r.child_item?'Y':'',r.notes].map(itemCsvEscape).join(','));
+  return new Response(lines.join('\r\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="hb-item-manager-export.csv"', 'cache-control': 'no-store' } });
+}
+
+async function adminItemManagerJson(request, env) {
+  const user = await requireAuth(request, env); if (!user) return jsonResponse({ ok:false, error:'Not logged in' }, 401);
+  const rows = await itemManagerRows(env, { includeInactive: true });
+  return jsonResponse({ ok:true, items:rows });
+}
+
+async function itemManagerInventoryForEnv(env) {
+  await ensureItemManagerTables(env);
+  const rows = await itemManagerRows(env, { includeInactive: false });
+  return rows.map(r => {
+    const cost = Math.max(0, Number(r.cost || 0));
+    const sale = Math.max(0, Number(r.price || 0));
+    const markup = cost > 0 && sale > 0 ? Math.round(((sale - cost) / cost) * 10000) / 100 : 0;
+    return {
+      id: r.id,
+      sku: r.sku || r.upc || r.id,
+      brand: r.brand || 'HB Commerce',
+      category: r.category || r.department || 'Item Manager',
+      name: r.item_name || r.sku,
+      desc: r.notes || [r.department, r.category, r.size, r.pack].filter(Boolean).join(' • '),
+      regular_price: Number(r.msrp || r.price || 0),
+      sale_price: sale,
+      cost,
+      markup,
+      taxable: !!r.tax1,
+      quote_only: sale <= 0,
+      product_url: '',
+      source: 'item-manager'
+    };
+  });
+}
 function jsonResponse(obj, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 }
