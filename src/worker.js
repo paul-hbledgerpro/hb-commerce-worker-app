@@ -102,6 +102,13 @@ async function handleRequest(request, env, ctx) {
   const path = normalizePath(url.pathname);
   const method = request.method.toUpperCase();
 
+  // Apple Pay merchant domain verification must be reachable BEFORE any redirect, auth, app routing, or HTML fallback.
+  // Apple Developer currently asks for the .txt URL, while some Apple Pay docs/tools also check the extensionless URL,
+  // so serve the exact same Apple-generated file at both paths on both www and apex hosts.
+  if (isApplePayDomainAssociationPath(path) && (method === "GET" || method === "HEAD")) {
+    return applePayDomainAssociationResponse(method);
+  }
+
   // Apple Pay merchant domain verification is for www.hbcommercesolution.com.
   // Keep checkout, invoice payment, and Apple Pay validation on the exact verified host.
   // This prevents Safari/Apple Pay sessions from closing immediately due to host/domain mismatch.
@@ -118,10 +125,6 @@ async function handleRequest(request, env, ctx) {
   )) {
     url.hostname = "www.hbcommercesolution.com";
     return Response.redirect(url.toString(), 308);
-  }
-
-  if ((method === "GET" || method === "HEAD") && (path === "/.well-known/apple-developer-merchantid-domain-association.txt" || path === "/.well-known/apple-developer-merchantid-domain-association")) {
-    return applePayDomainAssociationResponse(method);
   }
 
   if (path === "/assets/hb-homepage-background-theme.css") return homepageBackgroundThemeCss();
@@ -345,13 +348,26 @@ function normalizePath(path) {
   return path;
 }
 
+function isApplePayDomainAssociationPath(path) {
+  return path === "/.well-known/apple-developer-merchantid-domain-association.txt" ||
+    path === "/.well-known/apple-developer-merchantid-domain-association" ||
+    path === "/apple-developer-merchantid-domain-association.txt" ||
+    path === "/apple-developer-merchantid-domain-association";
+}
+
 function applePayDomainAssociationResponse(method = "GET") {
+  const body = APPLE_PAY_DOMAIN_ASSOCIATION_TEXT;
   const headers = {
-    "content-type": "text/plain; charset=utf-8",
-    "cache-control": "no-store, max-age=0",
-    "x-content-type-options": "nosniff"
+    "content-type": "text/plain",
+    "content-disposition": "inline; filename=apple-developer-merchantid-domain-association.txt",
+    "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
+    "pragma": "no-cache",
+    "expires": "0",
+    "access-control-allow-origin": "*",
+    "x-content-type-options": "nosniff",
+    "content-length": String(new TextEncoder().encode(body).length)
   };
-  return new Response(method === "HEAD" ? null : APPLE_PAY_DOMAIN_ASSOCIATION_TEXT, { status: 200, headers });
+  return new Response(method === "HEAD" ? null : body, { status: 200, headers });
 }
 
 function assetResponse(b64, mime) {
