@@ -20001,6 +20001,238 @@ function itemManagerStyle() {
   .item-manager-shell .im-grid{width:1680px!important;min-width:1680px!important;}
 }
 
+/* v237 final Item Manager layout: compact full-width grid, no page overflow, readable editor fields */
+body:has(.item-manager-shell),
+body:has(.item-editor-page){overflow-x:hidden!important;}
+.admin-app-topbar ~ main:has(.item-manager-shell) .container,
+.admin-dashboard:has(.item-manager-shell) .container{
+  width:calc(100% - 28px)!important;
+  max-width:1920px!important;
+}
+.item-manager-shell{
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  border-radius:18px!important;
+}
+.item-manager-shell .item-manager-titlebar{
+  min-height:46px!important;
+  padding:10px 14px!important;
+}
+.item-manager-shell .im-title-actions{
+  min-width:0!important;
+  white-space:nowrap!important;
+}
+.item-manager-shell .im-note{
+  max-width:52vw!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.item-manager-shell .im-searchbar{
+  grid-template-columns:minmax(150px,.78fr) minmax(190px,1fr) minmax(220px,1.08fr) minmax(200px,1fr) minmax(244px,auto)!important;
+  gap:10px!important;
+  padding:14px 12px!important;
+  overflow:hidden!important;
+}
+.item-manager-shell .im-searchbar .im-group{
+  min-width:0!important;
+  padding:17px 9px 9px!important;
+}
+.item-manager-shell .im-searchbar .im-field input,
+.item-manager-shell .im-searchbar .im-field select{
+  min-height:36px!important;
+  font-size:13px!important;
+}
+.item-manager-shell .im-search-actions{
+  min-width:244px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,1fr)!important;
+  gap:7px!important;
+}
+.item-manager-shell .im-search-actions .im-classic-btn{
+  min-width:0!important;
+  padding:0 10px!important;
+  font-size:13px!important;
+}
+.item-manager-shell .im-filter-row{
+  flex-wrap:wrap!important;
+  gap:14px 22px!important;
+  min-height:38px!important;
+  padding:8px 12px!important;
+}
+.item-manager-shell .im-main-area{display:block!important;width:100%!important;min-width:0!important;}
+.item-manager-shell .im-grid-wrap{
+  width:100%!important;
+  height:clamp(340px,calc(100vh - 520px),540px)!important;
+  max-height:none!important;
+  overflow:auto!important;
+  overflow-x:auto!important;
+  border-top:3pt solid #c4d1e1!important;
+  border-bottom:3pt solid #c4d1e1!important;
+  background:#fff!important;
+}
+.item-manager-shell.lookup-mode .im-grid-wrap{
+  height:clamp(420px,calc(100vh - 400px),680px)!important;
+}
+.item-manager-shell .im-grid{
+  table-layout:fixed!important;
+  width:100%!important;
+  min-width:1420px!important;
+  max-width:none!important;
+  border-collapse:collapse!important;
+}
+.item-manager-shell .im-grid col.im-col-select{width:50px!important}
+.item-manager-shell .im-grid col.im-col-image{width:58px!important}
+.item-manager-shell .im-grid col.im-col-sku{width:105px!important}
+.item-manager-shell .im-grid col.im-col-name{width:320px!important}
+.item-manager-shell .im-grid col.im-col-cost{width:82px!important}
+.item-manager-shell .im-grid col.im-col-sale{width:90px!important}
+.item-manager-shell .im-grid col.im-col-qty{width:64px!important}
+.item-manager-shell .im-grid col.im-col-instore{width:76px!important}
+.item-manager-shell .im-grid col.im-col-size{width:56px!important}
+.item-manager-shell .im-grid col.im-col-pack{width:56px!important}
+.item-manager-shell .im-grid col.im-col-reorder{width:82px!important}
+.item-manager-shell .im-grid col.im-col-dept{width:110px!important}
+.item-manager-shell .im-grid col.im-col-cat{width:110px!important}
+.item-manager-shell .im-grid col.im-col-brand{width:72px!important}
+.item-manager-shell .im-grid col.im-col-website{width:70px!important}
+.item-manager-shell .im-grid col.im-col-status{width:70px!important}
+.item-manager-shell .im-grid th,
+.item-manager-shell .im-grid td{
+  border:3pt solid #c4d1e1!important;
+  padding:8px 7px!important;
+  font-size:var(--im-grid-font-size)!important;
+  line-height:1.22!important;
+  vertical-align:middle!important;
+  color:var(--im-grid-font-color)!important;
+  -webkit-text-fill-color:var(--im-grid-font-color)!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.item-manager-shell .im-grid th{
+  color:#06284d!important;
+  -webkit-text-fill-color:#06284d!important;
+  white-space:normal!important;
+  word-break:normal!important;
+}
+.item-manager-shell .im-grid td{white-space:nowrap!important;}
+.item-manager-shell .im-grid td:nth-child(4),
+.item-manager-shell .im-grid th:nth-child(4){
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+.item-manager-shell .im-grid td:nth-child(5),
+.item-manager-shell .im-grid td:nth-child(6){
+  color:#061b35!important;
+  -webkit-text-fill-color:#061b35!important;
+  font-weight:950!important;
+}
+.item-manager-shell .im-thumb,
+.item-manager-shell .im-thumb-placeholder{
+  width:42px!important;
+  height:34px!important;
+  margin:auto!important;
+}
+.item-manager-shell .im-row-check{
+  width:20px!important;
+  height:20px!important;
+  min-height:20px!important;
+}
+.item-manager-shell .im-side-toggle,
+.item-manager-shell .im-right-filter,
+.item-manager-shell .im-bottom{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+  overflow:hidden!important;
+}
+.item-manager-shell .im-bottom-filter{
+  grid-template-columns:repeat(6,minmax(130px,1fr)) minmax(120px,auto)!important;
+  padding:10px 12px!important;
+  gap:10px!important;
+  border-top:1px solid rgba(255,106,0,.50)!important;
+}
+.item-manager-shell .im-bottom-filter select{
+  min-height:38px!important;
+  font-size:13px!important;
+}
+.item-manager-shell .im-bottom-actions{
+  display:grid!important;
+  grid-template-columns:minmax(160px,1fr) minmax(160px,1fr) minmax(160px,1fr) minmax(220px,auto)!important;
+  gap:10px!important;
+  padding:10px 12px 12px!important;
+}
+.item-manager-shell .im-bottom-actions .im-classic-btn{
+  min-height:40px!important;
+}
+.item-manager-shell .im-bottom-actions:after{
+  min-height:40px!important;
+  font-size:13px!important;
+  color:#e2e8f0!important;
+}
+.item-manager-shell .im-lookup-actions{
+  display:none;
+  padding:10px 12px!important;
+}
+.item-manager-shell.lookup-mode .im-lookup-actions{
+  display:flex!important;
+}
+.admin-app-topbar ~ main .item-editor-page input,
+.admin-app-topbar ~ main .item-editor-page select,
+.admin-app-topbar ~ main .item-editor-page textarea,
+.admin-dashboard .item-editor-page input,
+.admin-dashboard .item-editor-page select,
+.admin-dashboard .item-editor-page textarea{
+  background:#ffffff!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  border:1.8px solid #ff8c21!important;
+  box-shadow:0 0 0 3px rgba(255,106,0,.06)!important;
+  font-weight:850!important;
+  opacity:1!important;
+}
+.admin-app-topbar ~ main .item-editor-page textarea,
+.admin-dashboard .item-editor-page textarea{
+  min-height:126px!important;
+  line-height:1.45!important;
+}
+.admin-app-topbar ~ main .item-editor-page input::placeholder,
+.admin-app-topbar ~ main .item-editor-page textarea::placeholder,
+.admin-dashboard .item-editor-page input::placeholder,
+.admin-dashboard .item-editor-page textarea::placeholder{
+  color:#64748b!important;
+  -webkit-text-fill-color:#64748b!important;
+}
+.admin-app-topbar ~ main .item-editor-page input[type="checkbox"],
+.admin-dashboard .item-editor-page input[type="checkbox"]{
+  background:#fff!important;
+  color:#06101f!important;
+  -webkit-text-fill-color:#06101f!important;
+  min-height:20px!important;
+}
+.admin-app-topbar ~ main .item-editor-page input[type="file"],
+.admin-dashboard .item-editor-page input[type="file"]{
+  padding:10px 12px!important;
+}
+@media(max-width:1280px){
+  .item-manager-shell .im-searchbar{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  .item-manager-shell .im-search-actions{grid-column:1 / -1!important;min-width:0!important;grid-template-columns:repeat(3,minmax(110px,1fr))!important;}
+  .item-manager-shell .im-grid-wrap{height:clamp(360px,calc(100vh - 560px),560px)!important;}
+  .item-manager-shell .im-bottom-filter{grid-template-columns:repeat(3,minmax(140px,1fr))!important;}
+  .item-manager-shell .im-bottom-actions{grid-template-columns:repeat(3,minmax(140px,1fr))!important;}
+  .item-manager-shell .im-bottom-actions:after{grid-column:1 / -1!important;}
+}
+@media(max-width:760px){
+  .item-manager-shell .im-searchbar{grid-template-columns:1fr!important;}
+  .item-manager-shell .im-search-actions{grid-template-columns:1fr!important;}
+  .item-manager-shell .im-filter-row{display:grid!important;grid-template-columns:1fr!important;}
+  .item-manager-shell .im-grid-wrap{height:62vh!important;}
+  .item-manager-shell .im-grid{min-width:1420px!important;width:1420px!important;}
+  .item-manager-shell .im-bottom-filter{grid-template-columns:1fr!important;}
+  .item-manager-shell .im-bottom-actions{grid-template-columns:1fr!important;}
+}
+
 </style>`;
 }
 
@@ -20032,7 +20264,7 @@ let selected=null;
 const qs=s=>page.querySelector(s), qsa=s=>[...page.querySelectorAll(s)];
 const total=qs('#imTotal');
 const toast=document.getElementById('imToast');
-const settingsKey='hbItemManagerGridSettings';
+const settingsKey='hbItemManagerGridSettings_v237';
 function money(n){n=Number(n||0);return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)}
 function readItem(tr){try{return JSON.parse(tr?.dataset?.item||'{}')}catch(e){return {}}}
@@ -20055,7 +20287,7 @@ function applyFilter(){
   showVisibleRows();
   if(selected&&(selected.dataset.filterHidden==='1'||selected.dataset.pageHidden==='1'))setSelected(null);
 }
-const defaultSettings={pageSize:200,fontFamily:'Segoe UI, Arial, sans-serif',fontSize:13,fontColor:'#0b1220',gridBg:'#ffffff'};
+const defaultSettings={pageSize:500,fontFamily:'Segoe UI, Arial, sans-serif',fontSize:12,fontColor:'#06101f',gridBg:'#ffffff'};
 let settings={...defaultSettings};
 try{settings={...settings,...JSON.parse(localStorage.getItem(settingsKey)||'{}')}}catch(e){}
 function applySettings(){
@@ -20110,7 +20342,7 @@ async function adminItemManagerPage(request, env, message = '') {
   const lookupBanner = lookupMode ? `<div class="im-lookup-banner"><strong>Item lookup mode:</strong> check one or more items, then click Add Selected Items to Quote/Invoice.</div><div class="im-lookup-actions"><button type="button" class="im-classic-btn im-btn-green" id="imAddSelected">Add Selected Items</button><button type="button" class="im-classic-btn" id="imCancelLookup">Cancel Lookup</button></div>` : '';
   const settingsModal = `<div class="im-settings-modal" id="imSettingsModal"><div class="im-settings-card"><h3>Item Manager Settings</h3><div class="grid-3"><div class="field"><label>Items shown in grid</label><input id="imSetPageSize" type="number" min="1" step="1"></div><div class="field"><label>Grid font family</label><input id="imSetFontFamily" placeholder="Segoe UI, Arial"></div><div class="field"><label>Grid font size</label><input id="imSetFontSize" type="number" min="10" max="24"></div><div class="field"><label>Grid font color</label><input id="imSetFontColor" type="color"></div><div class="field"><label>Grid background color</label><input id="imSetGridBg" type="color"></div></div><div class="im-settings-actions"><button type="button" class="im-classic-btn im-btn-green" id="imSettingsSave">Save Settings</button><button type="button" class="im-classic-btn" id="imSettingsReset">Reset Defaults</button><button type="button" class="im-classic-btn im-btn-red" id="imSettingsClose">Close</button></div></div></div>`;
   const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist>`;
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell${lookupClass}"><div class="item-manager-titlebar"><span>Items</span><span class="im-title-actions"><span class="im-note">Internal Item Manager v236 • ${rows.length} saved item${rows.length===1?'':'s'}</span><button type="button" class="im-settings-btn" id="imSettingsBtn" title="Item Manager settings">⚙</button></span></div>${lookupBanner}<div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option value="sku/upc">SKU/UPC</option><option value="sku">SKU only</option><option value="upc">UPC only</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><colgroup><col class="im-col-select"><col class="im-col-image"><col class="im-col-sku"><col class="im-col-name"><col class="im-col-cost"><col class="im-col-sale"><col class="im-col-qty"><col class="im-col-instore"><col class="im-col-size"><col class="im-col-pack"><col class="im-col-reorder"><col class="im-col-dept"><col class="im-col-cat"><col class="im-col-brand"><col class="im-col-website"><col class="im-col-status"></colgroup><thead><tr><th class="im-select-col">Select</th><th>Image</th><th>SKU</th><th>Item Name</th><th>Cost</th><th>Sale Price</th><th>Quantity</th><th>InStore Qty</th><th>Size</th><th>Pack</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom-filter"><div class="field"><label>Filter Department</label><select id="imBottomDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Filter Category</label><select id="imBottomCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category</label><select id="imBottomSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Brand</label><select id="imBottomBrand">${itemOptionList(lists.brands,'','--All--')}</select></div><div class="field"><label>Supplier</label><select id="imBottomSupplier">${itemOptionList(lists.suppliers,'','--All--')}</select></div><div class="field"><label>Item Type</label><select id="imBottomType">${typeOptions}</select></div><button type="button" class="im-classic-btn" id="imBottomClear">Clear Filters</button></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${settingsModal}${datalists}${itemManagerScript()}</div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell${lookupClass}"><div class="item-manager-titlebar"><span>Items</span><span class="im-title-actions"><span class="im-note">Internal Item Manager v237 • ${rows.length} saved item${rows.length===1?'':'s'}</span><button type="button" class="im-settings-btn" id="imSettingsBtn" title="Item Manager settings">⚙</button></span></div>${lookupBanner}<div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option value="sku/upc">SKU/UPC</option><option value="sku">SKU only</option><option value="upc">UPC only</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><colgroup><col class="im-col-select"><col class="im-col-image"><col class="im-col-sku"><col class="im-col-name"><col class="im-col-cost"><col class="im-col-sale"><col class="im-col-qty"><col class="im-col-instore"><col class="im-col-size"><col class="im-col-pack"><col class="im-col-reorder"><col class="im-col-dept"><col class="im-col-cat"><col class="im-col-brand"><col class="im-col-website"><col class="im-col-status"></colgroup><thead><tr><th class="im-select-col">Select</th><th>Image</th><th>SKU</th><th>Item Name</th><th>Cost</th><th>Sale Price</th><th>Quantity</th><th>InStore Qty</th><th>Size</th><th>Pack</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom-filter"><div class="field"><label>Filter Department</label><select id="imBottomDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Filter Category</label><select id="imBottomCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category</label><select id="imBottomSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Brand</label><select id="imBottomBrand">${itemOptionList(lists.brands,'','--All--')}</select></div><div class="field"><label>Supplier</label><select id="imBottomSupplier">${itemOptionList(lists.suppliers,'','--All--')}</select></div><div class="field"><label>Item Type</label><select id="imBottomType">${typeOptions}</select></div><button type="button" class="im-classic-btn" id="imBottomClear">Clear Filters</button></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${settingsModal}${datalists}${itemManagerScript()}</div></main>`;
   return htmlPage('Item Manager | HB Commerce', layout(env, 'Dashboard', body));
 }
 
