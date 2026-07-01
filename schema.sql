@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS item_manager_items (
   upc TEXT,
   vendor_sku TEXT,
   notes TEXT,
+  image_url TEXT,
+  public_description TEXT,
+  published INTEGER NOT NULL DEFAULT 1,
   active INTEGER NOT NULL DEFAULT 1,
   child_item INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
@@ -77,3 +80,19 @@ CREATE TABLE IF NOT EXISTS item_manager_items (
 CREATE INDEX IF NOT EXISTS idx_item_manager_items_name ON item_manager_items(item_name);
 CREATE INDEX IF NOT EXISTS idx_item_manager_items_dept_cat ON item_manager_items(department, category);
 CREATE INDEX IF NOT EXISTS idx_item_manager_items_active ON item_manager_items(active);
+
+
+CREATE TABLE IF NOT EXISTS item_manager_departments (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  description TEXT,
+  image_url TEXT,
+  link_url TEXT,
+  display_order INTEGER NOT NULL DEFAULT 100,
+  active INTEGER NOT NULL DEFAULT 1,
+  system_department INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_item_manager_departments_slug ON item_manager_departments(slug);

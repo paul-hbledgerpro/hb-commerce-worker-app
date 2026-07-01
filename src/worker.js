@@ -218,6 +218,10 @@ async function handleRequest(request, env, ctx) {
   if (method === "GET" && path === "/security-camera-systems/lts-dvr-nvr") return pageLtsCollection(env, "recorders");
   if (method === "GET" && path === "/security-camera-systems/lts-cameras") return pageLtsCollection(env, "cameras");
   if (method === "GET" && path.startsWith("/security-camera-systems/lts/")) return pageLtsProduct(env, path.split("/").pop());
+  if (method === "GET" && path === "/api/product-departments.json") return publicProductDepartmentsJson(request, env);
+  if (method === "GET" && path === "/products") return pageProducts(env);
+  if (method === "GET" && path.startsWith("/products/item/")) return pageItemProduct(env, path.split("/").pop());
+  if (method === "GET" && path.startsWith("/products/")) return pageItemDepartment(env, path.split("/").pop());
   if (method === "GET" && path === "/security-camera-systems/eufy-poe-nvr-camera-systems") return pageEufyCollection(env);
   if (method === "GET" && path.startsWith("/security-camera-systems/eufy-poe-nvr-camera-systems/")) return pageEufyProduct(env, path.split("/").pop());
   if (method === "GET" && path === "/cart") return pageEufyCart(env);
@@ -282,7 +286,11 @@ async function handleRequest(request, env, ctx) {
   if (method === "GET" && path === "/admin/eufy") return adminEufyPage(request, env);
   if (method === "GET" && path === "/admin/lts") return adminLtsPage(request, env);
   if (method === "GET" && path === "/admin/items") return adminItemManagerPage(request, env);
+  if (method === "GET" && path === "/admin/items/new") return adminItemEditPage(request, env);
+  if (method === "GET" && path === "/admin/items/edit") return adminItemEditPage(request, env);
   if (method === "POST" && path === "/admin/items") return adminItemManagerPost(request, env);
+  if (method === "GET" && path === "/admin/item-departments") return adminItemDepartmentsPage(request, env);
+  if (method === "POST" && path === "/admin/item-departments") return adminItemDepartmentsPost(request, env);
   if (method === "GET" && path === "/admin/items.csv") return adminItemManagerCsv(request, env);
   if (method === "GET" && path === "/admin/items.json") return adminItemManagerJson(request, env);
   if (method === "GET" && path === "/admin/tax") return adminTaxPage(request, env);
@@ -14989,10 +14997,12 @@ function layout(env, title, content, current = "") {
         </div>
       </div>
       <div class="dropdown"><span class="dropdown-toggle">Products ▾</span>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" id="hbProductsDropdown">
+          <a href="/products">All Product Departments</a>
           <a href="/security-camera-systems/lts-dvr-nvr">LTS DVR / NVR</a>
           <a href="/security-camera-systems/lts-cameras">LTS Cameras</a>
           <a href="/security-camera-systems/eufy-poe-nvr-camera-systems">EUFY Camera Systems</a>
+          <span id="hbDynamicProductDepartments"></span>
         </div>
       </div>
       <a href="/about">About Us</a>
@@ -15003,6 +15013,15 @@ function layout(env, title, content, current = "") {
   </div>
 </header>
 ${content}
+
+<script>(function(){
+  var slot=document.getElementById('hbDynamicProductDepartments');
+  if(!slot) return;
+  fetch('/api/product-departments.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(d){
+    if(!d||!Array.isArray(d.departments)||!d.departments.length) return;
+    slot.innerHTML=d.departments.map(function(x){var a=document.createElement('a');a.href=x.href||('/products/'+encodeURIComponent(x.slug||''));a.textContent=x.name||x.slug||'Department';return a.outerHTML;}).join('');
+  }).catch(function(){});
+})();</script>
 <footer class="footer hb-v72-footer hb-v131-footer">
   <div class="container hb-v131-footer-grid">
     <div class="hb-v131-footer-brand">
@@ -17556,7 +17575,7 @@ const ADMIN_PERMISSION_LIST = [
   ["orders","Online Orders"],
   ["quoteOrders","Online Quote Orders"],
   ["customers","Customers"],
-  ["products","EUFY / LTS Products"],
+  ["products","Products / Departments"],
   ["applications","Applications"],
   ["reports","Sales Reports"],
   ["pnl_reports","P&L Reports"],
@@ -18652,6 +18671,7 @@ const ADMIN_SIDEBAR_ITEM_DEFS = [
   ["apps_pos","/admin/applications/pos-merchant","◎","POS + MS Apps"],
   ["apps_merchant","/admin/applications/merchant-only","◉","Merchant Apps"],
   ["item_manager","/admin/items","▦","Item Manager"],
+  ["item_departments","/admin/item-departments","▤","Departments"],
   ["eufy","/admin/eufy","📹","EUFY Manager"],
   ["lts","/admin/lts","🖥️","LTS Manager"],
   ["tax","/admin/tax","%","Tax"],
@@ -18802,6 +18822,7 @@ async function adminDashboard(request, env) {
     { href:"/admin/applications/pos-merchant", icon:"🧩", title:"POS + MS Apps", sub:`${counts.posMerchantApps} submitted`, tone:"green" },
     { href:"/admin/applications/merchant-only", icon:"💳", title:"Merchant Apps", sub:`${counts.merchantOnlyApps} submitted`, tone:"blue" },
     { href:"/admin/items", icon:"▦", title:"Item Manager", sub:"Inventory browsing", tone:"green" },
+    { href:"/admin/item-departments", icon:"▤", title:"Departments", sub:"Website product menu", tone:"blue" },
     { href:"/admin/eufy", icon:"📹", title:"EUFY Manager", sub:"Products & coupons", tone:"orange" },
     { href:"/admin/lts", icon:"🖥️", title:"LTS Manager", sub:"DVR/NVR & cameras", tone:"blue" }
   ];
@@ -19530,14 +19551,38 @@ async function ensureItemManagerTables(env) {
     upc TEXT,
     vendor_sku TEXT,
     notes TEXT,
+    image_url TEXT,
+    public_description TEXT,
+    published INTEGER NOT NULL DEFAULT 1,
     active INTEGER NOT NULL DEFAULT 1,
     child_item INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   )`).run();
+  for (const stmt of [
+    `ALTER TABLE item_manager_items ADD COLUMN image_url TEXT`,
+    `ALTER TABLE item_manager_items ADD COLUMN public_description TEXT`,
+    `ALTER TABLE item_manager_items ADD COLUMN published INTEGER NOT NULL DEFAULT 1`
+  ]) { try { await env.DB.prepare(stmt).run(); } catch (_) {} }
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_name ON item_manager_items(item_name)`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_dept_cat ON item_manager_items(department, category)`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_items_active ON item_manager_items(active)`).run();
+
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS item_manager_departments (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    slug TEXT NOT NULL UNIQUE,
+    description TEXT,
+    image_url TEXT,
+    link_url TEXT,
+    display_order INTEGER NOT NULL DEFAULT 100,
+    active INTEGER NOT NULL DEFAULT 1,
+    system_department INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_departments_slug ON item_manager_departments(slug)`).run();
+  await seedDefaultItemDepartments(env);
 }
 
 function itemBool(v) { return v === true || v === 1 || v === '1' || v === 'on' || v === 'yes' || v === 'Y'; }
@@ -19572,6 +19617,9 @@ function itemRowFromDb(row = {}) {
     upc: String(row.upc || ''),
     vendor_sku: String(row.vendor_sku || ''),
     notes: String(row.notes || ''),
+    image_url: String(row.image_url || ''),
+    public_description: String(row.public_description || ''),
+    published: row.published === undefined || row.published === null ? 1 : (Number(row.published || 0) ? 1 : 0),
     active: Number(row.active || 0) ? 1 : 0,
     child_item: Number(row.child_item || 0) ? 1 : 0,
     created_at: String(row.created_at || ''),
@@ -19579,7 +19627,16 @@ function itemRowFromDb(row = {}) {
   };
 }
 
-function itemFromForm(fd) {
+async function itemFromForm(fd, existing = null) {
+  let imageUrl = itemText(fd.get('image_url')).slice(0, 500000);
+  const file = fd.get('image_file');
+  if (file && typeof file === 'object' && file.name && file.size > 0) {
+    if (!String(file.type || '').startsWith('image/')) throw new Error('Item image must be an image file.');
+    if (file.size > 850000) throw new Error('Item image is too large. Please upload an image under 850 KB or use an image URL.');
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    imageUrl = `data:${file.type || 'image/png'};base64,${bytesToBase64(bytes)}`;
+  }
+  if (!imageUrl && existing && existing.image_url) imageUrl = existing.image_url;
   return {
     id: itemText(fd.get('id')) || randomId(),
     sku: itemCleanSku(fd.get('sku')),
@@ -19591,9 +19648,9 @@ function itemFromForm(fd) {
     instore_qty: itemNum(fd.get('instore_qty')),
     cost: itemNum(fd.get('cost')),
     msrp: itemNum(fd.get('msrp')),
-    tax1: itemBool(fd.get('tax1')) ? 1 : 0,
-    tax2: itemBool(fd.get('tax2')) ? 1 : 0,
-    tax3: itemBool(fd.get('tax3')) ? 1 : 0,
+    tax1: 1,
+    tax2: 0,
+    tax3: 0,
     reorder_level: itemNum(fd.get('reorder_level')),
     department: itemText(fd.get('department')).slice(0, 90),
     category: itemText(fd.get('category')).slice(0, 90),
@@ -19606,6 +19663,9 @@ function itemFromForm(fd) {
     upc: itemText(fd.get('upc')).slice(0, 90),
     vendor_sku: itemText(fd.get('vendor_sku')).slice(0, 90),
     notes: itemText(fd.get('notes')).slice(0, 1200),
+    image_url: imageUrl,
+    public_description: itemText(fd.get('public_description')).slice(0, 1400),
+    published: fd.has('published') ? 1 : 0,
     active: fd.has('active') ? 1 : 0,
     child_item: fd.has('child_item') ? 1 : 0
   };
@@ -19642,17 +19702,24 @@ function itemOptionList(values, selected = '', allLabel = '') {
 
 function itemManagerStyle() {
   return `<style>
-.item-manager-shell{display:grid;gap:0;background:#cfd9e6;color:#07152a;border:1px solid #7f93ad;border-radius:14px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.34);font-family:"Segoe UI",Arial,sans-serif}.item-manager-titlebar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#e8f0f8,#cdd9e8);border-bottom:1px solid #8aa1ba;padding:8px 12px;color:#09264a;font-weight:950}.im-searchbar{background:#dce8f5;padding:14px 12px;border-bottom:1px solid #9eb2c7;display:grid;grid-template-columns:minmax(210px,.8fr) minmax(210px,.8fr) minmax(210px,.8fr) auto auto auto;gap:12px;align-items:end}.im-group{border:1px solid #9eb2c7;border-radius:4px;padding:16px 10px 10px;position:relative;background:#e8f1fa}.im-group legend,.im-group-label{position:absolute;top:-10px;left:10px;background:#e8f1fa;padding:0 6px;font-size:13px;font-weight:950;color:#8b1111}.im-field label{display:block;font-size:12px;font-weight:950;color:#082b57;margin-bottom:5px}.im-field input,.im-field select,.im-field textarea{width:100%;border:1px solid #8ba3bc;border-radius:3px;background:#fff!important;color:#07152a!important;min-height:30px;padding:5px 7px;font-size:13px}.im-search-actions{display:flex;gap:9px}.im-classic-btn{border:1px solid #556579!important;border-radius:3px!important;min-height:38px!important;padding:0 18px!important;color:#fff!important;background:linear-gradient(#6f7b86,#3d454e)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 rgba(0,0,0,.24)!important;font-weight:950}.im-btn-blue{background:linear-gradient(#2678c8,#0d4f93)!important}.im-btn-green{background:linear-gradient(#25a45b,#11783a)!important}.im-btn-red{background:linear-gradient(#d75b50,#9e2e2e)!important}.im-filter-row{display:flex;align-items:center;gap:24px;background:#cfd9e6;border-bottom:1px solid #9eb2c7;padding:5px 10px;font-size:13px;color:#082b57;font-weight:850}.im-filter-row label{display:inline-flex;gap:7px;align-items:center;color:#082b57}.im-filter-row input{width:auto!important;min-height:auto!important}.im-total{margin-left:auto;font-weight:950;color:#082b57}.im-main-area{display:grid;grid-template-columns:1fr auto;min-height:420px}.im-grid-wrap{overflow:auto;background:#fff;border-bottom:1px solid #9eb2c7}.im-grid{width:100%;min-width:1120px;border-collapse:collapse;background:#fff;color:#111827}.im-grid th{position:sticky;top:0;z-index:3;background:linear-gradient(#eaf3ff,#cbdcf1)!important;color:#082b57!important;border:1px solid #9eb2c7!important;font-size:12px;text-align:left;padding:7px}.im-grid td{border:1px solid #d4dfec!important;color:#111827!important;background:#fff!important;font-size:13px;padding:7px;white-space:nowrap}.im-grid tr:nth-child(even) td{background:#f6faff!important}.im-grid tr.selected td,.im-grid tr:hover td{background:#dff0ff!important}.im-grid .money{text-align:right;font-variant-numeric:tabular-nums}.im-grid .center{text-align:center}.im-side-toggle{writing-mode:vertical-rl;text-orientation:mixed;background:linear-gradient(#e8fbff,#bfe7ee);color:#1337e5;border-left:1px solid #8cb0c0;border-right:0;min-width:30px;font-weight:950;cursor:pointer}.im-right-filter{display:none;width:356px;background:#fff;border-left:1px solid #8ba3bc;padding:14px 16px;overflow:auto}.im-right-filter.show{display:block}.im-right-filter h3{margin:0 0 12px;color:#082b57}.im-right-filter .btn-row{display:grid;grid-template-columns:1fr 1fr}.im-bottom{background:#cfd9e6;display:grid;grid-template-columns:minmax(420px,1fr) 320px 430px;gap:10px;padding:10px;border-top:1px solid #9eb2c7}.im-tabs{border:1px solid #8ba3bc;background:#fff;min-height:152px}.im-tab-heads{display:flex;background:#d5e5f7;border-bottom:1px solid #8ba3bc}.im-tab-heads button{border:0;border-right:1px solid #8ba3bc;border-radius:0!important;background:linear-gradient(#eef6ff,#c6d9ef)!important;color:#082b57!important;min-height:28px!important;padding:0 13px!important;box-shadow:none!important}.im-tab-heads button.active{background:#fff!important}.im-tab-panel{display:none;padding:10px}.im-tab-panel.active{display:block}.im-mini-grid{width:100%;border-collapse:collapse}.im-mini-grid th,.im-mini-grid td{border:1px solid #d4dfec;padding:7px;font-size:12px;color:#111827!important;background:#fff!important}.im-info-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.im-info-card{border:1px solid #8ba3bc;background:#fff;color:#111827}.im-info-card h4{margin:0;padding:4px 8px;background:#c0392b;color:#fff;font-size:12px}.im-info-card.blue h4{background:#2869b5}.im-info-card.purple h4{background:#7d3c98}.im-info-card div{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:7px;font-size:12px}.im-bottom-form{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-content:start}.im-bottom-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}.im-action-cluster{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.item-editor{margin-top:18px;background:linear-gradient(135deg,rgba(14,39,67,.94),rgba(4,13,26,.96));border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:18px;color:#fff}.item-editor h3{margin:0 0 12px;color:#fff}.item-editor .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.item-editor .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.item-editor label{color:#dbe7f5!important}.item-editor input,.item-editor select,.item-editor textarea{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;color:#fff!important}.item-editor textarea{min-height:70px}.item-editor option{background:#07152a;color:#fff}.im-note{font-size:12px;color:#475569}.im-selected{font-weight:950;color:#082b57}.im-toast{position:fixed;right:18px;bottom:18px;z-index:999999;background:#061b35;color:#fff;border:1px solid #ff6a00;border-radius:14px;padding:12px 14px;box-shadow:0 20px 60px rgba(0,0,0,.34);display:none}.im-toast.show{display:block}@media(max-width:1180px){.im-searchbar{grid-template-columns:1fr 1fr}.im-bottom{grid-template-columns:1fr}.im-main-area{grid-template-columns:1fr}.im-side-toggle{writing-mode:horizontal-tb;min-height:42px}.im-right-filter{width:auto;border-left:0;border-top:1px solid #8ba3bc}.item-editor .grid-4,.item-editor .grid-3{grid-template-columns:1fr 1fr}}@media(max-width:760px){.im-searchbar{grid-template-columns:1fr}.im-filter-row{display:grid;grid-template-columns:1fr;gap:8px}.im-total{margin-left:0}.item-editor .grid-4,.item-editor .grid-3{grid-template-columns:1fr}.im-bottom-actions,.im-action-cluster{grid-template-columns:1fr 1fr}.im-grid{min-width:1080px}}
+.item-manager-shell{display:grid;gap:0;background:#09182b;color:#f8fafc;border:1.5px solid rgba(255,106,0,.62);border-radius:16px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.38);font-family:"Segoe UI",Arial,sans-serif}.item-manager-titlebar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#07152a,#10294a);border-bottom:1px solid rgba(255,106,0,.48);padding:10px 14px;color:#fff;font-weight:950}.item-manager-titlebar span:first-child{font-size:20px}.im-note{font-size:12px;color:#cbd5e1}.im-searchbar{background:linear-gradient(135deg,#10233d,#07152a);padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:minmax(190px,.9fr) minmax(190px,.9fr) minmax(190px,.9fr) minmax(180px,.7fr) auto;gap:12px;align-items:end}.im-group{border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:18px 10px 10px;position:relative;background:rgba(255,255,255,.065)}.im-group-label{position:absolute;top:-11px;left:10px;background:#10233d;padding:0 7px;font-size:13px;font-weight:950;color:#ffb14f}.im-field label{display:block;font-size:12px;font-weight:950;color:#eaf3ff;margin-bottom:5px}.im-field input,.im-field select,.im-field textarea{width:100%;border:1.5px solid rgba(255,255,255,.22);border-radius:7px;background:#fff!important;color:#07152a!important;min-height:34px;padding:6px 8px;font-size:13px;-webkit-text-fill-color:#07152a!important}.im-search-actions{display:flex;gap:9px}.im-classic-btn{border:1.5px solid rgba(255,106,0,.70)!important;border-radius:10px!important;min-height:40px!important;padding:0 18px!important;color:#fff!important;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,106,0,.12) 42%,rgba(6,18,34,.92))!important;box-shadow:0 5px 0 rgba(95,38,0,.78),0 14px 28px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.22)!important;font-weight:950}.im-btn-blue{background:linear-gradient(#2678c8,#0d4f93)!important}.im-btn-green{background:linear-gradient(#25a45b,#11783a)!important}.im-btn-red{background:linear-gradient(#d75b50,#9e2e2e)!important}.im-filter-row{display:flex;align-items:center;gap:24px;background:#0b1c33;border-bottom:1px solid rgba(255,255,255,.14);padding:7px 12px;font-size:13px;color:#eaf3ff;font-weight:850}.im-filter-row strong{color:#fff}.im-filter-row label{display:inline-flex;gap:7px;align-items:center;color:#eaf3ff}.im-filter-row input{width:auto!important;min-height:auto!important;accent-color:#ff6a00}.im-total{margin-left:auto;font-weight:950;color:#ffb14f}.im-main-area{display:grid;grid-template-columns:1fr auto;min-height:420px}.im-grid-wrap{overflow:auto;background:#fff;border-bottom:1px solid rgba(255,255,255,.14)}.im-grid{width:100%;min-width:1200px;border-collapse:collapse;background:#fff;color:#111827}.im-grid th{position:sticky;top:0;z-index:3;background:linear-gradient(#eaf3ff,#cbdcf1)!important;color:#082b57!important;border:1px solid #9eb2c7!important;font-size:12px;text-align:left;padding:8px}.im-grid td{border:1px solid #d4dfec!important;color:#111827!important;background:#fff!important;font-size:13px;padding:8px;white-space:nowrap}.im-grid tr:nth-child(even) td{background:#f6faff!important}.im-grid tr.selected td,.im-grid tr:hover td{background:#dff0ff!important}.im-grid .money{text-align:right;font-variant-numeric:tabular-nums}.im-grid .center{text-align:center}.im-thumb{width:44px;height:36px;border-radius:8px;object-fit:cover;background:#eef4fb;border:1px solid #d4dfec;display:block}.im-thumb-placeholder{width:44px;height:36px;border-radius:8px;background:linear-gradient(135deg,#061b35,#ff6a00);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:950}.im-side-toggle{writing-mode:vertical-rl;text-orientation:mixed;background:linear-gradient(#10233d,#07152a);color:#fff;border-left:1px solid rgba(255,106,0,.48);border-right:0;min-width:32px;font-weight:950;cursor:pointer}.im-right-filter{display:none;width:356px;background:#0b1c33;border-left:1px solid rgba(255,106,0,.42);padding:14px 16px;overflow:auto;color:#fff}.im-right-filter.show{display:block}.im-right-filter h3{margin:0 0 12px;color:#fff}.im-right-filter .btn-row{display:grid;grid-template-columns:1fr 1fr}.im-bottom{background:#0b1c33;display:grid;grid-template-columns:minmax(420px,1fr) 320px 430px;gap:10px;padding:10px;border-top:1px solid rgba(255,255,255,.14)}.im-tabs{border:1px solid rgba(255,255,255,.16);background:#fff;min-height:152px}.im-tab-heads{display:flex;background:#d5e5f7;border-bottom:1px solid #8ba3bc}.im-tab-heads button{border:0;border-right:1px solid #8ba3bc;border-radius:0!important;background:linear-gradient(#eef6ff,#c6d9ef)!important;color:#082b57!important;min-height:30px!important;padding:0 14px!important;box-shadow:none!important}.im-tab-heads button.active{background:#fff!important}.im-tab-panel{display:none;padding:10px}.im-tab-panel.active{display:block}.im-mini-grid{width:100%;border-collapse:collapse}.im-mini-grid th,.im-mini-grid td{border:1px solid #d4dfec;padding:8px;font-size:12px;color:#111827!important;background:#fff!important}.im-bottom-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.im-bottom-form label{color:#eaf3ff!important}.im-action-cluster{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.im-bottom-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}.im-toast{position:fixed;right:18px;bottom:18px;z-index:999999;background:#061b35;color:#fff;border:1px solid #ff6a00;border-radius:14px;padding:12px 14px;box-shadow:0 20px 60px rgba(0,0,0,.34);display:none}.im-toast.show{display:block}.item-editor-page{background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98));border:1.6px solid rgba(255,106,0,.42);border-radius:24px;padding:22px;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.32)}.item-editor-page h3{margin:0 0 14px;color:#fff}.item-editor-page .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.item-editor-page .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.item-editor-page label{color:#dbe7f5!important}.item-editor-page input,.item-editor-page select,.item-editor-page textarea{background:#fff!important;border:1.5px solid rgba(255,106,0,.42)!important;color:#07152a!important;-webkit-text-fill-color:#07152a!important}.item-editor-page textarea{min-height:90px}.item-editor-page option{background:#fff;color:#07152a}.im-image-preview{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px}.im-image-preview img,.im-image-preview .placeholder{width:130px;height:100px;object-fit:contain;background:#fff;border-radius:14px;border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;color:#082b57;font-weight:950}@media(max-width:1180px){.im-searchbar{grid-template-columns:1fr 1fr}.im-bottom{grid-template-columns:1fr}.im-main-area{grid-template-columns:1fr}.im-side-toggle{writing-mode:horizontal-tb;min-height:42px}.im-right-filter{width:auto;border-left:0;border-top:1px solid rgba(255,106,0,.42)}.item-editor-page .grid-4,.item-editor-page .grid-3{grid-template-columns:1fr 1fr}}@media(max-width:760px){.im-searchbar{grid-template-columns:1fr}.im-filter-row{display:grid;grid-template-columns:1fr;gap:8px}.im-total{margin-left:0}.item-editor-page .grid-4,.item-editor-page .grid-3{grid-template-columns:1fr}.im-bottom-actions,.im-action-cluster{grid-template-columns:1fr 1fr}.im-grid{min-width:1120px}.im-image-preview{grid-template-columns:1fr}.im-image-preview img,.im-image-preview .placeholder{width:100%;height:180px}}
+.im-dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.im-dept-card{background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98));border:1.5px solid rgba(255,106,0,.38);border-radius:20px;padding:18px;color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.28)}.im-dept-card h3{margin:0 0 8px;color:#fff}.im-dept-card p{color:#cbd5e1}.im-dept-card code{color:#ffb14f}.im-dept-card .badge{display:inline-flex;border-radius:999px;padding:4px 9px;background:rgba(19,138,61,.22);color:#fff;font-size:12px;font-weight:950}
 </style>`;
+}
+
+function itemImageThumb(row) {
+  const src = String(row.image_url || '').trim();
+  if (src) return `<img class="im-thumb" src="${escapeHtml(src)}" alt="${escapeHtml(row.item_name || row.sku)}">`;
+  const label = String(row.sku || row.item_name || 'HB').slice(0,2).toUpperCase();
+  return `<span class="im-thumb-placeholder">${escapeHtml(label)}</span>`;
 }
 
 function itemRowHtml(row) {
   const data = escapeHtml(JSON.stringify(row));
   return `<tr data-item='${data}' data-active="${row.active}" data-child="${row.child_item}" data-search="${escapeHtml([row.sku,row.upc,row.item_name,row.department,row.category,row.brand,row.supplier,row.notes].join(' ').toLowerCase())}">
-    <td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td><td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td>
+    <td>${itemImageThumb(row)}</td><td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td><td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td>
     <td class="money">${money(row.price)}</td><td class="money">${escapeHtml(String(row.quantity))}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td><td class="money">${money(row.cost)}</td>
-    <td class="center">${row.tax1?'Y':''}</td><td class="center">${row.tax2?'Y':''}</td><td class="center">${row.tax3?'Y':''}</td><td class="money">${escapeHtml(String(row.reorder_level))}</td>
-    <td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
+    <td class="money">${escapeHtml(String(row.reorder_level))}</td><td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.published?'<span class="status approved">Published</span>':'<span class="status canceled">Hidden</span>'}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
   </tr>`;
 }
 
@@ -19663,16 +19730,15 @@ function money(n){n=Number(n||0);return '$'+n.toLocaleString(undefined,{minimumF
 function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
 function getSelected(){return selected?JSON.parse(selected.dataset.item||'{}'):null}
 function selectedOrAlert(){const it=getSelected();if(!it){showToast('Select an item first.');return null}return it}
-function setSelected(tr){rows.forEach(r=>r.classList.remove('selected'));selected=tr; if(tr)tr.classList.add('selected'); updateDetail();}
+function setSelected(tr){rows.forEach(r=>r.classList.remove('selected'));selected=tr;if(tr)tr.classList.add('selected');updateDetail();}
 function val(sel){const el=qs(sel);return el?String(el.value||'').toLowerCase().trim():''}
 function matchesSelect(item,key,sel){const v=val(sel);return !v || String(item[key]||'').toLowerCase()===v}
 function applyFilter(){const search=val('#imSearchValue'), name=val('#imSearchName'), kw=val('#imSearchKeyword');const include=qs('#imIncludeInactive')?.checked, only=qs('#imOnlyInactive')?.checked, child=qs('#imIncludeChild')?.checked;let count=0;rows.forEach(tr=>{const it=JSON.parse(tr.dataset.item||'{}');let ok=true;if(only)ok=Number(it.active)===0;else if(!include)ok=Number(it.active)===1;if(ok&&!child)ok=Number(it.child_item)!==1;if(ok&&search)ok=String(it.sku+' '+it.upc).toLowerCase().includes(search);if(ok&&name)ok=String(it.item_name||'').toLowerCase().includes(name);if(ok&&kw)ok=String(tr.dataset.search||'').includes(kw);if(ok)ok=matchesSelect(it,'department','#imBotDept')&&matchesSelect(it,'category','#imBotCat')&&matchesSelect(it,'item_type','#imFiltType')&&matchesSelect(it,'department','#imFiltDept')&&matchesSelect(it,'category','#imFiltCat')&&matchesSelect(it,'sub_category','#imFiltSubCat')&&matchesSelect(it,'size','#imFiltSize')&&matchesSelect(it,'pack','#imFiltPack')&&matchesSelect(it,'item_group','#imFiltGroup')&&matchesSelect(it,'brand','#imFiltBrand')&&matchesSelect(it,'supplier','#imFiltSupplier');tr.style.display=ok?'':'none';if(ok)count++;});if(total)total.textContent='Total: '+count.toLocaleString();if(selected&&selected.style.display==='none')setSelected(null)}
-qsa('input,select').forEach(el=>{if(el.closest('.item-editor'))return;el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});rows.forEach(tr=>tr.addEventListener('click',()=>setSelected(tr)));if(rows[0])setSelected(rows[0]);
-function setEditor(it){const form=document.getElementById('itemEditorForm');if(!form)return;const data=it||{id:'',sku:'',item_name:'',size:'',pack:'',price:0,quantity:0,instore_qty:0,cost:0,msrp:0,tax1:1,tax2:0,tax3:0,reorder_level:0,department:'',category:'',sub_category:'',brand:'',supplier:'',item_group:'',item_type:'Standard',location:'',upc:'',vendor_sku:'',notes:'',active:1,child_item:0};Object.keys(data).forEach(k=>{const el=form.elements[k];if(!el)return;if(el.type==='checkbox')el.checked=!!Number(data[k]);else el.value=data[k]??''});form.elements.action.value=it&&it.id?'save':'save';document.getElementById('itemEditorTitle').textContent=it&&it.id?'Edit Item: '+(it.sku||''):'Add New Item';form.scrollIntoView({behavior:'smooth',block:'start'});}
+qsa('input,select').forEach(el=>{el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});rows.forEach(tr=>tr.addEventListener('click',()=>setSelected(tr)));if(rows[0])setSelected(rows[0]);
 function updateDetail(){const it=getSelected();if(!it){qsa('[data-im-detail]').forEach(el=>el.textContent='');return;}qsa('[data-im-detail]').forEach(el=>{const k=el.dataset.imDetail;let v=it[k]??'';if(['price','cost','msrp'].includes(k))v=money(v);if(k==='margin')v=(Number(it.price)>0&&Number(it.cost)>0?(((Number(it.price)-Number(it.cost))/Number(it.price))*100).toFixed(1)+'%':'0.0%');el.textContent=v});}
 qsa('.im-tab-heads button').forEach(btn=>btn.addEventListener('click',()=>{qsa('.im-tab-heads button').forEach(b=>b.classList.remove('active'));qsa('.im-tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');qs('#'+btn.dataset.tab)?.classList.add('active')}));
 qs('#imToggleFilter')?.addEventListener('click',()=>qs('#imRightFilter')?.classList.toggle('show'));qs('#imResetFilters')?.addEventListener('click',()=>{qsa('.im-right-filter select').forEach(s=>s.value='');applyFilter()});qs('#imCustomFilter')?.addEventListener('click',()=>showToast('Use the dropdowns above for custom filtering.'));
-qs('#imAdd')?.addEventListener('click',()=>setEditor(null));qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(it)setEditor(it)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return; setEditor({...it,id:'',sku:(it.sku||'')+'-COPY',item_name:(it.item_name||'')+' Copy'});});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)});qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\nVendor SKU: '+(it.vendor_sku||'')+'\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Edit Item Group in the item editor.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Set Item Type to Set Item / Multi Pack in the editor.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));applyFilter();})();</script>`;
+qs('#imAdd')?.addEventListener('click',()=>location.href='/admin/items/new');qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/edit?id='+encodeURIComponent(it.id)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/new?clone='+encodeURIComponent(it.id)});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)});qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\nVendor SKU: '+(it.vendor_sku||'')+'\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Use the Edit page to change Item Group.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Use the Edit page and set Item Type to Set Item / Multi Pack.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));applyFilter();})();</script>`;
 }
 
 async function adminItemManagerPage(request, env, message = '') {
@@ -19680,12 +19746,10 @@ async function adminItemManagerPage(request, env, message = '') {
   await ensureItemManagerTables(env);
   const rows = await itemManagerRows(env, { includeInactive: true });
   const lists = await itemManagerLookupLists(env, rows);
-  const rowHtml = rows.map(itemRowHtml).join('') || `<tr><td colspan="16">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
+  const rowHtml = rows.map(itemRowHtml).join('') || `<tr><td colspan="15">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
   const typeOptions = itemOptionList(['Standard','Service','Set Item','Matrix Parent','Matrix Child','Non-Stock','Shipping','Labor'], '', '--All--');
-  const field = (name, label, type='text', extra='') => `<div class="field"><label>${escapeHtml(label)}</label><input ${type ? `type="${type}"` : ''} name="${name}" ${extra}></div>`;
-  const editor = `<section class="item-editor" id="itemEditor"><h3 id="itemEditorTitle">Add / Edit Item</h3><form id="itemEditorForm" method="post" action="/admin/items"><input type="hidden" name="action" value="save"><input type="hidden" name="id"><div class="grid-4">${field('sku','SKU / Item Code')}${field('upc','UPC / Barcode')}${field('item_name','Item Name')}${field('item_type','Item Type','text','list="imTypeList" value="Standard"')}</div><div class="grid-4">${field('size','Size','text','list="imSizeList"')}${field('pack','Pack','text','list="imPackList"')}${field('department','Department','text','list="imDeptList"')}${field('category','Category','text','list="imCatList"')}</div><div class="grid-4">${field('sub_category','Sub-Category','text','list="imSubCatList"')}${field('brand','Brand','text','list="imBrandList"')}${field('supplier','Supplier','text','list="imSupplierList"')}${field('item_group','Item Group','text','list="imGroupList"')}</div><div class="grid-4">${field('price','Price','number','step="0.01"')}${field('cost','Cost','number','step="0.01"')}${field('msrp','MSRP','number','step="0.01"')}${field('reorder_level','Reorder Level','number','step="1"')}</div><div class="grid-4">${field('quantity','Quantity','number','step="1"')}${field('instore_qty','InStore Qty','number','step="1"')}${field('location','Location','text','list="imLocList"')}${field('vendor_sku','Vendor SKU')}</div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="tax1" checked> Tax1</label><label class="same-ship"><input type="checkbox" name="tax2"> Tax2</label><label class="same-ship"><input type="checkbox" name="tax3"> Tax3</label></div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="active" checked> Active</label><label class="same-ship"><input type="checkbox" name="child_item"> Child Item</label><div></div></div><div class="field"><label>Notes</label><textarea name="notes"></textarea></div><div class="btn-row"><button class="orange" type="submit">Save Item</button><button class="btn" type="button" id="imClearEditor" onclick="document.getElementById('itemEditorForm').reset();document.getElementById('itemEditorForm').elements.id.value='';document.getElementById('itemEditorTitle').textContent='Add New Item';">Clear Form</button><a class="btn" href="/admin/items">Cancel</a></div></form></section>`;
-  const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imTypeList"><option value="Standard"><option value="Service"><option value="Set Item"><option value="Matrix Parent"><option value="Matrix Child"><option value="Non-Stock"><option value="Labor"></datalist>`;
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager are unchanged and remain separate.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell"><div class="item-manager-titlebar"><span>Items</span><span class="im-note">Internal Item Manager • ${rows.length} saved item${rows.length===1?'':'s'}</span></div><div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option>SKU/UPC</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><thead><tr><th>SKU</th><th>Item Name</th><th>Size</th><th>Pack</th><th>Price</th><th>Quantity</th><th>InStore Qty</th><th>Cost</th><th>Tax1</th><th>Tax2</th><th>Tax3</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${editor}${datalists}${itemManagerScript()}</div></main>`;
+  const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell"><div class="item-manager-titlebar"><span>Items</span><span class="im-note">Internal Item Manager • ${rows.length} saved item${rows.length===1?'':'s'}</span></div><div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option>SKU/UPC</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><thead><tr><th>Image</th><th>SKU</th><th>Item Name</th><th>Size</th><th>Pack</th><th>Price</th><th>Quantity</th><th>InStore Qty</th><th>Cost</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${datalists}${itemManagerScript()}</div></main>`;
   return htmlPage('Item Manager | HB Commerce', layout(env, 'Dashboard', body));
 }
 
@@ -19698,30 +19762,31 @@ async function adminItemManagerPost(request, env) {
   try {
     if (action === 'delete') {
       if (id) await env.DB.prepare('DELETE FROM item_manager_items WHERE id=?').bind(id).run();
-      return adminItemManagerPage(request, env, '<div class="notice success">Item deleted.</div>');
+      return redirect('/admin/items?deleted=1');
     }
     if (action === 'toggle_active') {
       if (id) await env.DB.prepare('UPDATE item_manager_items SET active=CASE WHEN active=1 THEN 0 ELSE 1 END, updated_at=? WHERE id=?').bind(now(), id).run();
-      return adminItemManagerPage(request, env, '<div class="notice success">Item active flag updated.</div>');
+      return redirect('/admin/items?status=1');
     }
     if (action === 'price') {
       const price = itemNum(fd.get('value'));
       if (id) await env.DB.prepare('UPDATE item_manager_items SET price=?, updated_at=? WHERE id=?').bind(price, now(), id).run();
-      return adminItemManagerPage(request, env, '<div class="notice success">Item price updated.</div>');
+      return redirect('/admin/items?price=1');
     }
-    const it = itemFromForm(fd);
-    if (!it.sku || !it.item_name) return adminItemManagerPage(request, env, '<div class="notice error">SKU and Item Name are required.</div>');
-    const exists = id ? await env.DB.prepare('SELECT id FROM item_manager_items WHERE id=?').bind(id).first() : null;
+    const existingRow = id ? await env.DB.prepare('SELECT * FROM item_manager_items WHERE id=?').bind(id).first() : null;
+    const existing = existingRow ? itemRowFromDb(existingRow) : null;
+    const it = await itemFromForm(fd, existing);
+    if (!it.sku || !it.item_name) return adminItemEditPage(request, env, id || '', '<div class="notice error">SKU and Item Name are required.</div>');
     const t = now();
-    if (exists) {
-      await env.DB.prepare(`UPDATE item_manager_items SET sku=?, item_name=?, size=?, pack=?, price=?, quantity=?, instore_qty=?, cost=?, msrp=?, tax1=?, tax2=?, tax3=?, reorder_level=?, department=?, category=?, sub_category=?, brand=?, supplier=?, item_group=?, item_type=?, location=?, upc=?, vendor_sku=?, notes=?, active=?, child_item=?, updated_at=? WHERE id=?`).bind(it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.active,it.child_item,t,id).run();
-      return adminItemManagerPage(request, env, '<div class="notice success">Item updated.</div>');
+    if (existing) {
+      await env.DB.prepare(`UPDATE item_manager_items SET sku=?, item_name=?, size=?, pack=?, price=?, quantity=?, instore_qty=?, cost=?, msrp=?, tax1=?, tax2=?, tax3=?, reorder_level=?, department=?, category=?, sub_category=?, brand=?, supplier=?, item_group=?, item_type=?, location=?, upc=?, vendor_sku=?, notes=?, image_url=?, public_description=?, published=?, active=?, child_item=?, updated_at=? WHERE id=?`).bind(it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.image_url,it.public_description,it.published,it.active,it.child_item,t,id).run();
+      return redirect('/admin/items?saved=1');
     }
-    await env.DB.prepare(`INSERT INTO item_manager_items (id,sku,item_name,size,pack,price,quantity,instore_qty,cost,msrp,tax1,tax2,tax3,reorder_level,department,category,sub_category,brand,supplier,item_group,item_type,location,upc,vendor_sku,notes,active,child_item,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(it.id,it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.active,it.child_item,t,t).run();
-    return adminItemManagerPage(request, env, '<div class="notice success">Item saved.</div>');
+    await env.DB.prepare(`INSERT INTO item_manager_items (id,sku,item_name,size,pack,price,quantity,instore_qty,cost,msrp,tax1,tax2,tax3,reorder_level,department,category,sub_category,brand,supplier,item_group,item_type,location,upc,vendor_sku,notes,image_url,public_description,published,active,child_item,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(it.id,it.sku,it.item_name,it.size,it.pack,it.price,it.quantity,it.instore_qty,it.cost,it.msrp,it.tax1,it.tax2,it.tax3,it.reorder_level,it.department,it.category,it.sub_category,it.brand,it.supplier,it.item_group,it.item_type,it.location,it.upc,it.vendor_sku,it.notes,it.image_url,it.public_description,it.published,it.active,it.child_item,t,t).run();
+    return redirect('/admin/items?saved=1');
   } catch (err) {
     const msg = String(err && err.message || err);
-    return adminItemManagerPage(request, env, `<div class="notice error"><strong>Item Manager save failed.</strong><br>${escapeHtml(msg)}</div>`);
+    return adminItemEditPage(request, env, id || '', `<div class="notice error"><strong>Item Manager save failed.</strong><br>${escapeHtml(msg)}</div>`);
   }
 }
 
@@ -19729,16 +19794,17 @@ function itemCsvEscape(v) { return '"' + String(v ?? '').replace(/"/g, '""') + '
 async function adminItemManagerCsv(request, env) {
   const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
   const rows = await itemManagerRows(env, { includeInactive: true });
-  const headers = ['SKU','Item Name','Size','Pack','Price','Quantity','InStore Qty','Cost','MSRP','Tax1','Tax2','Tax3','Reorder Level','Department','Category','Sub-Category','Brand','Supplier','Group','Type','Location','UPC','Vendor SKU','Active','Child Item','Notes'];
+  const headers = ['SKU','Item Name','Size','Pack','Price','Quantity','InStore Qty','Cost','MSRP','Reorder Level','Department','Category','Sub-Category','Brand','Supplier','Group','Type','Location','UPC','Vendor SKU','Website Published','Active','Child Item','Image URL','Public Description','Notes'];
   const lines = [headers.map(itemCsvEscape).join(',')];
-  for (const r of rows) lines.push([r.sku,r.item_name,r.size,r.pack,r.price,r.quantity,r.instore_qty,r.cost,r.msrp,r.tax1?'Y':'',r.tax2?'Y':'',r.tax3?'Y':'',r.reorder_level,r.department,r.category,r.sub_category,r.brand,r.supplier,r.item_group,r.item_type,r.location,r.upc,r.vendor_sku,r.active?'Active':'Inactive',r.child_item?'Y':'',r.notes].map(itemCsvEscape).join(','));
+  for (const r of rows) lines.push([r.sku,r.item_name,r.size,r.pack,r.price,r.quantity,r.instore_qty,r.cost,r.msrp,r.reorder_level,r.department,r.category,r.sub_category,r.brand,r.supplier,r.item_group,r.item_type,r.location,r.upc,r.vendor_sku,r.published?'Y':'',r.active?'Active':'Inactive',r.child_item?'Y':'',String(r.image_url||'').startsWith('data:')?'Uploaded image':r.image_url,r.public_description,r.notes].map(itemCsvEscape).join(','));
   return new Response(lines.join('\r\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="hb-item-manager-export.csv"', 'cache-control': 'no-store' } });
 }
 
 async function adminItemManagerJson(request, env) {
   const user = await requireAuth(request, env); if (!user) return jsonResponse({ ok:false, error:'Not logged in' }, 401);
   const rows = await itemManagerRows(env, { includeInactive: true });
-  return jsonResponse({ ok:true, items:rows });
+  const departments = await itemManagerDepartments(env, true);
+  return jsonResponse({ ok:true, items:rows, departments });
 }
 
 async function itemManagerInventoryForEnv(env) {
@@ -19754,18 +19820,165 @@ async function itemManagerInventoryForEnv(env) {
       brand: r.brand || 'HB Commerce',
       category: r.category || r.department || 'Item Manager',
       name: r.item_name || r.sku,
-      desc: r.notes || [r.department, r.category, r.size, r.pack].filter(Boolean).join(' • '),
+      desc: r.notes || r.public_description || [r.department, r.category, r.size, r.pack].filter(Boolean).join(' • '),
+      image: r.image_url || '',
       regular_price: Number(r.msrp || r.price || 0),
       sale_price: sale,
       cost,
       markup,
-      taxable: !!r.tax1,
+      taxable: true,
       quote_only: sale <= 0,
-      product_url: '',
+      product_url: r.published ? `/products/item/${encodeURIComponent(r.id)}` : '',
       source: 'item-manager'
     };
   });
 }
+
+function itemSlugify(s) {
+  return String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90) || randomId().toLowerCase();
+}
+
+function defaultProductDepartments() {
+  return [
+    { id:'dept_lts_dvr_nvr', name:'LTS DVR / NVR', slug:'lts-dvr-nvr', description:'LTS DVR and NVR recorder hardware. Pricing available by quote.', image_url:'/assets/v75-lts-recorders.webp', link_url:'/security-camera-systems/lts-dvr-nvr', display_order:10, active:1, system_department:1 },
+    { id:'dept_lts_cameras', name:'LTS Cameras', slug:'lts-cameras', description:'LTS IP and network camera hardware. Pricing available by quote.', image_url:'/assets/v75-lts-cameras.webp', link_url:'/security-camera-systems/lts-cameras', display_order:20, active:1, system_department:1 },
+    { id:'dept_eufy_cameras', name:'EUFY Camera Systems', slug:'eufy-camera-systems', description:'EUFY PoE NVR and camera systems with published checkout pricing.', image_url:'', link_url:'/security-camera-systems/eufy-poe-nvr-camera-systems', display_order:30, active:1, system_department:1 }
+  ];
+}
+
+async function seedDefaultItemDepartments(env) {
+  const t = now();
+  for (const d of defaultProductDepartments()) {
+    try {
+      await env.DB.prepare(`INSERT OR IGNORE INTO item_manager_departments (id,name,slug,description,image_url,link_url,display_order,active,system_department,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)`).bind(d.id,d.name,d.slug,d.description,d.image_url,d.link_url,d.display_order,d.active,d.system_department,t,t).run();
+    } catch (err) { console.error('seed department failed', d.slug, err); }
+  }
+}
+
+function departmentFromDb(row = {}) {
+  return {
+    id: String(row.id || ''), name: String(row.name || ''), slug: String(row.slug || ''), description: String(row.description || ''), image_url: String(row.image_url || ''), link_url: String(row.link_url || ''), display_order: Number(row.display_order || 100), active: Number(row.active || 0) ? 1 : 0, system_department: Number(row.system_department || 0) ? 1 : 0, created_at: String(row.created_at || ''), updated_at: String(row.updated_at || '')
+  };
+}
+
+async function itemManagerDepartments(env, includeInactive = false) {
+  await ensureItemManagerTables(env);
+  let sql = 'SELECT * FROM item_manager_departments';
+  if (!includeInactive) sql += ' WHERE active=1';
+  sql += ' ORDER BY display_order ASC, name COLLATE NOCASE';
+  const res = await env.DB.prepare(sql).all();
+  return ((res && res.results) || []).map(departmentFromDb);
+}
+
+async function itemManagerDepartmentBySlug(env, slug) {
+  await ensureItemManagerTables(env);
+  const row = await env.DB.prepare('SELECT * FROM item_manager_departments WHERE slug=?').bind(String(slug || '')).first();
+  return row ? departmentFromDb(row) : null;
+}
+
+async function publicProductDepartmentsJson(request, env) {
+  const deps = await itemManagerDepartments(env, false);
+  const custom = deps.filter(d => !d.system_department && d.active).map(d => ({ name:d.name, slug:d.slug, href:d.link_url || `/products/${encodeURIComponent(d.slug)}` }));
+  return jsonResponse({ ok:true, departments:custom });
+}
+
+function itemPublicImage(row, cls = '') {
+  const src = String(row.image_url || '').trim();
+  if (src) return `<img class="${escapeHtml(cls)}" src="${escapeHtml(src)}" alt="${escapeHtml(row.item_name || row.sku)}" loading="lazy">`;
+  return `<div class="lts-placeholder"><span>HB</span><strong>${escapeHtml(row.item_name || row.sku || 'Product')}</strong></div>`;
+}
+
+async function pageProducts(env) {
+  const departments = await itemManagerDepartments(env, false);
+  const cards = departments.map(d => {
+    const href = d.link_url || `/products/${encodeURIComponent(d.slug)}`;
+    const img = d.image_url ? `<img src="${escapeHtml(d.image_url)}" alt="${escapeHtml(d.name)}" loading="lazy">` : `<div class="lts-placeholder"><span>HB</span><strong>${escapeHtml(d.name)}</strong></div>`;
+    return `<a class="eufy-shop-card lts-shop-card hb-product-dept-card" href="${escapeHtml(href)}"><div class="eufy-card-image">${img}</div><div class="eufy-card-body"><div class="eufy-category">Product Department</div><h3>${escapeHtml(d.name)}</h3><p>${escapeHtml(d.description || 'Browse products and request a quote from HB Commerce Solutions.')}</p><span class="btn small orange">View Department</span></div></a>`;
+  }).join('') || `<div class="notice warning">No product departments are published yet.</div>`;
+  const body = `<main class="eufy-page"><section class="eufy-collection-hero"><div class="container"><div class="kicker">Products</div><h1>Product Departments</h1><p>Browse HB Commerce Solutions product departments. LTS and EUFY sections remain unchanged, and new Item Manager departments can be published here.</p></div></section><section class="section"><div class="container"><div class="section-title centered"><h2>Departments</h2><p>Select a department to view available products.</p></div><div class="eufy-store-grid">${cards}</div></div></section></main>`;
+  return htmlPage('Products | HB Commerce Solutions', layout(env, 'Products', body));
+}
+
+async function pageItemDepartment(env, slug) {
+  const dep = await itemManagerDepartmentBySlug(env, decodeURIComponent(slug || ''));
+  if (!dep || !dep.active) return htmlPage('Department Not Found', layout(env, 'Products', `<section class="section"><div class="container"><div class="notice error">Product department not found.</div><p><a class="btn" href="/products">Back to Products</a></p></div></section>`), 404);
+  if (dep.link_url) return Response.redirect(dep.link_url, 302);
+  const rowsAll = await itemManagerRows(env, { includeInactive: false });
+  const rows = rowsAll.filter(r => r.published && (itemSlugify(r.department) === dep.slug || String(r.department || '').trim().toLowerCase() === String(dep.name || '').trim().toLowerCase()));
+  const cards = rows.map(r => `<article class="eufy-shop-card lts-shop-card"><a class="eufy-card-image" href="/products/item/${encodeURIComponent(r.id)}">${itemPublicImage(r)}</a><div class="eufy-card-body"><div class="eufy-category">${escapeHtml(r.category || r.department || 'Product')}</div><h3><a href="/products/item/${encodeURIComponent(r.id)}">${escapeHtml(r.item_name)}</a></h3><p>${escapeHtml(r.public_description || r.notes || [r.brand,r.size,r.pack].filter(Boolean).join(' • '))}</p><div class="eufy-price-row"><strong class="eufy-sale">${Number(r.price || 0) > 0 ? money(r.price) : 'Quote'}</strong></div><div class="eufy-actions"><a class="btn small" href="/products/item/${encodeURIComponent(r.id)}">View Details</a><button type="button" class="orange small" onclick="eufyAddToCart('${escapeHtml(r.id)}',1,false)">Add to Quote Cart</button></div></div></article>`).join('') || `<div class="notice warning"><strong>No active products are published in this department yet.</strong><br>Add items in Admin → Item Manager and check “Publish on Website.”</div>`;
+  const all = await quoteProductsForEnv(env);
+  const body = `<main class="eufy-page"><section class="eufy-collection-hero"><div class="container"><div class="kicker">${escapeHtml(dep.name)}</div><h1>${escapeHtml(dep.name)}</h1><p>${escapeHtml(dep.description || 'Browse products from this department and add items to your quote cart.')}</p><div class="eufy-hero-actions"><a class="btn orange" href="#dept-products">View Products</a><a class="btn" href="/cart">View Cart <span class="eufy-cart-floating-count">0</span></a></div></div></section><section class="section" id="dept-products"><div class="container"><div class="section-title centered"><h2>${escapeHtml(dep.name)} Products</h2><p>Published from the HB Commerce Item Manager.</p></div><div class="eufy-store-grid">${cards}</div>${eufyStoreScript(all)}</div></section></main>`;
+  return htmlPage(`${dep.name} | HB Commerce Solutions`, layout(env, 'Products', body));
+}
+
+async function pageItemProduct(env, id) {
+  const rows = await itemManagerRows(env, { includeInactive: false });
+  const p = rows.find(r => r.id === decodeURIComponent(id || '') && r.published);
+  if (!p) return htmlPage('Product Not Found', layout(env, 'Products', `<section class="section"><div class="container"><div class="notice error">Product not found.</div><p><a class="btn" href="/products">Back to Products</a></p></div></section>`), 404);
+  const back = p.department ? `/products/${encodeURIComponent(itemSlugify(p.department))}` : '/products';
+  const all = await quoteProductsForEnv(env);
+  const bullets = [p.brand, p.size, p.pack, p.category, p.sub_category].filter(Boolean).map(x => `<li>${escapeHtml(x)}</li>`).join('');
+  const body = `<main class="eufy-detail-page"><section class="section"><div class="container"><a class="back-link" href="${back}">← Back to ${escapeHtml(p.department || 'Products')}</a><div class="eufy-detail-grid"><div class="eufy-detail-image">${itemPublicImage(p)}</div><div class="eufy-detail-info"><div class="eufy-category">${escapeHtml(p.category || p.department || 'Product')}</div><h1>${escapeHtml(p.item_name)}</h1><p class="lead"><strong>SKU:</strong> ${escapeHtml(p.sku || '')}${p.upc ? ` • <strong>UPC:</strong> ${escapeHtml(p.upc)}` : ''}</p><p class="lead">${escapeHtml(p.public_description || p.notes || 'Product available from HB Commerce Solutions.')}</p><div class="eufy-price-row detail"><strong class="eufy-sale">${Number(p.price || 0) > 0 ? money(p.price) : 'Quote Required'}</strong></div>${bullets ? `<ul class="eufy-detail-bullets">${bullets}</ul>` : ''}<div class="notice">Add this item to the quote cart. HB Commerce Solutions will review availability, sales tax, and shipping before sending the final quote.</div><div class="eufy-detail-actions"><input id="detailQty" type="number" min="1" value="1"><button class="orange" type="button" onclick="eufyAddToCart('${escapeHtml(p.id)}',document.getElementById('detailQty').value,false)">Add to Quote Cart</button></div></div></div>${eufyStoreScript(all)}</div></section></main>`;
+  return htmlPage(`${p.item_name} | HB Commerce Solutions`, layout(env, 'Products', body));
+}
+
+function itemEditorField(name, label, value, type='text', extra='') {
+  return `<div class="field"><label>${escapeHtml(label)}</label><input ${type ? `type="${type}"` : ''} name="${escapeHtml(name)}" value="${escapeHtml(value ?? '')}" ${extra}></div>`;
+}
+
+async function adminItemEditPage(request, env, id = '', message = '') {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  await ensureItemManagerTables(env);
+  const url = new URL(request.url);
+  const cloneId = url.searchParams.get('clone') || '';
+  const editId = id || url.searchParams.get('id') || '';
+  let row = null;
+  if (editId) { const r = await env.DB.prepare('SELECT * FROM item_manager_items WHERE id=?').bind(editId).first(); row = r ? itemRowFromDb(r) : null; }
+  if (!row && cloneId) { const r = await env.DB.prepare('SELECT * FROM item_manager_items WHERE id=?').bind(cloneId).first(); row = r ? itemRowFromDb(r) : null; if (row) { row.id=''; row.sku = (row.sku || '') + '-COPY'; row.item_name = (row.item_name || '') + ' Copy'; } }
+  const rows = await itemManagerRows(env, { includeInactive: true });
+  const lists = await itemManagerLookupLists(env, rows);
+  const it = row || { id:'', sku:'', upc:'', item_name:'', item_type:'Standard', size:'', pack:'', department:'', category:'', sub_category:'', brand:'', supplier:'', item_group:'', price:'', cost:'', msrp:'', reorder_level:'', quantity:'', instore_qty:'', location:'', vendor_sku:'', notes:'', image_url:'', public_description:'', active:1, child_item:0, published:1 };
+  const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imTypeList"><option value="Standard"><option value="Service"><option value="Set Item"><option value="Matrix Parent"><option value="Matrix Child"><option value="Non-Stock"><option value="Labor"></datalist>`;
+  const title = it.id ? `Edit Item: ${escapeHtml(it.sku || it.item_name)}` : 'Add New Item';
+  const preview = it.image_url ? `<img src="${escapeHtml(it.image_url)}" alt="Item image preview">` : `<div class="placeholder">No Image</div>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>${title}</h2><p>Add/edit internal inventory items. Tax fields are intentionally removed because sales tax is handled by ZipTax/destination tax in Quote and Invoice creation.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a><a class="btn" href="/admin/item-departments">Departments</a></div></div>${message}${itemManagerStyle()}<section class="item-editor-page"><h3>${title}</h3><form method="post" action="/admin/items" enctype="multipart/form-data"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="${escapeHtml(it.id)}"><div class="grid-4">${itemEditorField('sku','SKU / Item Code',it.sku)}${itemEditorField('upc','UPC / Barcode',it.upc)}${itemEditorField('item_name','Item Name',it.item_name)}${itemEditorField('item_type','Item Type',it.item_type,'text','list="imTypeList"')}</div><div class="grid-4">${itemEditorField('size','Size',it.size,'text','list="imSizeList"')}${itemEditorField('pack','Pack',it.pack,'text','list="imPackList"')}${itemEditorField('department','Department',it.department,'text','list="imDeptList"')}${itemEditorField('category','Category',it.category,'text','list="imCatList"')}</div><div class="grid-4">${itemEditorField('sub_category','Sub-Category',it.sub_category,'text','list="imSubCatList"')}${itemEditorField('brand','Brand',it.brand,'text','list="imBrandList"')}${itemEditorField('supplier','Supplier',it.supplier,'text','list="imSupplierList"')}${itemEditorField('item_group','Item Group',it.item_group,'text','list="imGroupList"')}</div><div class="grid-4">${itemEditorField('price','Price',it.price,'number','step="0.01"')}${itemEditorField('cost','Cost',it.cost,'number','step="0.01"')}${itemEditorField('msrp','MSRP',it.msrp,'number','step="0.01"')}${itemEditorField('reorder_level','Reorder Level',it.reorder_level,'number','step="1"')}</div><div class="grid-4">${itemEditorField('quantity','Quantity',it.quantity,'number','step="1"')}${itemEditorField('instore_qty','InStore Qty',it.instore_qty,'number','step="1"')}${itemEditorField('location','Location',it.location,'text','list="imLocList"')}${itemEditorField('vendor_sku','Vendor SKU',it.vendor_sku)}</div><div class="im-image-preview" style="margin:10px 0 14px">${preview}<div><div class="field"><label>Website Product Image URL</label><input name="image_url" value="${escapeHtml(it.image_url && !String(it.image_url).startsWith('data:') ? it.image_url : '')}" placeholder="https://... image URL"></div><div class="field"><label>Upload Product Image</label><input type="file" name="image_file" accept="image/*"></div><p class="hint">Use either an image URL or upload a small image. This image appears on the website product page and department listing.</p></div></div><div class="field"><label>Website Product Description</label><textarea name="public_description" placeholder="Customer-facing product description">${escapeHtml(it.public_description || '')}</textarea></div><div class="field"><label>Internal Notes</label><textarea name="notes">${escapeHtml(it.notes || '')}</textarea></div><div class="grid-3"><label class="same-ship"><input type="checkbox" name="active" ${it.active?'checked':''}> Active</label><label class="same-ship"><input type="checkbox" name="published" ${it.published?'checked':''}> Publish on Website</label><label class="same-ship"><input type="checkbox" name="child_item" ${it.child_item?'checked':''}> Child Item</label></div><div class="notice warning" style="margin-top:12px"><strong>Tax removed from item setup:</strong> Quote/Invoice sales tax is still handled by the billing/shipping ZIP destination tax workflow.</div><div class="btn-row" style="margin-top:16px"><button class="orange" type="submit">Save Item</button><a class="btn" href="/admin/items/new">Clear Form</a><a class="btn" href="/admin/items">Cancel</a></div></form>${datalists}</section></div></main>`;
+  return htmlPage(`${it.id ? 'Edit' : 'Add'} Item | HB Commerce`, layout(env, 'Dashboard', body));
+}
+
+async function adminItemDepartmentsPage(request, env, message = '') {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  await ensureItemManagerTables(env);
+  const url = new URL(request.url);
+  const editId = url.searchParams.get('id') || '';
+  const deps = await itemManagerDepartments(env, true);
+  const edit = deps.find(d => d.id === editId) || { id:'', name:'', slug:'', description:'', image_url:'', link_url:'', display_order:100, active:1, system_department:0 };
+  const cards = deps.map(d => `<article class="im-dept-card"><span class="badge">${d.system_department?'System Department':'Custom Department'}</span><h3>${escapeHtml(d.name)}</h3><p>${escapeHtml(d.description || '')}</p><p><strong>Slug:</strong> <code>${escapeHtml(d.slug)}</code><br><strong>Status:</strong> ${d.active?'Active':'Inactive'}<br><strong>Website:</strong> ${d.link_url ? escapeHtml(d.link_url) : `/products/${escapeHtml(d.slug)}`}</p><div class="btn-row"><a class="btn small" href="/admin/item-departments?id=${encodeURIComponent(d.id)}">Edit</a>${!d.system_department?`<form method="post" action="/admin/item-departments" onsubmit="return confirm('Delete this department? Items are not deleted.');"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="${escapeHtml(d.id)}"><button class="danger small">Delete</button></form>`:''}</div></article>`).join('');
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Product Departments</h2><p>Departments appear under the website Products area. Existing LTS DVR/NVR, LTS Cameras, and EUFY Camera Systems are treated as system departments and still keep their current managers/pages.</p></div><div class="btn-row"><a class="btn" href="/admin/items">Item Manager</a><a class="btn" href="/products" target="_blank" rel="noopener">View Products Page</a></div></div>${message}${itemManagerStyle()}<section class="item-editor-page"><h3>${edit.id?'Edit Department':'Add Department'}</h3><form method="post" action="/admin/item-departments"><input type="hidden" name="action" value="save"><input type="hidden" name="id" value="${escapeHtml(edit.id)}"><div class="grid-4">${itemEditorField('name','Department Name',edit.name)}${itemEditorField('slug','Slug',edit.slug,'text','placeholder="auto-generated if blank"')}${itemEditorField('display_order','Display Order',edit.display_order,'number','step="1"')}${itemEditorField('image_url','Department Image URL',edit.image_url)}</div><div class="field"><label>Description</label><textarea name="description">${escapeHtml(edit.description || '')}</textarea></div><div class="field"><label>Existing Page Link / Override URL</label><input name="link_url" value="${escapeHtml(edit.link_url || '')}" placeholder="Leave blank for Item Manager product department page"></div><label class="same-ship"><input type="checkbox" name="active" ${edit.active?'checked':''}> Active / show on website</label><div class="btn-row" style="margin-top:14px"><button class="orange">Save Department</button><a class="btn" href="/admin/item-departments">Clear</a></div></form></section><section style="margin-top:18px" class="im-dept-grid">${cards}</section></div></main>`;
+  return htmlPage('Product Departments | HB Commerce', layout(env, 'Dashboard', body));
+}
+
+async function adminItemDepartmentsPost(request, env) {
+  const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  await ensureItemManagerTables(env);
+  const fd = await request.formData();
+  const action = String(fd.get('action') || 'save');
+  const id = itemText(fd.get('id'));
+  if (action === 'delete') {
+    const row = id ? await env.DB.prepare('SELECT system_department FROM item_manager_departments WHERE id=?').bind(id).first() : null;
+    if (row && !Number(row.system_department || 0)) await env.DB.prepare('DELETE FROM item_manager_departments WHERE id=?').bind(id).run();
+    return redirect('/admin/item-departments?deleted=1');
+  }
+  const name = itemText(fd.get('name')).slice(0, 90);
+  if (!name) return adminItemDepartmentsPage(request, env, '<div class="notice error">Department name is required.</div>');
+  const slug = (itemText(fd.get('slug')) || itemSlugify(name)).toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const d = { id: id || randomId(), name, slug, description:itemText(fd.get('description')).slice(0,800), image_url:itemText(fd.get('image_url')).slice(0,1200), link_url:itemText(fd.get('link_url')).slice(0,400), display_order:itemNum(fd.get('display_order'),100), active:fd.has('active')?1:0 };
+  const t = now();
+  const exists = id ? await env.DB.prepare('SELECT id FROM item_manager_departments WHERE id=?').bind(id).first() : null;
+  if (exists) await env.DB.prepare('UPDATE item_manager_departments SET name=?, slug=?, description=?, image_url=?, link_url=?, display_order=?, active=?, updated_at=? WHERE id=?').bind(d.name,d.slug,d.description,d.image_url,d.link_url,d.display_order,d.active,t,id).run();
+  else await env.DB.prepare('INSERT INTO item_manager_departments (id,name,slug,description,image_url,link_url,display_order,active,system_department,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)').bind(d.id,d.name,d.slug,d.description,d.image_url,d.link_url,d.display_order,d.active,0,t,t).run();
+  return redirect('/admin/item-departments?saved=1');
+}
+
 function jsonResponse(obj, status = 200) {
   return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 }
