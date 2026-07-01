@@ -2428,10 +2428,8 @@ Required Cloudflare/Apple settings before Apple Pay appears:
 1. Keep the Apple domain-verification file live at:
    https://www.hbcommercesolution.com/.well-known/apple-developer-merchantid-domain-association.txt
 
-2. APPLE_PAY_MERCHANT_ID is already set in wrangler.toml as:
-   merchant.HBCOMMAUTH
-
-   This identifier matches the Apple Pay certificates uploaded for this project. It is not a private secret.
+2. Add APPLE_PAY_MERCHANT_ID as a Cloudflare Worker secret or variable. Example:
+   merchant.com.your.identifier
 
 3. Add optional variables if desired:
    APPLE_PAY_DISPLAY_NAME = HB Commerce Solutions
@@ -2439,7 +2437,7 @@ Required Cloudflare/Apple settings before Apple Pay appears:
    APPLE_PAY_COUNTRY_CODE = US
    APPLE_PAY_CURRENCY_CODE = USD
 
-4. Export the Apple Merchant Identity Certificate WITH its private key from the computer/keychain that created the CSR. Then upload the certificate and private key to Cloudflare mTLS and bind it as APPLE_PAY_MERCHANT_CERT in wrangler.toml:
+4. Upload the Apple Merchant Identity Certificate and private key to Cloudflare mTLS, then bind it as APPLE_PAY_MERCHANT_CERT in wrangler.toml:
 
    npx wrangler mtls-certificate upload --cert ./apple-merchant-identity.pem --key ./apple-merchant-identity.key --name hb-apple-pay-merchant-identity
 
@@ -2457,4 +2455,7 @@ Admin test page after deployment:
 Apple Pay appears only on compatible Apple Pay devices/browsers with an active Wallet card. Other customers will continue seeing Credit Card, Check, and Zelle.
 
 
-Important: the uploaded .cer file alone is not enough for Apple Pay web merchant validation. Cloudflare needs the Merchant Identity certificate plus the matching private key. Do not commit the certificate/key files to GitHub and do not send the private key in chat.
+V223 Apple Pay QR validation fix:
+- Allows Apple Pay QR-code validation gateway hosts such as apple-pay-gateway-nc-pod*.apple.com.
+- Keeps Apple Pay checkout, invoice Apple Pay, Credit Card, Check, and Zelle flows unchanged.
+- Adds clearer error messages if Apple merchant validation fails.
