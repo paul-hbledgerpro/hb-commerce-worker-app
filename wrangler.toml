@@ -37,6 +37,6 @@ crons = ["0 14 * * *"]
 # Add APPLE_PAY_MERCHANT_ID as a Cloudflare secret or variable.
 # Optional vars: APPLE_PAY_DISPLAY_NAME, APPLE_PAY_DOMAIN, APPLE_PAY_COUNTRY_CODE, APPLE_PAY_CURRENCY_CODE.
 # After uploading the Apple Merchant Identity Certificate with Wrangler, uncomment and set the certificate_id:
-# [[mtls_certificates]]
-# binding = "APPLE_PAY_MERCHANT_CERT"
-# certificate_id = "38ac7b28-5fab-47f9-b0c9-2923e335efde"
+[[mtls_certificates]]
+binding = "APPLE_PAY_MERCHANT_CERT"
+certificate_id = "38ac7b28-5fab-47f9-b0c9-2923e335efde"
