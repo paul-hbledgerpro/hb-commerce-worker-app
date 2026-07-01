@@ -6,3 +6,10 @@ node_modules/
 *.local
 .DS_Store
 backup-*.sql
+*.pfx
+*.pem
+*.key
+*.cer
+*.certSigningRequest
+apple-merchant-identity*
+merchant_id*

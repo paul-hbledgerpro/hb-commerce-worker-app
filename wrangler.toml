@@ -6,6 +6,11 @@ compatibility_date = "2024-12-01"
 APP_NAME = "HB Commerce Solutions"
 EMAIL_FROM = "HB Commerce Solutions <info@hbcommercesolution.com>"
 EMAIL_BCC = "paulcamerasystems@gmail.com"
+APPLE_PAY_MERCHANT_ID = "merchant.HBCOMMAUTH"
+APPLE_PAY_DISPLAY_NAME = "HB Commerce Solutions"
+APPLE_PAY_DOMAIN = "www.hbcommercesolution.com"
+APPLE_PAY_COUNTRY_CODE = "US"
+APPLE_PAY_CURRENCY_CODE = "USD"
 
 [[d1_databases]]
 binding = "DB"
@@ -13,3 +18,25 @@ database_name = "hb-commerce-db"
 database_id = "ff20d45f-12ed-45c0-bf00-8760ccd66db2"
 
 # Private setup code is stored as a secret, not here. Run: npx wrangler secret put SETUP_CODE
+
+# Optional sales tax origin settings for TaxJar SmartCalcs. Update these to your fulfillment/origin location.
+# TAX_ORIGIN_COUNTRY = "US"
+# TAX_ORIGIN_ZIP = "60016"
+# TAX_ORIGIN_STATE = "IL"
+# TAX_ORIGIN_CITY = "Des Plaines"
+# TAX_ORIGIN_STREET = ""
+# Private TaxJar token is a secret, not here. Run: npx wrangler secret put TAXJAR_API_KEY
+
+[triggers]
+crons = ["0 14 * * *"]
+
+# Recommended for reminder email links:
+# PUBLIC_BASE_URL = "https://www.hbcommercesolution.com"
+
+# Apple Pay on the Web notes:
+# Add APPLE_PAY_MERCHANT_ID as a Cloudflare secret or variable.
+# Optional vars: APPLE_PAY_DISPLAY_NAME, APPLE_PAY_DOMAIN, APPLE_PAY_COUNTRY_CODE, APPLE_PAY_CURRENCY_CODE.
+# After uploading the Apple Merchant Identity Certificate with Wrangler, uncomment and set the certificate_id:
+# [[mtls_certificates]]
+# binding = "APPLE_PAY_MERCHANT_CERT"
+# certificate_id = "38ac7b28-5fab-47f9-b0c9-2923e335efde"

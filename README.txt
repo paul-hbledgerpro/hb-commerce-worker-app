@@ -2417,3 +2417,44 @@ The route is handled directly by the Cloudflare Worker and returns text/plain wi
 https://www.hbcommercesolution.com/.well-known/apple-developer-merchantid-domain-association.txt
 
 Then return to Apple Developer / Authorize.Net Apple Pay setup and click Verify for the domain.
+
+
+=== v222 Apple Pay Checkout Notes ===
+
+This version adds Apple Pay as a checkout payment option in addition to Credit Card, Check, and Zelle. It also adds Apple Pay as an alternate option on the public invoice payment page when the customer is using an Apple Pay-capable browser/device.
+
+Required Cloudflare/Apple settings before Apple Pay appears:
+
+1. Keep the Apple domain-verification file live at:
+   https://www.hbcommercesolution.com/.well-known/apple-developer-merchantid-domain-association.txt
+
+2. APPLE_PAY_MERCHANT_ID is already set in wrangler.toml as:
+   merchant.HBCOMMAUTH
+
+   This identifier matches the Apple Pay certificates uploaded for this project. It is not a private secret.
+
+3. Add optional variables if desired:
+   APPLE_PAY_DISPLAY_NAME = HB Commerce Solutions
+   APPLE_PAY_DOMAIN = www.hbcommercesolution.com
+   APPLE_PAY_COUNTRY_CODE = US
+   APPLE_PAY_CURRENCY_CODE = USD
+
+4. Export the Apple Merchant Identity Certificate WITH its private key from the computer/keychain that created the CSR. Then upload the certificate and private key to Cloudflare mTLS and bind it as APPLE_PAY_MERCHANT_CERT in wrangler.toml:
+
+   npx wrangler mtls-certificate upload --cert ./apple-merchant-identity.pem --key ./apple-merchant-identity.key --name hb-apple-pay-merchant-identity
+
+   Then add the returned certificate_id to wrangler.toml:
+
+   [[mtls_certificates]]
+   binding = "APPLE_PAY_MERCHANT_CERT"
+   certificate_id = "PASTE_CERTIFICATE_ID_HERE"
+
+Do not commit certificate/key files to GitHub. Keep them outside the project folder.
+
+Admin test page after deployment:
+/admin/apple-pay-test
+
+Apple Pay appears only on compatible Apple Pay devices/browsers with an active Wallet card. Other customers will continue seeing Credit Card, Check, and Zelle.
+
+
+Important: the uploaded .cer file alone is not enough for Apple Pay web merchant validation. Cloudflare needs the Merchant Identity certificate plus the matching private key. Do not commit the certificate/key files to GitHub and do not send the private key in chat.
