@@ -19711,117 +19711,152 @@ function itemManagerStyle() {
 .item-manager-shell{display:grid;gap:0;background:#09182b;color:#f8fafc;border:1.5px solid rgba(255,106,0,.62);border-radius:16px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.38);font-family:"Segoe UI",Arial,sans-serif}.item-manager-titlebar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#07152a,#10294a);border-bottom:1px solid rgba(255,106,0,.48);padding:10px 14px;color:#fff;font-weight:950}.item-manager-titlebar span:first-child{font-size:20px}.im-note{font-size:12px;color:#cbd5e1}.im-searchbar{background:linear-gradient(135deg,#10233d,#07152a);padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.14);display:grid;grid-template-columns:minmax(190px,.9fr) minmax(190px,.9fr) minmax(190px,.9fr) minmax(180px,.7fr) auto;gap:12px;align-items:end}.im-group{border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:18px 10px 10px;position:relative;background:rgba(255,255,255,.065)}.im-group-label{position:absolute;top:-11px;left:10px;background:#10233d;padding:0 7px;font-size:13px;font-weight:950;color:#ffb14f}.im-field label{display:block;font-size:12px;font-weight:950;color:#eaf3ff;margin-bottom:5px}.im-field input,.im-field select,.im-field textarea{width:100%;border:1.5px solid rgba(255,255,255,.22);border-radius:7px;background:#fff!important;color:#07152a!important;min-height:34px;padding:6px 8px;font-size:13px;-webkit-text-fill-color:#07152a!important}.im-search-actions{display:flex;gap:9px}.im-classic-btn{border:1.5px solid rgba(255,106,0,.70)!important;border-radius:10px!important;min-height:40px!important;padding:0 18px!important;color:#fff!important;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,106,0,.12) 42%,rgba(6,18,34,.92))!important;box-shadow:0 5px 0 rgba(95,38,0,.78),0 14px 28px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.22)!important;font-weight:950}.im-btn-blue{background:linear-gradient(#2678c8,#0d4f93)!important}.im-btn-green{background:linear-gradient(#25a45b,#11783a)!important}.im-btn-red{background:linear-gradient(#d75b50,#9e2e2e)!important}.im-filter-row{display:flex;align-items:center;gap:24px;background:#0b1c33;border-bottom:1px solid rgba(255,255,255,.14);padding:7px 12px;font-size:13px;color:#eaf3ff;font-weight:850}.im-filter-row strong{color:#fff}.im-filter-row label{display:inline-flex;gap:7px;align-items:center;color:#eaf3ff}.im-filter-row input{width:auto!important;min-height:auto!important;accent-color:#ff6a00}.im-total{margin-left:auto;font-weight:950;color:#ffb14f}.im-main-area{display:grid;grid-template-columns:1fr auto;min-height:420px}.im-grid-wrap{overflow:auto;background:#fff;border-bottom:1px solid rgba(255,255,255,.14)}.im-grid{width:100%;min-width:1200px;border-collapse:collapse;background:#fff;color:#111827}.im-grid th{position:sticky;top:0;z-index:3;background:linear-gradient(#eaf3ff,#cbdcf1)!important;color:#082b57!important;border:1px solid #9eb2c7!important;font-size:12px;text-align:left;padding:8px}.im-grid td{border:1px solid #d4dfec!important;color:#111827!important;background:#fff!important;font-size:13px;padding:8px;white-space:nowrap}.im-grid tr:nth-child(even) td{background:#f6faff!important}.im-grid tr.selected td,.im-grid tr:hover td{background:#dff0ff!important}.im-grid .money{text-align:right;font-variant-numeric:tabular-nums}.im-grid .center{text-align:center}.im-thumb{width:44px;height:36px;border-radius:8px;object-fit:cover;background:#eef4fb;border:1px solid #d4dfec;display:block}.im-thumb-placeholder{width:44px;height:36px;border-radius:8px;background:linear-gradient(135deg,#061b35,#ff6a00);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:950}.im-side-toggle{writing-mode:vertical-rl;text-orientation:mixed;background:linear-gradient(#10233d,#07152a);color:#fff;border-left:1px solid rgba(255,106,0,.48);border-right:0;min-width:32px;font-weight:950;cursor:pointer}.im-right-filter{display:none;width:356px;background:#0b1c33;border-left:1px solid rgba(255,106,0,.42);padding:14px 16px;overflow:auto;color:#fff}.im-right-filter.show{display:block}.im-right-filter h3{margin:0 0 12px;color:#fff}.im-right-filter .btn-row{display:grid;grid-template-columns:1fr 1fr}.im-bottom{background:#0b1c33;display:grid;grid-template-columns:minmax(420px,1fr) 320px 430px;gap:10px;padding:10px;border-top:1px solid rgba(255,255,255,.14)}.im-tabs{border:1px solid rgba(255,255,255,.16);background:#fff;min-height:152px}.im-tab-heads{display:flex;background:#d5e5f7;border-bottom:1px solid #8ba3bc}.im-tab-heads button{border:0;border-right:1px solid #8ba3bc;border-radius:0!important;background:linear-gradient(#eef6ff,#c6d9ef)!important;color:#082b57!important;min-height:30px!important;padding:0 14px!important;box-shadow:none!important}.im-tab-heads button.active{background:#fff!important}.im-tab-panel{display:none;padding:10px}.im-tab-panel.active{display:block}.im-mini-grid{width:100%;border-collapse:collapse}.im-mini-grid th,.im-mini-grid td{border:1px solid #d4dfec;padding:8px;font-size:12px;color:#111827!important;background:#fff!important}.im-bottom-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.im-bottom-form label{color:#eaf3ff!important}.im-action-cluster{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.im-bottom-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}.im-toast{position:fixed;right:18px;bottom:18px;z-index:999999;background:#061b35;color:#fff;border:1px solid #ff6a00;border-radius:14px;padding:12px 14px;box-shadow:0 20px 60px rgba(0,0,0,.34);display:none}.im-toast.show{display:block}.item-editor-page{background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98));border:1.6px solid rgba(255,106,0,.42);border-radius:24px;padding:22px;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.32)}.item-editor-page h3{margin:0 0 14px;color:#fff}.item-editor-page .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.item-editor-page .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.item-editor-page label{color:#dbe7f5!important}.item-editor-page input,.item-editor-page select,.item-editor-page textarea{background:#fff!important;border:1.5px solid rgba(255,106,0,.42)!important;color:#07152a!important;-webkit-text-fill-color:#07152a!important}.item-editor-page textarea{min-height:90px}.item-editor-page option{background:#fff;color:#07152a}.im-image-preview{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px}.im-image-preview img,.im-image-preview .placeholder{width:130px;height:100px;object-fit:contain;background:#fff;border-radius:14px;border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;color:#082b57;font-weight:950}@media(max-width:1180px){.im-searchbar{grid-template-columns:1fr 1fr}.im-bottom{grid-template-columns:1fr}.im-main-area{grid-template-columns:1fr}.im-side-toggle{writing-mode:horizontal-tb;min-height:42px}.im-right-filter{width:auto;border-left:0;border-top:1px solid rgba(255,106,0,.42)}.item-editor-page .grid-4,.item-editor-page .grid-3{grid-template-columns:1fr 1fr}}@media(max-width:760px){.im-searchbar{grid-template-columns:1fr}.im-filter-row{display:grid;grid-template-columns:1fr;gap:8px}.im-total{margin-left:0}.item-editor-page .grid-4,.item-editor-page .grid-3{grid-template-columns:1fr}.im-bottom-actions,.im-action-cluster{grid-template-columns:1fr 1fr}.im-grid{min-width:1120px}.im-image-preview{grid-template-columns:1fr}.im-image-preview img,.im-image-preview .placeholder{width:100%;height:180px}}
 .im-dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.im-dept-card{background:linear-gradient(135deg,rgba(14,39,67,.96),rgba(4,13,26,.98));border:1.5px solid rgba(255,106,0,.38);border-radius:20px;padding:18px;color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.28)}.im-dept-card h3{margin:0 0 8px;color:#fff}.im-dept-card p{color:#cbd5e1}.im-dept-card code{color:#ffb14f}.im-dept-card .badge{display:inline-flex;border-radius:999px;padding:4px 9px;background:rgba(19,138,61,.22);color:#fff;font-size:12px;font-weight:950}
 
-
-/* v234 Item Manager readability hard override: keep WinForms-style white grid readable inside dark admin theme */
-.admin-dashboard .item-manager-shell,
-.admin-dashboard .item-manager-shell *{
+/* v234 Item Manager readability fix: override global admin dark theme on the WinForms-style grid */
+.admin-app-topbar ~ main .item-manager-shell,
+.admin-app-topbar ~ main .item-manager-shell *{
+  opacity:1!important;
+  filter:none!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid-wrap,
+.admin-app-topbar ~ main .item-manager-shell .im-tabs,
+.admin-app-topbar ~ main .item-manager-shell .im-tab-panel,
+.admin-app-topbar ~ main .item-manager-shell .im-mini-grid{
+  background:#ffffff!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid th,
+.admin-app-topbar ~ main .item-manager-shell .im-grid th *,
+.admin-dashboard .item-manager-shell .im-grid th,
+.admin-dashboard .item-manager-shell .im-grid th *{
+  background:linear-gradient(#eaf3ff,#cbdcf1)!important;
+  color:#082b57!important;
+  -webkit-text-fill-color:#082b57!important;
+  text-shadow:none!important;
+  opacity:1!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid td,
+.admin-app-topbar ~ main .item-manager-shell .im-grid td *,
+.admin-dashboard .item-manager-shell .im-grid td,
+.admin-dashboard .item-manager-shell .im-grid td *{
+  color:#0b1220!important;
+  -webkit-text-fill-color:#0b1220!important;
+  text-shadow:none!important;
+  opacity:1!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid td,
+.admin-dashboard .item-manager-shell .im-grid td{
+  background:#ffffff!important;
+  border-color:#cbd7e8!important;
+  font-weight:760!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid tr:nth-child(even) td,
+.admin-dashboard .item-manager-shell .im-grid tr:nth-child(even) td{
+  background:#f1f6fd!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid tr:hover td,
+.admin-app-topbar ~ main .item-manager-shell .im-grid tr.selected td,
+.admin-dashboard .item-manager-shell .im-grid tr:hover td,
+.admin-dashboard .item-manager-shell .im-grid tr.selected td{
+  background:#d9ecff!important;
+  color:#061b35!important;
+  -webkit-text-fill-color:#061b35!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid td strong,
+.admin-dashboard .item-manager-shell .im-grid td strong{
+  color:#061b35!important;
+  -webkit-text-fill-color:#061b35!important;
+  font-weight:950!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid .status,
+.admin-dashboard .item-manager-shell .im-grid .status{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-shadow:none!important;
+  border:0!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid .status.approved,
+.admin-dashboard .item-manager-shell .im-grid .status.approved{
+  background:#0f8a3d!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-grid .status.canceled,
+.admin-dashboard .item-manager-shell .im-grid .status.canceled{
+  background:#64748b!important;
+}
+.admin-app-topbar ~ main .item-manager-shell .im-mini-grid th,
+.admin-app-topbar ~ main .item-manager-shell .im-mini-grid td,
+.admin-app-topbar ~ main .item-manager-shell .im-mini-grid th *,
+.admin-app-topbar ~ main .item-manager-shell .im-mini-grid td *,
+.admin-dashboard .item-manager-shell .im-mini-grid th,
+.admin-dashboard .item-manager-shell .im-mini-grid td,
+.admin-dashboard .item-manager-shell .im-mini-grid th *,
+.admin-dashboard .item-manager-shell .im-mini-grid td *{
+  background:#ffffff!important;
+  color:#0b1220!important;
+  -webkit-text-fill-color:#0b1220!important;
   opacity:1!important;
   text-shadow:none!important;
 }
-.admin-dashboard .item-manager-shell .im-grid-wrap,
-.admin-dashboard .item-manager-shell .im-tabs,
-.admin-dashboard .item-manager-shell .im-tab-panel,
-.admin-dashboard .item-manager-shell .im-mini-grid{
-  background:#ffffff!important;
-}
-.admin-dashboard .item-manager-shell .im-grid,
-.admin-dashboard .item-manager-shell .im-grid tbody,
-.admin-dashboard .item-manager-shell .im-grid tr,
-.admin-dashboard .item-manager-shell .im-grid td,
-.admin-dashboard .item-manager-shell .im-grid td strong,
-.admin-dashboard .item-manager-shell .im-grid td span:not(.im-thumb-placeholder),
-.admin-dashboard .item-manager-shell .im-grid td a{
-  color:#07152a!important;
-  -webkit-text-fill-color:#07152a!important;
-  background-color:#ffffff!important;
-  font-weight:800!important;
-  opacity:1!important;
-}
-.admin-dashboard .item-manager-shell .im-grid tr:nth-child(even) td,
-.admin-dashboard .item-manager-shell .im-grid tr:nth-child(even) td strong,
-.admin-dashboard .item-manager-shell .im-grid tr:nth-child(even) td span:not(.im-thumb-placeholder){
-  background-color:#f3f8ff!important;
-  color:#07152a!important;
-  -webkit-text-fill-color:#07152a!important;
-}
-.admin-dashboard .item-manager-shell .im-grid tr:hover td,
-.admin-dashboard .item-manager-shell .im-grid tr:hover td strong,
-.admin-dashboard .item-manager-shell .im-grid tr.selected td,
-.admin-dashboard .item-manager-shell .im-grid tr.selected td strong{
-  background-color:#dceeff!important;
-  color:#061b35!important;
-  -webkit-text-fill-color:#061b35!important;
-}
-.admin-dashboard .item-manager-shell .im-grid th{
-  background:linear-gradient(#f8fbff,#cfe0f3)!important;
-  color:#061b35!important;
-  -webkit-text-fill-color:#061b35!important;
-  border-color:#93a9bf!important;
+.admin-app-topbar ~ main .item-manager-shell .im-tab-heads button,
+.admin-dashboard .item-manager-shell .im-tab-heads button{
+  color:#082b57!important;
+  -webkit-text-fill-color:#082b57!important;
   font-weight:950!important;
-  opacity:1!important;
 }
-.admin-dashboard .item-manager-shell .im-mini-grid th,
-.admin-dashboard .item-manager-shell .im-mini-grid td,
-.admin-dashboard .item-manager-shell .im-mini-grid td strong,
-.admin-dashboard .item-manager-shell .im-tab-panel,
-.admin-dashboard .item-manager-shell .im-tab-panel p,
-.admin-dashboard .item-manager-shell .im-tab-panel span,
-.admin-dashboard .item-manager-shell .im-tab-panel strong{
-  background-color:#ffffff!important;
-  color:#07152a!important;
-  -webkit-text-fill-color:#07152a!important;
-  opacity:1!important;
-}
-.admin-dashboard .item-manager-shell .im-thumb-placeholder{
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
-  background:linear-gradient(135deg,#061b35,#ff6a00)!important;
-}
-.admin-dashboard .item-manager-shell .im-field label,
+.admin-app-topbar ~ main .item-manager-shell .im-filter-row,
+.admin-app-topbar ~ main .item-manager-shell .im-filter-row label,
+.admin-app-topbar ~ main .item-manager-shell .im-filter-row strong,
 .admin-dashboard .item-manager-shell .im-filter-row,
 .admin-dashboard .item-manager-shell .im-filter-row label,
-.admin-dashboard .item-manager-shell .im-bottom-form label,
-.admin-dashboard .item-manager-shell .im-right-filter label,
-.admin-dashboard .item-manager-shell .im-right-filter h3,
-.admin-dashboard .item-manager-shell .im-title,
-.admin-dashboard .item-manager-shell .im-note{
-  color:#f8fafc!important;
-  -webkit-text-fill-color:#f8fafc!important;
+.admin-dashboard .item-manager-shell .im-filter-row strong{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
   opacity:1!important;
 }
-.admin-dashboard .item-manager-shell .im-group-label{
-  color:#ffb14f!important;
-  -webkit-text-fill-color:#ffb14f!important;
-  background:#10233d!important;
+.admin-app-topbar ~ main .item-manager-shell .im-field label,
+.admin-app-topbar ~ main .item-manager-shell .im-bottom-form label,
+.admin-app-topbar ~ main .item-manager-shell .im-right-filter label,
+.admin-dashboard .item-manager-shell .im-field label,
+.admin-dashboard .item-manager-shell .im-bottom-form label,
+.admin-dashboard .item-manager-shell .im-right-filter label{
+  color:#eaf3ff!important;
+  -webkit-text-fill-color:#eaf3ff!important;
+  opacity:1!important;
+  text-shadow:none!important;
 }
+.admin-app-topbar ~ main .item-manager-shell input,
+.admin-app-topbar ~ main .item-manager-shell select,
+.admin-app-topbar ~ main .item-manager-shell textarea,
 .admin-dashboard .item-manager-shell input,
 .admin-dashboard .item-manager-shell select,
 .admin-dashboard .item-manager-shell textarea{
   background:#ffffff!important;
   color:#07152a!important;
   -webkit-text-fill-color:#07152a!important;
-  border-color:#91a8bf!important;
-  font-weight:800!important;
+  border-color:#8aa7c4!important;
+  opacity:1!important;
 }
+.admin-app-topbar ~ main .item-manager-shell input::placeholder,
+.admin-app-topbar ~ main .item-manager-shell textarea::placeholder,
 .admin-dashboard .item-manager-shell input::placeholder,
 .admin-dashboard .item-manager-shell textarea::placeholder{
-  color:#556987!important;
-  -webkit-text-fill-color:#556987!important;
+  color:#475569!important;
+  -webkit-text-fill-color:#475569!important;
   opacity:1!important;
 }
-.admin-dashboard .item-manager-shell .im-classic-btn,
-.admin-dashboard .item-manager-shell button,
-.admin-dashboard .item-manager-shell .btn{
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
-  font-weight:950!important;
-  opacity:1!important;
-}
-.admin-dashboard .item-manager-shell .im-tab-heads button{
-  color:#061b35!important;
-  -webkit-text-fill-color:#061b35!important;
+.admin-app-topbar ~ main .item-manager-shell .im-total,
+.admin-dashboard .item-manager-shell .im-total{
+  color:#ffb14f!important;
+  -webkit-text-fill-color:#ffb14f!important;
   font-weight:950!important;
 }
+.admin-app-topbar ~ main .item-manager-shell .im-note,
+.admin-dashboard .item-manager-shell .im-note{
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+}
+
+
+/* v235 Item Manager operational fixes */
+.item-manager-titlebar .im-title-actions{display:flex;align-items:center;gap:10px}.im-settings-btn{width:38px;height:34px;border-radius:10px!important;padding:0!important;font-size:19px!important;background:linear-gradient(135deg,#ff6a00,#ff8c21)!important;color:#fff!important;border:0!important;box-shadow:0 4px 0 rgba(95,38,0,.78),0 12px 24px rgba(0,0,0,.26)!important}.im-lookup-banner{display:none;background:#eaf8ef;color:#064e3b;border-bottom:1px solid #9fd7b0;padding:12px 16px;font-weight:900}.lookup-mode .im-lookup-banner{display:block}.im-lookup-banner .btn-row{margin-top:8px}.im-side-toggle,.im-right-filter{display:none!important}.im-main-area{display:block!important;min-height:420px!important}.im-grid-wrap{background:var(--im-grid-bg,#fff)!important;min-height:420px!important}.im-grid{font-family:var(--im-grid-font-family,"Segoe UI",Arial,sans-serif)!important;background:var(--im-grid-bg,#fff)!important}.im-grid th{border:3pt solid #8aa7c4!important;font-size:calc(var(--im-grid-font-size,13px) - 1px)!important}.im-grid td{border:3pt solid #9eb2c7!important;color:var(--im-grid-font-color,#0b1220)!important;-webkit-text-fill-color:var(--im-grid-font-color,#0b1220)!important;background:var(--im-grid-bg,#fff)!important;font-family:var(--im-grid-font-family,"Segoe UI",Arial,sans-serif)!important;font-size:var(--im-grid-font-size,13px)!important;opacity:1!important}.im-grid tr:nth-child(even) td{background:color-mix(in srgb,var(--im-grid-bg,#fff) 92%,#dff0ff)!important}.im-grid tr.selected td,.im-grid tr.lookup-checked td,.im-grid tr:hover td{background:#d6ebff!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important}.im-select-cell{text-align:center!important;width:54px}.im-row-check{width:20px!important;height:20px!important;min-height:20px!important;accent-color:#ff6a00}.im-sale-price,.im-cost-price{font-weight:950!important;color:#061b35!important;-webkit-text-fill-color:#061b35!important}.im-bottom-filter{display:grid;grid-template-columns:repeat(6,minmax(130px,1fr)) auto;gap:10px;align-items:end;background:#0b1c33;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14);padding:12px}.im-bottom-filter .field{margin:0}.im-bottom-filter label{color:#fff!important;font-weight:950}.im-bottom-filter select{background:#fff!important;color:#07152a!important;-webkit-text-fill-color:#07152a!important;border:1.5px solid rgba(255,106,0,.42)!important}.im-bottom .im-tabs,.im-bottom .im-bottom-form{display:none!important}.im-bottom{grid-template-columns:1fr 430px!important;align-items:start}.im-action-cluster{grid-column:2}.im-bottom-actions{background:#0b1c33}.im-settings-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.62);z-index:2147483300;padding:20px}.im-settings-modal.show{display:flex}.im-settings-card{width:min(680px,100%);background:#07152a;border:1.7px solid rgba(255,106,0,.7);border-radius:22px;color:#fff;box-shadow:0 32px 100px rgba(0,0,0,.55);padding:20px}.im-settings-card h3{margin:0 0 12px;color:#fff}.im-settings-card .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.im-settings-card label{color:#eaf3ff!important}.im-settings-card input,.im-settings-card select{background:#fff!important;color:#07152a!important;-webkit-text-fill-color:#07152a!important}.im-settings-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.lookup-mode .im-bottom-actions #imAdd,.lookup-mode .im-bottom-actions #imEdit,.lookup-mode .im-bottom-actions #imDelete,.lookup-mode .im-action-cluster{display:none!important}.lookup-mode .im-bottom{display:none!important}.lookup-mode .im-bottom-filter{grid-template-columns:repeat(4,minmax(130px,1fr)) auto}.im-lookup-actions{display:none;gap:10px;flex-wrap:wrap;padding:12px;background:#0b1c33;border-bottom:1px solid rgba(255,255,255,.14)}.lookup-mode .im-lookup-actions{display:flex}.item-editor-page{background:linear-gradient(135deg,#07152a,#0b2340 62%,#092a22)!important;border:1.7px solid rgba(255,106,0,.62)!important}.item-editor-page h3{font-size:24px!important}.item-editor-page input,.item-editor-page select,.item-editor-page textarea{background:#fff!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important;border:1.7px solid #ff8c21!important}.item-editor-page label{color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:950!important}@media(max-width:1180px){.im-bottom-filter{grid-template-columns:1fr 1fr}.im-bottom{grid-template-columns:1fr!important}.im-action-cluster{grid-column:1}.im-settings-card .grid-3{grid-template-columns:1fr}.lookup-mode .im-bottom-filter{grid-template-columns:1fr 1fr}}@media(max-width:760px){.im-bottom-filter,.lookup-mode .im-bottom-filter{grid-template-columns:1fr}.im-grid{min-width:1280px!important}.im-settings-card{padding:16px}}
 </style>`;
 }
 
@@ -19832,42 +19867,106 @@ function itemImageThumb(row) {
   return `<span class="im-thumb-placeholder">${escapeHtml(label)}</span>`;
 }
 
-function itemRowHtml(row) {
+function itemRowHtml(row, lookupMode = false) {
   const data = escapeHtml(JSON.stringify(row));
-  return `<tr data-item='${data}' data-active="${row.active}" data-child="${row.child_item}" data-search="${escapeHtml([row.sku,row.upc,row.item_name,row.department,row.category,row.brand,row.supplier,row.notes].join(' ').toLowerCase())}">
-    <td>${itemImageThumb(row)}</td><td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td><td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td>
-    <td class="money">${money(row.price)}</td><td class="money">${escapeHtml(String(row.quantity))}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td><td class="money">${money(row.cost)}</td>
-    <td class="money">${escapeHtml(String(row.reorder_level))}</td><td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.published?'<span class="status approved">Published</span>':'<span class="status canceled">Hidden</span>'}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
+  const selector = lookupMode
+    ? `<input class="im-row-check" type="checkbox" aria-label="Select ${escapeHtml(row.item_name || row.sku)}">`
+    : `<input class="im-row-check" type="radio" name="im_selected_item" aria-label="Select ${escapeHtml(row.item_name || row.sku)}">`;
+  return `<tr data-item='${data}' data-active="${row.active}" data-child="${row.child_item}" data-search="${escapeHtml([row.sku,row.upc,row.item_name,row.department,row.category,row.sub_category,row.brand,row.supplier,row.notes,row.public_description].join(' ').toLowerCase())}">
+    <td class="im-select-cell">${selector}</td><td>${itemImageThumb(row)}</td><td>${escapeHtml(row.sku)}</td><td><strong>${escapeHtml(row.item_name)}</strong></td>
+    <td class="money im-cost-price">${money(row.cost)}</td><td class="money im-sale-price">${money(row.price)}</td><td class="money">${escapeHtml(String(row.quantity))}</td><td class="money">${escapeHtml(String(row.instore_qty))}</td>
+    <td>${escapeHtml(row.size)}</td><td>${escapeHtml(row.pack)}</td><td class="money">${escapeHtml(String(row.reorder_level))}</td><td>${escapeHtml(row.department)}</td><td>${escapeHtml(row.category)}</td><td>${escapeHtml(row.brand)}</td><td>${row.published?'<span class="status approved">Published</span>':'<span class="status canceled">Hidden</span>'}</td><td>${row.active?'<span class="status approved">Active</span>':'<span class="status canceled">Inactive</span>'}</td>
   </tr>`;
 }
 
 function itemManagerScript() {
   return `<script>(function(){
-const page=document.querySelector('.item-manager-shell');if(!page)return;const rows=[...page.querySelectorAll('.im-grid tbody tr')];let selected=null;const qs=s=>page.querySelector(s), qsa=s=>[...page.querySelectorAll(s)];const total=qs('#imTotal');const toast=document.getElementById('imToast');
+const page=document.querySelector('.item-manager-shell');if(!page)return;
+const lookupMode=page.classList.contains('lookup-mode');
+let rows=[...page.querySelectorAll('.im-grid tbody tr')];
+let selected=null;
+const qs=s=>page.querySelector(s), qsa=s=>[...page.querySelectorAll(s)];
+const total=qs('#imTotal');
+const toast=document.getElementById('imToast');
+const settingsKey='hbItemManagerGridSettings';
 function money(n){n=Number(n||0);return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
-function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
-function getSelected(){return selected?JSON.parse(selected.dataset.item||'{}'):null}
-function selectedOrAlert(){const it=getSelected();if(!it){showToast('Select an item first.');return null}return it}
-function setSelected(tr){rows.forEach(r=>r.classList.remove('selected'));selected=tr;if(tr)tr.classList.add('selected');updateDetail();}
+function showToast(t){if(!toast)return;toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)}
+function readItem(tr){try{return JSON.parse(tr?.dataset?.item||'{}')}catch(e){return {}}}
+function getSelected(){return selected?readItem(selected):null}
+function selectedOrAlert(){const it=getSelected();if(!it||!it.id){showToast('Select an item first.');return null}return it}
+function setSelected(tr){rows.forEach(r=>r.classList.remove('selected'));selected=tr||null;if(tr){tr.classList.add('selected');const pick=tr.querySelector('.im-row-check');if(pick&&!lookupMode)pick.checked=true;}updateDetail();}
 function val(sel){const el=qs(sel);return el?String(el.value||'').toLowerCase().trim():''}
-function matchesSelect(item,key,sel){const v=val(sel);return !v || String(item[key]||'').toLowerCase()===v}
-function applyFilter(){const search=val('#imSearchValue'), name=val('#imSearchName'), kw=val('#imSearchKeyword');const include=qs('#imIncludeInactive')?.checked, only=qs('#imOnlyInactive')?.checked, child=qs('#imIncludeChild')?.checked;let count=0;rows.forEach(tr=>{const it=JSON.parse(tr.dataset.item||'{}');let ok=true;if(only)ok=Number(it.active)===0;else if(!include)ok=Number(it.active)===1;if(ok&&!child)ok=Number(it.child_item)!==1;if(ok&&search)ok=String(it.sku+' '+it.upc).toLowerCase().includes(search);if(ok&&name)ok=String(it.item_name||'').toLowerCase().includes(name);if(ok&&kw)ok=String(tr.dataset.search||'').includes(kw);if(ok)ok=matchesSelect(it,'department','#imBotDept')&&matchesSelect(it,'category','#imBotCat')&&matchesSelect(it,'item_type','#imFiltType')&&matchesSelect(it,'department','#imFiltDept')&&matchesSelect(it,'category','#imFiltCat')&&matchesSelect(it,'sub_category','#imFiltSubCat')&&matchesSelect(it,'size','#imFiltSize')&&matchesSelect(it,'pack','#imFiltPack')&&matchesSelect(it,'item_group','#imFiltGroup')&&matchesSelect(it,'brand','#imFiltBrand')&&matchesSelect(it,'supplier','#imFiltSupplier');tr.style.display=ok?'':'none';if(ok)count++;});if(total)total.textContent='Total: '+count.toLocaleString();if(selected&&selected.style.display==='none')setSelected(null)}
-qsa('input,select').forEach(el=>{el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});rows.forEach(tr=>tr.addEventListener('click',()=>setSelected(tr)));if(rows[0])setSelected(rows[0]);
+function exactOrBlank(item,key,sel){const v=val(sel);return !v || String(item[key]||'').toLowerCase()===v}
+function showVisibleRows(){const pageSize=Math.max(1,Number((settings.pageSize||200)));let shown=0;rows.forEach(tr=>{if(tr.dataset.filterHidden==='1'){tr.style.display='none';return;}shown++;tr.style.display=shown<=pageSize?'':'none';tr.dataset.pageHidden=shown<=pageSize?'0':'1';});const visible=rows.filter(r=>r.dataset.filterHidden!=='1').length;if(total)total.textContent='Total: '+visible.toLocaleString()+(visible>pageSize?' • showing first '+pageSize.toLocaleString():'');}
+function applyFilter(){
+  const search=val('#imSearchValue'), searchIn=val('#imSearchIn')||'sku/upc', name=val('#imSearchName'), kw=val('#imSearchKeyword');
+  const include=qs('#imIncludeInactive')?.checked, only=qs('#imOnlyInactive')?.checked, child=qs('#imIncludeChild')?.checked;
+  rows.forEach(tr=>{const it=readItem(tr);let ok=true;if(only)ok=Number(it.active)===0;else if(!include)ok=Number(it.active)===1;if(ok&&!child)ok=Number(it.child_item)!==1;
+    if(ok&&search){const sku=String(it.sku||'').toLowerCase(), upc=String(it.upc||'').toLowerCase(); if(searchIn==='sku')ok=sku.includes(search); else if(searchIn==='upc')ok=upc.includes(search); else ok=(sku+' '+upc).includes(search);}
+    if(ok&&name)ok=String(it.item_name||'').toLowerCase().includes(name);
+    if(ok&&kw)ok=String(tr.dataset.search||'').includes(kw);
+    if(ok)ok=exactOrBlank(it,'department','#imBottomDept')&&exactOrBlank(it,'category','#imBottomCat')&&exactOrBlank(it,'sub_category','#imBottomSubCat')&&exactOrBlank(it,'brand','#imBottomBrand')&&exactOrBlank(it,'supplier','#imBottomSupplier')&&exactOrBlank(it,'item_type','#imBottomType');
+    tr.dataset.filterHidden=ok?'0':'1';
+  });
+  showVisibleRows();
+  if(selected&&(selected.dataset.filterHidden==='1'||selected.dataset.pageHidden==='1'))setSelected(null);
+}
+const defaultSettings={pageSize:200,fontFamily:'Segoe UI, Arial, sans-serif',fontSize:13,fontColor:'#0b1220',gridBg:'#ffffff'};
+let settings={...defaultSettings};
+try{settings={...settings,...JSON.parse(localStorage.getItem(settingsKey)||'{}')}}catch(e){}
+function applySettings(){
+  page.style.setProperty('--im-grid-font-family',settings.fontFamily||defaultSettings.fontFamily);
+  page.style.setProperty('--im-grid-font-size',(Number(settings.fontSize)||13)+'px');
+  page.style.setProperty('--im-grid-font-color',settings.fontColor||defaultSettings.fontColor);
+  page.style.setProperty('--im-grid-bg',settings.gridBg||defaultSettings.gridBg);
+  ['imSetPageSize','imSetFontFamily','imSetFontSize','imSetFontColor','imSetGridBg'].forEach(id=>{const el=qs('#'+id); if(!el)return; if(id==='imSetPageSize')el.value=settings.pageSize; if(id==='imSetFontFamily')el.value=settings.fontFamily; if(id==='imSetFontSize')el.value=settings.fontSize; if(id==='imSetFontColor')el.value=settings.fontColor; if(id==='imSetGridBg')el.value=settings.gridBg;});
+  showVisibleRows();
+}
+function saveSettings(){
+  settings.pageSize=Math.max(1,Number(qs('#imSetPageSize')?.value||200));
+  settings.fontFamily=String(qs('#imSetFontFamily')?.value||defaultSettings.fontFamily).trim()||defaultSettings.fontFamily;
+  settings.fontSize=Math.max(10,Math.min(24,Number(qs('#imSetFontSize')?.value||13)));
+  settings.fontColor=String(qs('#imSetFontColor')?.value||defaultSettings.fontColor);
+  settings.gridBg=String(qs('#imSetGridBg')?.value||defaultSettings.gridBg);
+  localStorage.setItem(settingsKey,JSON.stringify(settings));
+  applySettings();showToast('Item Manager settings saved.');
+}
+function resetSettings(){settings={...defaultSettings};localStorage.setItem(settingsKey,JSON.stringify(settings));applySettings();showToast('Item Manager settings reset.');}
+qsa('input,select').forEach(el=>{el.addEventListener('input',applyFilter);el.addEventListener('change',applyFilter)});
+rows.forEach(tr=>{tr.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('a,button'))return;const pick=tr.querySelector('.im-row-check');if(lookupMode&&pick){if(e.target!==pick)pick.checked=!pick.checked;tr.classList.toggle('lookup-checked',pick.checked);}else setSelected(tr);});const pick=tr.querySelector('.im-row-check');if(pick)pick.addEventListener('click',e=>{e.stopPropagation(); if(lookupMode){tr.classList.toggle('lookup-checked',pick.checked);}else setSelected(tr);});});
 function updateDetail(){const it=getSelected();if(!it){qsa('[data-im-detail]').forEach(el=>el.textContent='');return;}qsa('[data-im-detail]').forEach(el=>{const k=el.dataset.imDetail;let v=it[k]??'';if(['price','cost','msrp'].includes(k))v=money(v);if(k==='margin')v=(Number(it.price)>0&&Number(it.cost)>0?(((Number(it.price)-Number(it.cost))/Number(it.price))*100).toFixed(1)+'%':'0.0%');el.textContent=v});}
+function itemPayload(it){return {id:it.id,sku:it.sku||it.upc||it.id,name:it.item_name||it.sku||'',desc:it.public_description||it.notes||[it.department,it.category,it.size,it.pack].filter(Boolean).join(' • '),cost:Number(it.cost||0),sale_price:Number(it.price||0),price:Number(it.price||0),markup:Number(it.cost)>0&&Number(it.price)>0?Math.round(((Number(it.price)-Number(it.cost))/Number(it.cost))*10000)/100:0,taxable:true,image:it.image_url||'',source:'item-manager'};}
+function selectedPayloads(){const checked=lookupMode?qsa('.im-row-check:checked').map(ch=>ch.closest('tr')).filter(Boolean):(selected?[selected]:[]);return checked.map(readItem).filter(it=>it&&it.id).map(itemPayload);}
+function sendSelectedToOpener(){const items=selectedPayloads();if(!items.length){showToast('Select at least one item.');return;}if(window.opener&&!window.opener.closed){window.opener.postMessage({type:'HB_ITEM_MANAGER_SELECTED_ITEMS',items},location.origin);showToast('Adding '+items.length+' item(s) to document...');setTimeout(()=>window.close(),350);}else{showToast('Lookup window is not connected to the document.')}}
 qsa('.im-tab-heads button').forEach(btn=>btn.addEventListener('click',()=>{qsa('.im-tab-heads button').forEach(b=>b.classList.remove('active'));qsa('.im-tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');qs('#'+btn.dataset.tab)?.classList.add('active')}));
-qs('#imToggleFilter')?.addEventListener('click',()=>qs('#imRightFilter')?.classList.toggle('show'));qs('#imResetFilters')?.addEventListener('click',()=>{qsa('.im-right-filter select').forEach(s=>s.value='');applyFilter()});qs('#imCustomFilter')?.addEventListener('click',()=>showToast('Use the dropdowns above for custom filtering.'));
-qs('#imAdd')?.addEventListener('click',()=>location.href='/admin/items/new');qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/edit?id='+encodeURIComponent(it.id)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/new?clone='+encodeURIComponent(it.id)});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)});qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\nVendor SKU: '+(it.vendor_sku||'')+'\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Use the Edit page to change Item Group.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Use the Edit page and set Item Type to Set Item / Multi Pack.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));applyFilter();})();</script>`;
+qs('#imKey')?.addEventListener('click',applyFilter);['#imSearchValue','#imSearchName','#imSearchKeyword'].forEach(sel=>qs(sel)?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyFilter();}}));
+qs('#imBottomClear')?.addEventListener('click',()=>{['#imBottomDept','#imBottomCat','#imBottomSubCat','#imBottomBrand','#imBottomSupplier','#imBottomType','#imSearchValue','#imSearchName','#imSearchKeyword'].forEach(sel=>{const el=qs(sel);if(el)el.value='';});applyFilter();});
+qs('#imSettingsBtn')?.addEventListener('click',()=>qs('#imSettingsModal')?.classList.add('show'));
+qs('#imSettingsClose')?.addEventListener('click',()=>qs('#imSettingsModal')?.classList.remove('show'));
+qs('#imSettingsSave')?.addEventListener('click',()=>{saveSettings();qs('#imSettingsModal')?.classList.remove('show')});
+qs('#imSettingsReset')?.addEventListener('click',resetSettings);
+qs('#imAddSelected')?.addEventListener('click',sendSelectedToOpener);
+qs('#imCancelLookup')?.addEventListener('click',()=>window.close());
+qs('#imAdd')?.addEventListener('click',()=>location.href='/admin/items/new');qs('#imEdit')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/edit?id='+encodeURIComponent(it.id)});qs('#imClone')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)location.href='/admin/items/new?clone='+encodeURIComponent(it.id)});qs('#imDelete')?.addEventListener('click',()=>{const it=selectedOrAlert(); if(!it)return;if(confirm('Delete item '+it.item_name+'?')){const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='delete';f.submit();}});qs('#imRefresh')?.addEventListener('click',()=>location.reload());qs('#imClose')?.addEventListener('click',()=>lookupMode?window.close():location.href='/admin/dashboard?app=1');qs('#imSelect')?.addEventListener('click',()=>lookupMode?sendSelectedToOpener():(()=>{const it=selectedOrAlert();if(it)showToast('Selected '+it.sku+' — '+it.item_name)})());qs('#imCopyUpc')?.addEventListener('click',async()=>{const it=selectedOrAlert();if(!it)return;try{await navigator.clipboard.writeText(it.upc||it.sku||'');showToast('Copied UPC / SKU.')}catch(e){showToast('Copy failed.')}});qs('#imExport')?.addEventListener('click',()=>location.href='/admin/items.csv');qs('#imPrint')?.addEventListener('click',()=>window.print());qs('#imVendorInfo')?.addEventListener('click',()=>{const it=selectedOrAlert();if(it)alert('Supplier: '+(it.supplier||'')+'\\nVendor SKU: '+(it.vendor_sku||'')+'\\nBrand: '+(it.brand||''));});qs('#imChangePrice')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const n=prompt('New sale price for '+it.item_name, it.price);if(n===null)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.value.value=n;f.elements.action.value='price';f.submit();});qs('#imSetFlags')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const f=document.getElementById('quickActionForm');f.elements.id.value=it.id;f.elements.action.value='toggle_active';f.submit();});qs('#imOrderItem')?.addEventListener('click',()=>{const it=selectedOrAlert();if(!it)return;const q=prompt('Enter order quantity for '+it.item_name,'1');if(!q)return;showToast('Order request noted for '+q+' unit(s).')});qs('#imCreateButton')?.addEventListener('click',()=>showToast('Create Button placeholder is preserved from the POS layout.'));qs('#imAddToGroup')?.addEventListener('click',()=>showToast('Use the Edit page to change Item Group.'));qs('#imMultiPack')?.addEventListener('click',()=>showToast('Use the Edit page and set Item Type to Set Item / Multi Pack.'));qs('#imHistory')?.addEventListener('click',()=>showToast('History view can be connected once sales/POS history is imported.'));
+if(rows[0]&&!lookupMode)setSelected(rows[0]);
+applySettings();applyFilter();
+})();</script>`;
 }
 
 async function adminItemManagerPage(request, env, message = '') {
   const user = await requireAuth(request, env); if (!user) return redirect('/admin-app');
+  const url = new URL(request.url);
+  const lookupMode = url.searchParams.get('lookup') === '1';
   await ensureItemManagerTables(env);
   const rows = await itemManagerRows(env, { includeInactive: true });
   const lists = await itemManagerLookupLists(env, rows);
-  const rowHtml = rows.map(itemRowHtml).join('') || `<tr><td colspan="15">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
+  const rowHtml = rows.map(r => itemRowHtml(r, lookupMode)).join('') || `<tr><td colspan="16">No items yet. Use ADD below to create the first inventory item.</td></tr>`;
   const typeOptions = itemOptionList(['Standard','Service','Set Item','Matrix Parent','Matrix Child','Non-Stock','Shipping','Labor'], '', '--All--');
+  const lookupClass = lookupMode ? ' lookup-mode' : '';
+  const lookupBanner = lookupMode ? `<div class="im-lookup-banner"><strong>Item lookup mode:</strong> check one or more items, then click Add Selected Items to Quote/Invoice.</div><div class="im-lookup-actions"><button type="button" class="im-classic-btn im-btn-green" id="imAddSelected">Add Selected Items</button><button type="button" class="im-classic-btn" id="imCancelLookup">Cancel Lookup</button></div>` : '';
+  const settingsModal = `<div class="im-settings-modal" id="imSettingsModal"><div class="im-settings-card"><h3>Item Manager Settings</h3><div class="grid-3"><div class="field"><label>Items shown in grid</label><input id="imSetPageSize" type="number" min="1" step="1"></div><div class="field"><label>Grid font family</label><input id="imSetFontFamily" placeholder="Segoe UI, Arial"></div><div class="field"><label>Grid font size</label><input id="imSetFontSize" type="number" min="10" max="24"></div><div class="field"><label>Grid font color</label><input id="imSetFontColor" type="color"></div><div class="field"><label>Grid background color</label><input id="imSetGridBg" type="color"></div></div><div class="im-settings-actions"><button type="button" class="im-classic-btn im-btn-green" id="imSettingsSave">Save Settings</button><button type="button" class="im-classic-btn" id="imSettingsReset">Reset Defaults</button><button type="button" class="im-classic-btn im-btn-red" id="imSettingsClose">Close</button></div></div></div>`;
   const datalists = `<datalist id="imDeptList">${lists.departments.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imCatList">${lists.categories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSubCatList">${lists.subCategories.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imBrandList">${lists.brands.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSupplierList">${lists.suppliers.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imSizeList">${lists.sizes.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imPackList">${lists.packs.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imGroupList">${lists.groups.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist><datalist id="imLocList">${lists.locations.map(x=>`<option value="${escapeHtml(x)}">`).join('')}</datalist>`;
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell"><div class="item-manager-titlebar"><span>Items</span><span class="im-note">Internal Item Manager • ${rows.length} saved item${rows.length===1?'':'s'}</span></div><div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option>SKU/UPC</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><thead><tr><th>Image</th><th>SKU</th><th>Item Name</th><th>Size</th><th>Pack</th><th>Price</th><th>Quantity</th><th>InStore Qty</th><th>Cost</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${datalists}${itemManagerScript()}</div></main>`;
+  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>Item Manager</h2><p>WinForms-style inventory manager for internal items. EUFY Manager and LTS Manager remain separate, while product departments can be published to the website.</p></div><div class="btn-row"><a class="btn" href="/admin/dashboard?app=1">Dashboard</a><a class="btn orange" href="/admin/items/new">ADD Item</a><a class="btn" href="/admin/items/import">Import Catalog</a><a class="btn" href="/admin/item-departments">Departments</a><a class="btn" href="/admin/eufy">EUFY Manager</a><a class="btn" href="/admin/lts">LTS Manager</a></div></div>${message}${itemManagerStyle()}<div class="item-manager-shell${lookupClass}"><div class="item-manager-titlebar"><span>Items</span><span class="im-title-actions"><span class="im-note">Internal Item Manager • ${rows.length} saved item${rows.length===1?'':'s'}</span><button type="button" class="im-settings-btn" id="imSettingsBtn" title="Item Manager settings">⚙</button></span></div>${lookupBanner}<div class="im-searchbar"><div class="im-group"><div class="im-group-label">Search In</div><div class="im-field"><label>Search In:</label><select id="imSearchIn"><option value="sku/upc">SKU/UPC</option><option value="sku">SKU only</option><option value="upc">UPC only</option></select></div></div><div class="im-group"><div class="im-group-label">Search Value</div><div class="im-field"><label>Search Value:</label><input id="imSearchValue" placeholder="SKU or UPC"></div></div><div class="im-group"><div class="im-group-label">Search In Name</div><div class="im-field"><label>Search In Name</label><input id="imSearchName" placeholder="Item name"></div></div><div class="im-group"><div class="im-group-label">Find In keyword</div><div class="im-field"><label>Find In keyword</label><input id="imSearchKeyword" placeholder="Any keyword"></div></div><div class="im-search-actions"><button type="button" class="im-classic-btn im-btn-blue" id="imKey">KEY</button><button type="button" class="im-classic-btn im-btn-green" id="imSelect">SELECT</button><button type="button" class="im-classic-btn im-btn-red" id="imClose">CLOSE</button></div></div><div class="im-filter-row"><strong>Items</strong><label><input id="imIncludeInactive" type="checkbox"> Include Inactive Items</label><label><input id="imOnlyInactive" type="checkbox"> Only Inactive Items</label><label><input id="imIncludeChild" type="checkbox"> Include Child Items</label><span class="im-total" id="imTotal">Total: ${rows.filter(r=>r.active).length.toLocaleString()}</span></div><div class="im-main-area"><div class="im-grid-wrap"><table class="im-grid"><thead><tr><th class="im-select-col">Select</th><th>Image</th><th>SKU</th><th>Item Name</th><th>Cost</th><th>Sale Price</th><th>Quantity</th><th>InStore Qty</th><th>Size</th><th>Pack</th><th>Reorder Level</th><th>Department</th><th>Category</th><th>Brand</th><th>Website</th><th>Status</th></tr></thead><tbody>${rowHtml}</tbody></table></div><button type="button" class="im-side-toggle" id="imToggleFilter">+ Filter Items</button><aside class="im-right-filter" id="imRightFilter"><h3>Filter Items</h3><div class="field"><label>Item Type :</label><select id="imFiltType">${typeOptions}</select></div><div class="field"><label>Department :</label><select id="imFiltDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Category :</label><select id="imFiltCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category :</label><select id="imFiltSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Item Size :</label><select id="imFiltSize">${itemOptionList(lists.sizes,'','<--All-->')}</select></div><div class="field"><label>Item Pack :</label><select id="imFiltPack">${itemOptionList(lists.packs,'','<--All-->')}</select></div><div class="field"><label>Item Group :</label><select id="imFiltGroup">${itemOptionList(lists.groups,'','<--All-->')}</select></div><div class="field"><label>Item Brand :</label><select id="imFiltBrand">${itemOptionList(lists.brands,'','<--All-->')}</select></div><div class="field"><label>Supplier :</label><select id="imFiltSupplier">${itemOptionList(lists.suppliers,'','<--All-->')}</select></div><div class="btn-row"><button type="button" class="btn" id="imCustomFilter">Custom Filter</button><button type="button" class="btn" id="imResetFilters">Reset Filters</button></div></aside></div><div class="im-bottom-filter"><div class="field"><label>Filter Department</label><select id="imBottomDept">${itemOptionList(lists.departments,'','--All--')}</select></div><div class="field"><label>Filter Category</label><select id="imBottomCat">${itemOptionList(lists.categories,'','--All--')}</select></div><div class="field"><label>Sub-Category</label><select id="imBottomSubCat">${itemOptionList(lists.subCategories,'','--All--')}</select></div><div class="field"><label>Brand</label><select id="imBottomBrand">${itemOptionList(lists.brands,'','--All--')}</select></div><div class="field"><label>Supplier</label><select id="imBottomSupplier">${itemOptionList(lists.suppliers,'','--All--')}</select></div><div class="field"><label>Item Type</label><select id="imBottomType">${typeOptions}</select></div><button type="button" class="im-classic-btn" id="imBottomClear">Clear Filters</button></div><div class="im-bottom"><div class="im-tabs"><div class="im-tab-heads"><button type="button" class="active" data-tab="imTabStock">Item Stock</button><button type="button" data-tab="imTabWeek">Week</button><button type="button" data-tab="imTabStorePrice">Store Price</button><button type="button" data-tab="imTabUpc">UPC</button></div><div class="im-tab-panel active" id="imTabStock"><table class="im-mini-grid"><tr><th>Facility</th><th>Qty</th></tr><tr><td>In-Store</td><td data-im-detail="instore_qty"></td></tr><tr><td>Warehouse</td><td data-im-detail="quantity"></td></tr></table></div><div class="im-tab-panel" id="imTabWeek"><table class="im-mini-grid"><tr><th>Period</th><th>Sales</th></tr><tr><td>Current Week</td><td>0</td></tr><tr><td>Last Week</td><td>0</td></tr></table></div><div class="im-tab-panel" id="imTabStorePrice"><table class="im-mini-grid"><tr><th>Price Level</th><th>Value</th></tr><tr><td>Price</td><td data-im-detail="price"></td></tr><tr><td>MSRP</td><td data-im-detail="msrp"></td></tr><tr><td>Margin</td><td data-im-detail="margin"></td></tr></table></div><div class="im-tab-panel" id="imTabUpc"><table class="im-mini-grid"><tr><th>UPC Type</th><th>Value</th></tr><tr><td>Main UPC</td><td data-im-detail="upc"></td></tr><tr><td>Department</td><td data-im-detail="department"></td></tr><tr><td>Category</td><td data-im-detail="category"></td></tr></table></div></div><div class="im-bottom-form"><div class="field"><label>Department:</label><select id="imBotDept">${itemOptionList(lists.departments,'','')}</select></div><div class="field"><label>Category:</label><select id="imBotCat">${itemOptionList(lists.categories,'','')}</select></div><div class="field"><label>Location:</label><input id="imBotLoc" readonly data-im-detail="location"></div><button type="button" class="im-classic-btn" id="imCopyUpc">Copy UPC</button></div><div class="im-action-cluster"><button type="button" class="im-classic-btn" id="imHistory">History</button><button type="button" class="im-classic-btn" id="imRefresh">Refresh</button><button type="button" class="im-classic-btn" id="imCreateButton">Create Button</button><button type="button" class="im-classic-btn" id="imVendorInfo">Vendor Info</button><button type="button" class="im-classic-btn" id="imChangePrice">Change Price</button><button type="button" class="im-classic-btn" id="imAddToGroup">Add To Group</button><button type="button" class="im-classic-btn" id="imClone">Clone</button><button type="button" class="im-classic-btn" id="imSetFlags">Set Flags</button><button type="button" class="im-classic-btn" id="imPrint">Print</button><button type="button" class="im-classic-btn" id="imExport">Export</button><button type="button" class="im-classic-btn" id="imOrderItem">Order Store</button><button type="button" class="im-classic-btn" id="imMultiPack">Multi Pack</button></div></div><div class="im-bottom-actions" style="padding:0 10px 12px"><button type="button" class="im-classic-btn im-btn-green" id="imAdd">ADD</button><button type="button" class="im-classic-btn im-btn-blue" id="imEdit">EDIT</button><button type="button" class="im-classic-btn im-btn-red" id="imDelete">DELETE</button></div></div><form id="quickActionForm" method="post" action="/admin/items"><input type="hidden" name="action"><input type="hidden" name="id"><input type="hidden" name="value"></form><div id="imToast" class="im-toast"></div>${settingsModal}${datalists}${itemManagerScript()}</div></main>`;
   return htmlPage('Item Manager | HB Commerce', layout(env, 'Dashboard', body));
 }
 
@@ -21611,7 +21710,7 @@ html body main.admin-document-page #docForm .btn-row .btn{
 <section class="form-section"><div class="form-title">Customer & Billing Address</div><div class="grid-2"><div class="field"><label>Customer Name</label><input name="customer_name" value="${escapeHtml(doc.customer_name || "")}" required></div><div class="field"><label>Client Email</label><input name="email" type="email" value="${escapeHtml(doc.email || "")}"></div></div><div class="grid-2"><div class="field"><label>Client Mobile / WhatsApp</label><input name="phone" id="phone" type="tel" value="${escapeHtml(doc.phone || "")}"></div><div class="field"><label>Billing Street Address</label><input name="billing_street" id="billing_street" value="${escapeHtml(bill.street || "")}" autocomplete="billing street-address"></div></div><div class="grid-4"><div class="field"><label>Billing ZIP <span class="hint">auto city/state + tax</span></label><input name="billing_zip" id="billing_zip" value="${escapeHtml(bill.zip || "")}" maxlength="10" autocomplete="billing postal-code"></div><div class="field"><label>Billing City</label><input name="billing_city" id="billing_city" value="${escapeHtml(bill.city || "")}" autocomplete="billing address-level2"></div><div class="field"><label>Billing State</label><input name="billing_state" id="billing_state" value="${escapeHtml(bill.state || "")}" maxlength="2" autocomplete="billing address-level1" placeholder="IL"></div><div class="field tax-rate-field"><label>Tax Rate (%)</label><input name="tax_rate" id="tax_rate" type="number" min="0" step="0.001" value="${Number(doc.tax_rate || 10).toFixed(3)}"><button type="button" class="small orange" onclick="lookupDestinationTax()">Lookup Destination Tax</button></div></div><div class="notice zip-lookup-note" id="billingZipNote">Enter a 5-digit billing ZIP. City/state and destination sales tax now update automatically.</div></section>
 <section class="form-section same-address-section"><label class="check same-address-check"><input name="shipping_same_as_billing" id="shipping_same_as_billing" value="1" type="checkbox" ${shippingSame ? "checked" : ""}> Shipping address same as billing address</label><p class="hint">This is intentionally unchecked by default. Check it only when the shipping destination is the same as the billing address.</p></section>
 <section class="form-section"><div class="form-title">Shipping Address</div><div class="grid-2"><div class="field"><label>Shipping Street Address</label><input name="shipping_street" id="shipping_street" value="${escapeHtml(ship.street || "")}" autocomplete="shipping street-address"></div><div class="field"><label>Shipping ZIP <span class="hint">auto city/state + rate</span></label><input name="shipping_zip" id="shipping_zip" value="${escapeHtml(ship.zip || "")}" maxlength="10" autocomplete="shipping postal-code"></div></div><div class="grid-3"><div class="field"><label>Shipping City</label><input name="shipping_city" id="shipping_city" value="${escapeHtml(ship.city || "")}" autocomplete="shipping address-level2"></div><div class="field"><label>Shipping State</label><input name="shipping_state" id="shipping_state" value="${escapeHtml(ship.state || "")}" maxlength="2" autocomplete="shipping address-level1" placeholder="IL"></div><div class="field"><label>Destination Tax</label><button type="button" class="orange" onclick="lookupDestinationTax()">Refresh Destination Tax</button></div></div><div class="notice" id="taxNote">${doc.tax_source ? `Tax source: ${escapeHtml(doc.tax_source)}${doc.tax_lookup_address ? " • " + escapeHtml(doc.tax_lookup_address) : ""}` : "Default tax rate is 10.000%. Destination ZIP/city/state fills automatically from the shipping ZIP."}</div></section>
-<section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground / Home Delivery</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals();markManualShippingOverride()"></div><div class="field"><label>Auto Rate Status</label><div class="auto-rate-pill" id="autoRateStatus">Waiting for ZIP and carrier</div></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Auto shipping:</strong> choose UPS or FedEx and enter a 5-digit shipping ZIP. The rate calculates automatically when the carrier, ZIP, address, package weight, or line items change. Choose Manual Entry to type your own shipping cost.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
+<section class="form-section"><div class="form-title">Line Items <span class="hint">Cost and markup are private/internal only.</span></div><div class="btn-row" style="margin-bottom:12px"><button class="orange" type="button" onclick="addItem()">+ Add Line Item</button><button type="button" onclick="openItemLookup()">Lookup Item Manager</button><button type="button" onclick="loadSample()">Load Selected Business Sample</button></div><div id="items"></div><div class="grid-4 shipping-cost-row"><div class="field"><label>Shipping Method / Carrier</label><select name="shipping_carrier" id="shipping_carrier"><option value="manual" ${shippingCarrier==="manual"?"selected":""}>Manual Entry</option><option value="ups" ${shippingCarrier==="ups"||shippingCarrier==="ups_ground"?"selected":""}>UPS Ground</option><option value="fedex" ${shippingCarrier==="fedex"||shippingCarrier==="fedex_ground"?"selected":""}>FedEx Ground / Home Delivery</option><option value="pickup" ${shippingCarrier==="pickup"?"selected":""}>Pickup / No Shipping</option></select></div><div class="field"><label>Package Weight (lb)</label><input name="shipping_weight_lbs" id="shipping_weight_lbs" type="number" min="0" step="0.1" inputmode="decimal" value="${escapeHtml(doc.shipping_weight_lbs || "")}" placeholder="optional"></div><div class="field"><label>Shipping Cost $ <span class="hint">non-taxable</span></label><input name="shipping_cost" id="shipping_cost" type="number" min="0" step="0.01" inputmode="decimal" value="${displayMoneyInput(doc.shipping_cost || 0)}" oninput="renderTotals();markManualShippingOverride()"></div><div class="field"><label>Auto Rate Status</label><div class="auto-rate-pill" id="autoRateStatus">Waiting for ZIP and carrier</div></div><input type="hidden" name="shipping_service" id="shipping_service" value="${escapeHtml(doc.shipping_service || "")}"><input type="hidden" name="shipping_rate_label" id="shipping_rate_label" value="${escapeHtml(doc.shipping_rate_label || "")}"><input type="hidden" name="shipping_rate_source" id="shipping_rate_source" value="${escapeHtml(doc.shipping_rate_source || "")}"></div><div class="notice" id="shippingRateNote"><strong>Auto shipping:</strong> choose UPS or FedEx and enter a 5-digit shipping ZIP. The rate calculates automatically when the carrier, ZIP, address, package weight, or line items change. Choose Manual Entry to type your own shipping cost.</div><div class="summary-grid"><div class="notice"><strong>Discount logic:</strong> line-item discounts are applied before subtotal and tax. The accumulated discount shown in totals is informational only and is not deducted again.</div><div class="totals-card" id="builderTotals"></div></div></section>
 <section class="form-section"><div class="form-title">Terms, Conditions & Payment Link</div><div class="grid-2"><div class="field"><label>Terms & Conditions</label><textarea name="terms_conditions" rows="5" placeholder="Example: Quote valid for 30 days. Hardware ships after approval and payment is received.">${escapeHtml(doc.terms_conditions || "")}</textarea></div><div class="field"><label>Invoice Payment Link <span class="hint">optional / future Authorize.Net</span></label><input name="payment_link" value="${escapeHtml(doc.payment_link || "")}" placeholder="https://..."><p class="hint">When Authorize.Net is ready, this field can display a Pay Invoice Online link on invoices.</p></div></div></section>
 <section class="form-section no-print"><div class="form-title">Actions</div><div class="btn-row"><button class="primary" name="save_only" value="1">Save Document</button><button class="green" name="save_email" value="1">Save and Email</button>${doc.id ? `<a class="btn" target="_blank" href="/review/${encodeURIComponent(doc.id)}/${escapeHtml(doc.token)}">View Customer Link</a><a class="btn orange" target="_blank" href="/admin/document.pdf?id=${encodeURIComponent(doc.id)}">Download PDF</a><a class="btn green" href="/admin/email?id=${encodeURIComponent(doc.id)}">Email Client</a>` : ""}<a class="btn" href="/admin/dashboard">Cancel</a><a class="btn danger" href="/admin/logout?force=1">Logout</a></div></section></form></div></main>
 <script>
@@ -21692,6 +21791,27 @@ function matchInventoryItem(i,value){
   },0);
 }
 function addItem(){items.push({qty:1,name:'',desc:'',cost:0,sale_price:0,markup:40,discount:0,taxable:true});renderItems();setTimeout(()=>{let cards=document.querySelectorAll('.line-item-card');let card=cards[cards.length-1];let input=card&&card.querySelector('input[name^="item_name"]');if(input)input.focus();},0)}
+function addItemFromManager(p){
+  p=p||{};
+  let cost=Number(p.cost||0), sale=Number(p.sale_price||p.price||0);
+  let markup=Number(p.markup||0);
+  if(!markup && cost>0 && sale>0) markup=Math.round(((sale-cost)/cost)*10000)/100;
+  items.push({qty:1,name:p.name||p.sku||'',desc:p.desc||'',cost:cost,sale_price:sale,markup:markup||40,discount:0,taxable:p.taxable!==false,inventory_item_id:p.id||'',image:p.image||''});
+  renderItems();
+  scheduleShippingRate(550);
+}
+function openItemLookup(){
+  let w=window.open('/admin/items?lookup=1','hb_item_lookup','popup=yes,width=1500,height=900,scrollbars=yes,resizable=yes');
+  if(!w) alert('Please allow popups for this site so Item Manager lookup can open.');
+}
+window.addEventListener('message',function(ev){
+  if(ev.origin!==location.origin)return;
+  let d=ev.data||{};
+  if(d.type==='HB_ITEM_MANAGER_SELECTED_ITEMS'&&Array.isArray(d.items)){
+    d.items.forEach(addItemFromManager);
+    renderTotals();
+  }
+});
 function removeItem(i){items.splice(i,1);renderItems()}
 function loadSample(){let b=document.getElementById('business').value;const samples={processing:[{qty:1,name:'PAY-PROC-SETUP',desc:'Payment processing account setup and gateway configuration',cost:215,markup:40,discount:0,taxable:true},{qty:1,name:'TERMINAL-CONFIG',desc:'Payment terminal configuration and integration support',cost:110,markup:40,discount:0,taxable:true},{qty:1,name:'MONTHLY-SUPPORT',desc:'Monthly processing support and account service',cost:35,markup:40,discount:0,taxable:false}],pos:[{qty:1,name:'RETAIL-POS-SETUP',desc:'Retail POS software setup, catalog configuration, tax setup, and onboarding',cost:350,markup:40,discount:0,taxable:true},{qty:1,name:'POS-SUPPORT',desc:'POS software support and staff training session',cost:175,markup:40,discount:0,taxable:true}],camera:${JSON.stringify(defaultItemsForBusiness("camera"))}};items=JSON.parse(JSON.stringify(samples[b]));renderItems()}
 function valueOf(id){let el=document.getElementById(id);return el?String(el.value||''):''}
