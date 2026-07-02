@@ -16507,11 +16507,8 @@ async function itemManagerProductImageResponse(request, env, filename) {
     return new Response(result.error, { status: result.error.includes('Invalid') ? 400 : 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
   }
   if (!result.object) {
-    const body = `Product image not found
-Requested: ${normalizeItemImagePath(filename)}
-Tried:
-${(result.tried || []).join('
-')}`;
+    const triedLines = (result.tried || []).join('\n');
+    const body = `Product image not found\nRequested: ${normalizeItemImagePath(filename)}\nTried:\n${triedLines}`;
     return new Response(body, { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
   }
   const headers = new Headers();
