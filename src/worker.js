@@ -179,6 +179,8 @@ async function handleRequest(request, env, ctx) {
   if (path === "/favicon.ico") return assetResponse(HB_FAVICON_B64, HB_APP_ICON_MIME);
   const ltsImageMatch = path.match(/^\/assets\/lts-product-image\/([^\/]+)$/);
   if (method === "GET" && ltsImageMatch) return ltsProductImageProxy(request, env, decodeURIComponent(ltsImageMatch[1]));
+  const itemImageMatch = path.match(/^\/assets\/item-images\/([^\/]+)$/);
+  if (method === "GET" && itemImageMatch) return itemManagerProductImageResponse(request, env, decodeURIComponent(itemImageMatch[1]));
   if (method === "GET" && path === "/admin/lts/sync") return adminLtsSyncOne(request, env);
   if (method === "GET" && path === "/admin/lts/sync-all") return adminLtsSyncAll(request, env);
 
@@ -16437,6 +16439,31 @@ async function findLtsOfficialImageUrl(model) {
     }
   }
   return '';
+}
+
+async function itemManagerProductImageResponse(request, env, filename) {
+  const safeName = String(filename || '').trim();
+  if (!/^[A-Za-z0-9._-]+\.(webp|png|jpg|jpeg)$/i.test(safeName)) {
+    return new Response('Invalid image name', { status: 400 });
+  }
+  if (!env.PRODUCT_IMAGES || typeof env.PRODUCT_IMAGES.get !== 'function') {
+    return new Response('Product image bucket is not configured', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+  const key = `item-images/${safeName}`;
+  const object = await env.PRODUCT_IMAGES.get(key);
+  if (!object) {
+    return new Response('Product image not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+  const headers = new Headers();
+  try { object.writeHttpMetadata(headers); } catch (_) {}
+  if (object.httpEtag) headers.set('etag', object.httpEtag);
+  if (!headers.get('content-type')) {
+    const lower = safeName.toLowerCase();
+    headers.set('content-type', lower.endsWith('.png') ? 'image/png' : (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) ? 'image/jpeg' : 'image/webp');
+  }
+  headers.set('cache-control', 'public, max-age=31536000, immutable');
+  headers.set('x-content-type-options', 'nosniff');
+  return new Response(object.body, { headers });
 }
 
 async function ltsProductImageProxy(request, env, model) {

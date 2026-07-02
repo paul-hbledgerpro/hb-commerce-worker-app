@@ -40,3 +40,7 @@ crons = ["0 14 * * *"]
 [[mtls_certificates]]
 binding = "APPLE_PAY_MERCHANT_CERT"
 certificate_id = "38ac7b28-5fab-47f9-b0c9-2923e335efde"
+
+[[r2_buckets]]
+binding = "PRODUCT_IMAGES"
+bucket_name = "hb-product-images"
