@@ -179,8 +179,9 @@ async function handleRequest(request, env, ctx) {
   if (path === "/favicon.ico") return assetResponse(HB_FAVICON_B64, HB_APP_ICON_MIME);
   const ltsImageMatch = path.match(/^\/assets\/lts-product-image\/([^\/]+)$/);
   if (method === "GET" && ltsImageMatch) return ltsProductImageProxy(request, env, decodeURIComponent(ltsImageMatch[1]));
-  const itemImageMatch = path.match(/^\/assets\/item-images\/([^\/]+)$/);
+  const itemImageMatch = path.match(/^\/assets\/item-images\/(.+)$/);
   if (method === "GET" && itemImageMatch) return itemManagerProductImageResponse(request, env, decodeURIComponent(itemImageMatch[1]));
+  if (method === "GET" && path === "/admin/r2-image-test") return adminR2ImageTest(request, env);
   if (method === "GET" && path === "/admin/lts/sync") return adminLtsSyncOne(request, env);
   if (method === "GET" && path === "/admin/lts/sync-all") return adminLtsSyncAll(request, env);
 
@@ -16441,29 +16442,112 @@ async function findLtsOfficialImageUrl(model) {
   return '';
 }
 
-async function itemManagerProductImageResponse(request, env, filename) {
-  const safeName = String(filename || '').trim();
-  if (!/^[A-Za-z0-9._-]+\.(webp|png|jpg|jpeg)$/i.test(safeName)) {
-    return new Response('Invalid image name', { status: 400 });
-  }
+function normalizeItemImagePath(name) {
+  let safePath = String(name || '').trim();
+  try { safePath = decodeURIComponent(safePath); } catch (_) {}
+  safePath = safePath.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\/+/g, '/');
+  safePath = safePath.replace(/^item-images\//i, '');
+  if (!safePath || safePath.includes('..') || !/^[A-Za-z0-9._\/-]+$/i.test(safePath)) return '';
+  return safePath;
+}
+
+function itemImageContentType(path) {
+  const lower = String(path || '').toLowerCase();
+  if (lower.endsWith('.png')) return 'image/png';
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
+  return 'image/webp';
+}
+
+async function getProductImageObject(env, requestedPath) {
   if (!env.PRODUCT_IMAGES || typeof env.PRODUCT_IMAGES.get !== 'function') {
-    return new Response('Product image bucket is not configured', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+    return { error: 'Product image bucket is not configured' };
   }
-  const key = `item-images/${safeName}`;
-  const object = await env.PRODUCT_IMAGES.get(key);
-  if (!object) {
-    return new Response('Product image not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  const safePath = normalizeItemImagePath(requestedPath);
+  if (!safePath) return { error: 'Invalid image name' };
+
+  const candidates = [];
+  const add = (key) => {
+    key = String(key || '').replace(/\/+/g, '/').replace(/^\/+/, '');
+    if (key && !candidates.includes(key)) candidates.push(key);
+  };
+
+  add(`item-images/${safePath}`);
+
+  // If /assets/item-images/SKU.webp is requested but only gallery images exist,
+  // fall back to the first gallery image for that SKU.
+  const m = safePath.match(/^(.+)\.(webp|png|jpg|jpeg)$/i);
+  if (m && !safePath.includes('/')) {
+    const sku = m[1];
+    add(`item-images/${sku}/01.webp`);
+    add(`item-images/${sku}/1.webp`);
+    add(`item-images/${sku}/001.webp`);
+    add(`item-images/${sku}/01.png`);
+    add(`item-images/${sku}/01.jpg`);
+  }
+
+  // If someone requests /assets/item-images/SKU/01.webp but the object was uploaded
+  // as a flat primary file, try the flat path too.
+  const gm = safePath.match(/^(.+)\/(\d+)\.(webp|png|jpg|jpeg)$/i);
+  if (gm) add(`item-images/${gm[1]}.webp`);
+
+  for (const key of candidates) {
+    try {
+      const object = await env.PRODUCT_IMAGES.get(key);
+      if (object) return { object, key, safePath, tried: candidates };
+    } catch (err) {
+      return { error: `R2 image lookup failed: ${err && err.message ? err.message : String(err)}`, safePath, tried: candidates };
+    }
+  }
+  return { notFound: true, safePath, tried: candidates };
+}
+
+async function itemManagerProductImageResponse(request, env, filename) {
+  const result = await getProductImageObject(env, filename);
+  if (result.error) {
+    return new Response(result.error, { status: result.error.includes('Invalid') ? 400 : 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+  if (!result.object) {
+    const body = `Product image not found
+Requested: ${normalizeItemImagePath(filename)}
+Tried:
+${(result.tried || []).join('
+')}`;
+    return new Response(body, { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
   }
   const headers = new Headers();
-  try { object.writeHttpMetadata(headers); } catch (_) {}
-  if (object.httpEtag) headers.set('etag', object.httpEtag);
-  if (!headers.get('content-type')) {
-    const lower = safeName.toLowerCase();
-    headers.set('content-type', lower.endsWith('.png') ? 'image/png' : (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) ? 'image/jpeg' : 'image/webp');
-  }
+  try { result.object.writeHttpMetadata(headers); } catch (_) {}
+  if (result.object.httpEtag) headers.set('etag', result.object.httpEtag);
+  if (!headers.get('content-type')) headers.set('content-type', itemImageContentType(result.key || filename));
   headers.set('cache-control', 'public, max-age=31536000, immutable');
   headers.set('x-content-type-options', 'nosniff');
-  return new Response(object.body, { headers });
+  headers.set('x-hb-r2-key', result.key || '');
+  return new Response(result.object.body, { headers });
+}
+
+async function adminR2ImageTest(request, env) {
+  const url = new URL(request.url);
+  const sku = normalizeItemImagePath(url.searchParams.get('sku') || '500101-OC').replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/\/.*$/, '');
+  const primary = `${sku}.webp`;
+  const gallery = `${sku}/01.webp`;
+  const checks = [];
+  for (const requestPath of [primary, gallery, `${sku}/1.webp`, `${sku}/001.webp`]) {
+    const r = await getProductImageObject(env, requestPath);
+    checks.push({ requestPath, found: !!r.object, key: r.key || '', tried: r.tried || [], error: r.error || '' });
+  }
+  let listed = [];
+  if (env.PRODUCT_IMAGES && typeof env.PRODUCT_IMAGES.list === 'function') {
+    try {
+      const list1 = await env.PRODUCT_IMAGES.list({ prefix: `item-images/${sku}`, limit: 40 });
+      listed = (list1.objects || []).map(o => ({ key: o.key, size: o.size, uploaded: o.uploaded }));
+    } catch (err) {
+      listed = [{ key: `LIST ERROR: ${err && err.message ? err.message : String(err)}` }];
+    }
+  }
+  const rows = checks.map(c => `<tr><td>${escapeHtml(c.requestPath)}</td><td>${c.found ? '<span class="status approved">Found</span>' : '<span class="status unpaid">Missing</span>'}</td><td>${escapeHtml(c.key || '')}</td><td><pre style="white-space:pre-wrap;margin:0">${escapeHtml((c.error ? c.error + '
+' : '') + c.tried.join('
+'))}</pre></td></tr>`).join('');
+  const listRows = listed.map(o => `<tr><td>${escapeHtml(o.key || '')}</td><td>${escapeHtml(o.size || '')}</td><td>${escapeHtml(o.uploaded || '')}</td></tr>`).join('') || '<tr><td colspan="3">No listed objects for this prefix.</td></tr>';
+  return pageShell('R2 Image Test', `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>R2 Product Image Test</h2><p>Checks the Cloudflare R2 product image bucket for a SKU.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a></div></div><form class="form-section" method="get" action="/admin/r2-image-test"><div class="grid-3"><div class="field"><label>SKU</label><input name="sku" value="${escapeHtml(sku)}" placeholder="500101-OC"></div><div class="field" style="align-self:end"><button class="orange" type="submit">Check SKU Images</button></div></div></form><section class="form-section"><h3>Lookup Checks</h3><div class="table-wrap"><table><thead><tr><th>Request path</th><th>Status</th><th>R2 key found</th><th>Keys tried</th></tr></thead><tbody>${rows}</tbody></table></div></section><section class="form-section"><h3>Objects listed with prefix item-images/${escapeHtml(sku)}</h3><div class="table-wrap"><table><thead><tr><th>R2 object key</th><th>Size</th><th>Uploaded</th></tr></thead><tbody>${listRows}</tbody></table></div></section><div class="notice warning">If the object appears in this list but the public image URL still fails, copy the exact R2 key shown here and send it to support. The route now supports both primary images and gallery images such as <code>/assets/item-images/${escapeHtml(sku)}.webp</code> and <code>/assets/item-images/${escapeHtml(sku)}/01.webp</code>.</div></div></main>`);
 }
 
 async function ltsProductImageProxy(request, env, model) {
