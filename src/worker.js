@@ -16540,9 +16540,10 @@ async function adminR2ImageTest(request, env) {
       listed = [{ key: `LIST ERROR: ${err && err.message ? err.message : String(err)}` }];
     }
   }
-  const rows = checks.map(c => `<tr><td>${escapeHtml(c.requestPath)}</td><td>${c.found ? '<span class="status approved">Found</span>' : '<span class="status unpaid">Missing</span>'}</td><td>${escapeHtml(c.key || '')}</td><td><pre style="white-space:pre-wrap;margin:0">${escapeHtml((c.error ? c.error + '
-' : '') + c.tried.join('
-'))}</pre></td></tr>`).join('');
+  const rows = checks.map(c => {
+    const triedText = (c.error ? String(c.error) + '\n' : '') + (Array.isArray(c.tried) ? c.tried.join('\n') : '');
+    return `<tr><td>${escapeHtml(c.requestPath)}</td><td>${c.found ? '<span class="status approved">Found</span>' : '<span class="status unpaid">Missing</span>'}</td><td>${escapeHtml(c.key || '')}</td><td><pre style="white-space:pre-wrap;margin:0">${escapeHtml(triedText)}</pre></td></tr>`;
+  }).join('');
   const listRows = listed.map(o => `<tr><td>${escapeHtml(o.key || '')}</td><td>${escapeHtml(o.size || '')}</td><td>${escapeHtml(o.uploaded || '')}</td></tr>`).join('') || '<tr><td colspan="3">No listed objects for this prefix.</td></tr>';
   return pageShell('R2 Image Test', `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>R2 Product Image Test</h2><p>Checks the Cloudflare R2 product image bucket for a SKU.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a></div></div><form class="form-section" method="get" action="/admin/r2-image-test"><div class="grid-3"><div class="field"><label>SKU</label><input name="sku" value="${escapeHtml(sku)}" placeholder="500101-OC"></div><div class="field" style="align-self:end"><button class="orange" type="submit">Check SKU Images</button></div></div></form><section class="form-section"><h3>Lookup Checks</h3><div class="table-wrap"><table><thead><tr><th>Request path</th><th>Status</th><th>R2 key found</th><th>Keys tried</th></tr></thead><tbody>${rows}</tbody></table></div></section><section class="form-section"><h3>Objects listed with prefix item-images/${escapeHtml(sku)}</h3><div class="table-wrap"><table><thead><tr><th>R2 object key</th><th>Size</th><th>Uploaded</th></tr></thead><tbody>${listRows}</tbody></table></div></section><div class="notice warning">If the object appears in this list but the public image URL still fails, copy the exact R2 key shown here and send it to support. The route now supports both primary images and gallery images such as <code>/assets/item-images/${escapeHtml(sku)}.webp</code> and <code>/assets/item-images/${escapeHtml(sku)}/01.webp</code>.</div></div></main>`);
 }
