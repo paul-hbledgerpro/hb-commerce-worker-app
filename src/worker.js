@@ -20403,6 +20403,76 @@ function itemManagerStyle() {
 .item-manager-shell .im-settings-v242 select#imSetGridGradient{background:#fff!important;color:#06101f!important;-webkit-text-fill-color:#06101f!important;border:2px solid #ff8c21!important;border-radius:12px!important;min-height:46px!important;font-weight:950!important;margin-top:7px;}
 @media(max-width:900px){.item-manager-shell .im-settings-v242 .im-color-picker-panel{grid-template-columns:1fr;}.item-manager-shell .im-grid,.item-manager-shell.lookup-mode .im-grid{min-width:1040px!important;}}
 
+
+
+/* v243 Item Manager grid fit fix: prevent Item Name overlap and widen the working grid */
+.admin-app-topbar ~ main:has(.item-manager-shell) .container,
+.admin-dashboard:has(.item-manager-shell) .container{
+  width:min(1960px,calc(100% - 18px))!important;
+  max-width:1960px!important;
+}
+.item-manager-shell .im-grid-wrap{
+  width:100%!important;
+  overflow:auto!important;
+  scrollbar-gutter:stable both-edges!important;
+}
+.item-manager-shell .im-grid,
+.item-manager-shell.lookup-mode .im-grid{
+  table-layout:fixed!important;
+  width:max(100%,1660px)!important;
+  min-width:1660px!important;
+  max-width:none!important;
+}
+.item-manager-shell .im-grid col.im-col-select{width:72px!important;}
+.item-manager-shell .im-grid col.im-col-sku{width:185px!important;}
+.item-manager-shell .im-grid col.im-col-name{width:660px!important;}
+.item-manager-shell .im-grid col.im-col-cost{width:108px!important;}
+.item-manager-shell .im-grid col.im-col-sale{width:118px!important;}
+.item-manager-shell .im-grid col.im-col-instore{width:118px!important;}
+.item-manager-shell .im-grid col.im-col-cat{width:185px!important;}
+.item-manager-shell .im-grid col.im-col-website{width:104px!important;}
+.item-manager-shell .im-grid col.im-col-status{width:110px!important;}
+.item-manager-shell .im-grid th,
+.item-manager-shell .im-grid td{
+  box-sizing:border-box!important;
+  vertical-align:middle!important;
+}
+.item-manager-shell .im-grid th:nth-child(3),
+.item-manager-shell .im-grid td:nth-child(3),
+.item-manager-shell.lookup-mode .im-grid th:nth-child(3),
+.item-manager-shell.lookup-mode .im-grid td:nth-child(3){
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+  line-height:1.24!important;
+  min-width:0!important;
+}
+.item-manager-shell .im-grid td:nth-child(3) strong,
+.item-manager-shell.lookup-mode .im-grid td:nth-child(3) strong{
+  display:block!important;
+  white-space:normal!important;
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+  line-height:1.24!important;
+}
+.item-manager-shell .im-grid tbody tr{
+  height:auto!important;
+}
+.item-manager-shell .im-grid td:nth-child(2),
+.item-manager-shell .im-grid th:nth-child(2){
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+@media(max-width:1100px){
+  .item-manager-shell .im-grid,
+  .item-manager-shell.lookup-mode .im-grid{
+    width:1660px!important;
+    min-width:1660px!important;
+  }
+}
 </style>`;
 }
 
