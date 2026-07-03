@@ -16522,42 +16522,29 @@ async function itemManagerProductImageResponse(request, env, filename) {
 }
 
 async function adminR2ImageTest(request, env) {
-  const user = await requireAuth(request, env);
-  if (!user) return redirect('/admin-app');
   const url = new URL(request.url);
   const sku = normalizeItemImagePath(url.searchParams.get('sku') || '500101-OC').replace(/\.(webp|png|jpg|jpeg)$/i, '').replace(/\/.*$/, '');
   const primary = `${sku}.webp`;
   const gallery = `${sku}/01.webp`;
   const checks = [];
-  for (const requestPath of [primary, gallery, `${sku}/1.webp`, `${sku}/001.webp`, `${sku}/06.webp`]) {
+  for (const requestPath of [primary, gallery, `${sku}/1.webp`, `${sku}/001.webp`]) {
     const r = await getProductImageObject(env, requestPath);
     checks.push({ requestPath, found: !!r.object, key: r.key || '', tried: r.tried || [], error: r.error || '' });
   }
   let listed = [];
   if (env.PRODUCT_IMAGES && typeof env.PRODUCT_IMAGES.list === 'function') {
     try {
-      const list1 = await env.PRODUCT_IMAGES.list({ prefix: `item-images/${sku}`, limit: 100 });
+      const list1 = await env.PRODUCT_IMAGES.list({ prefix: `item-images/${sku}`, limit: 40 });
       listed = (list1.objects || []).map(o => ({ key: o.key, size: o.size, uploaded: o.uploaded }));
     } catch (err) {
       listed = [{ key: `LIST ERROR: ${err && err.message ? err.message : String(err)}` }];
     }
-  } else {
-    listed = [{ key: 'PRODUCT_IMAGES R2 binding is missing or not readable by this Worker.' }];
   }
-  let dbGallery = [];
-  try {
-    await ensureItemManagerTables(env);
-    const res = await env.DB.prepare(`SELECT image_url, sort_order FROM item_image_gallery WHERE lower(sku)=lower(?) ORDER BY sort_order ASC, image_url ASC`).bind(sku).all();
-    dbGallery = ((res && res.results) || []);
-  } catch (err) { dbGallery = [{ image_url: `DB gallery lookup error: ${err && err.message ? err.message : String(err)}`, sort_order: '' }]; }
-  const rows = checks.map(c => {
-    const triedText = (c.error ? String(c.error) + '\n' : '') + (Array.isArray(c.tried) ? c.tried.join('\n') : '');
-    return `<tr><td>${escapeHtml(c.requestPath)}</td><td>${c.found ? '<span class="status approved">Found</span>' : '<span class="status unpaid">Missing</span>'}</td><td>${escapeHtml(c.key || '')}</td><td><pre style="white-space:pre-wrap;margin:0">${escapeHtml(triedText)}</pre></td></tr>`;
-  }).join('');
+  const rows = checks.map(c => `<tr><td>${escapeHtml(c.requestPath)}</td><td>${c.found ? '<span class="status approved">Found</span>' : '<span class="status unpaid">Missing</span>'}</td><td>${escapeHtml(c.key || '')}</td><td><pre style="white-space:pre-wrap;margin:0">${escapeHtml((c.error ? c.error + '
+' : '') + c.tried.join('
+'))}</pre></td></tr>`).join('');
   const listRows = listed.map(o => `<tr><td>${escapeHtml(o.key || '')}</td><td>${escapeHtml(o.size || '')}</td><td>${escapeHtml(o.uploaded || '')}</td></tr>`).join('') || '<tr><td colspan="3">No listed objects for this prefix.</td></tr>';
-  const dbRows = dbGallery.map(o => `<tr><td>${escapeHtml(o.sort_order || '')}</td><td>${escapeHtml(o.image_url || '')}</td></tr>`).join('') || '<tr><td colspan="2">No D1 gallery rows found for this SKU. R2 folder-list fallback can still show gallery images on product pages.</td></tr>';
-  const body = `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>R2 Product Image Test</h2><p>Checks the Cloudflare R2 product image bucket and D1 gallery table for a SKU.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a><a class="btn" href="/admin/dashboard?app=1">Dashboard</a></div></div><form class="form-section" method="get" action="/admin/r2-image-test"><div class="grid-3"><div class="field"><label>SKU</label><input name="sku" value="${escapeHtml(sku)}" placeholder="500101-OC"></div><div class="field" style="align-self:end"><button class="orange" type="submit">Check SKU Images</button></div></div></form><section class="form-section"><h3>Lookup Checks</h3><div class="table-wrap"><table><thead><tr><th>Request path</th><th>Status</th><th>R2 key found</th><th>Keys tried</th></tr></thead><tbody>${rows}</tbody></table></div></section><section class="form-section"><h3>R2 Objects listed with prefix item-images/${escapeHtml(sku)}</h3><div class="table-wrap"><table><thead><tr><th>R2 object key</th><th>Size</th><th>Uploaded</th></tr></thead><tbody>${listRows}</tbody></table></div></section><section class="form-section"><h3>D1 Gallery Rows for ${escapeHtml(sku)}</h3><div class="table-wrap"><table><thead><tr><th>Sort</th><th>Image URL</th></tr></thead><tbody>${dbRows}</tbody></table></div></section><div class="notice warning">This page now uses the correct admin layout. The route supports both primary images and gallery images, such as <code>/assets/item-images/${escapeHtml(sku)}.webp</code> and <code>/assets/item-images/${escapeHtml(sku)}/01.webp</code>.</div></div></main>`;
-  return htmlPage('R2 Image Test | HB Commerce', layout(env, 'Dashboard', body));
+  return pageShell('R2 Image Test', `<main class="section admin-dashboard"><div class="container"><div class="section-title"><div><h2>R2 Product Image Test</h2><p>Checks the Cloudflare R2 product image bucket for a SKU.</p></div><div class="btn-row"><a class="btn" href="/admin/items">← Item Manager</a></div></div><form class="form-section" method="get" action="/admin/r2-image-test"><div class="grid-3"><div class="field"><label>SKU</label><input name="sku" value="${escapeHtml(sku)}" placeholder="500101-OC"></div><div class="field" style="align-self:end"><button class="orange" type="submit">Check SKU Images</button></div></div></form><section class="form-section"><h3>Lookup Checks</h3><div class="table-wrap"><table><thead><tr><th>Request path</th><th>Status</th><th>R2 key found</th><th>Keys tried</th></tr></thead><tbody>${rows}</tbody></table></div></section><section class="form-section"><h3>Objects listed with prefix item-images/${escapeHtml(sku)}</h3><div class="table-wrap"><table><thead><tr><th>R2 object key</th><th>Size</th><th>Uploaded</th></tr></thead><tbody>${listRows}</tbody></table></div></section><div class="notice warning">If the object appears in this list but the public image URL still fails, copy the exact R2 key shown here and send it to support. The route now supports both primary images and gallery images such as <code>/assets/item-images/${escapeHtml(sku)}.webp</code> and <code>/assets/item-images/${escapeHtml(sku)}/01.webp</code>.</div></div></main>`);
 }
 
 async function ltsProductImageProxy(request, env, model) {
@@ -19758,18 +19745,6 @@ async function ensureItemManagerTables(env) {
     updated_at TEXT NOT NULL
   )`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_manager_departments_slug ON item_manager_departments(slug)`).run();
-
-  // Product detail gallery for Item Manager / Volcora products.
-  // Primary image stays in item_manager_items.image_url; additional images live here.
-  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS item_image_gallery (
-    sku TEXT NOT NULL,
-    image_url TEXT NOT NULL,
-    sort_order INTEGER NOT NULL DEFAULT 1,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (sku, image_url)
-  )`).run();
-  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_item_image_gallery_sku ON item_image_gallery(sku, sort_order)`).run();
-
   await seedDefaultItemDepartments(env);
   // v236: older imported Volcora/catalog items had MSRP but no internal cost. Backfill cost as 85% of MSRP so Quote/Invoice lookup can populate Cost $.
   try { await env.DB.prepare(`UPDATE item_manager_items SET cost=ROUND(msrp * 0.85, 2), updated_at=? WHERE (cost IS NULL OR cost=0) AND msrp>0`).bind(now()).run(); } catch (_) {}
@@ -20877,77 +20852,6 @@ function itemPublicImage(row, cls = '') {
   return `<div class="lts-placeholder"><span>HB</span><strong>${escapeHtml(row.item_name || row.sku || 'Product')}</strong></div>`;
 }
 
-function normalizePublicItemImageUrl(url) {
-  const v = String(url || '').trim();
-  if (!v) return '';
-  if (v.startsWith('/assets/item-images/')) return v;
-  if (/^https?:\/\//i.test(v) || v.startsWith('data:image/')) return v;
-  if (v.startsWith('item-images/')) return `/assets/${v}`;
-  return v;
-}
-
-function publicUrlFromR2ItemKey(key) {
-  key = String(key || '').replace(/^\/+/, '');
-  if (!key.startsWith('item-images/')) return '';
-  return `/assets/${key}`;
-}
-
-function addUniqueImageUrl(list, url) {
-  url = normalizePublicItemImageUrl(url);
-  if (!url) return;
-  if (!list.some(x => String(x).toLowerCase() === url.toLowerCase())) list.push(url);
-}
-
-async function itemImageGalleryUrls(env, item) {
-  const urls = [];
-  const sku = String(item && item.sku || '').trim();
-  addUniqueImageUrl(urls, item && item.image_url);
-
-  // Read gallery records created by the Volcora image processor / D1 update.
-  if (sku && env.DB) {
-    try {
-      await env.DB.prepare(`CREATE TABLE IF NOT EXISTS item_image_gallery (sku TEXT NOT NULL, image_url TEXT NOT NULL, sort_order INTEGER NOT NULL DEFAULT 1, created_at TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (sku, image_url))`).run();
-      const res = await env.DB.prepare(`SELECT image_url FROM item_image_gallery WHERE lower(sku)=lower(?) ORDER BY sort_order ASC, image_url ASC`).bind(sku).all();
-      for (const r of ((res && res.results) || [])) addUniqueImageUrl(urls, r.image_url);
-    } catch (err) { console.error('item gallery db lookup failed', err); }
-  }
-
-  // R2 fallback: even if the D1 gallery update was not applied, discover folder images directly from R2.
-  if (sku && env.PRODUCT_IMAGES && typeof env.PRODUCT_IMAGES.list === 'function') {
-    try {
-      const res = await env.PRODUCT_IMAGES.list({ prefix: `item-images/${sku}/`, limit: 100 });
-      const objects = ((res && res.objects) || []).slice().sort((a,b) => String(a.key||'').localeCompare(String(b.key||''), undefined, { numeric:true, sensitivity:'base' }));
-      for (const obj of objects) addUniqueImageUrl(urls, publicUrlFromR2ItemKey(obj.key));
-      // Make sure primary file is considered too.
-      addUniqueImageUrl(urls, `/assets/item-images/${sku}.webp`);
-    } catch (err) { console.error('item gallery r2 list failed', err); }
-  }
-
-  return urls;
-}
-
-function itemProductGalleryHtml(item, urls) {
-  urls = Array.isArray(urls) ? urls.filter(Boolean) : [];
-  if (!urls.length) return itemPublicImage(item);
-  const safeSku = escapeHtml(String(item.sku || item.id || 'product'));
-  const main = escapeHtml(urls[0]);
-  const thumbs = urls.map((u, i) => `<button type="button" class="hb-product-thumb ${i===0?'active':''}" onclick="hbProductGallerySwap('${safeSku}', '${escapeHtml(u)}', this)"><img src="${escapeHtml(u)}" alt="${escapeHtml(item.item_name || item.sku)} image ${i+1}" loading="lazy"></button>`).join('');
-  return `<div class="hb-product-gallery" data-gallery-sku="${safeSku}"><div class="hb-product-main-image"><img id="hbProductMainImage-${safeSku}" src="${main}" alt="${escapeHtml(item.item_name || item.sku)}" loading="lazy"></div>${urls.length > 1 ? `<div class="hb-product-thumbs">${thumbs}</div>` : ''}</div>`;
-}
-
-function itemProductGalleryStyles() {
-  return `<style>
-  .hb-product-gallery{display:grid;gap:12px;width:100%}
-  .hb-product-main-image{background:#f8fafc;border:1px solid var(--line);border-radius:24px;padding:20px;min-height:420px;display:grid;place-items:center;box-shadow:0 18px 52px rgba(6,40,77,.10)}
-  .hb-product-main-image img{width:100%;height:420px;object-fit:contain;display:block}
-  .hb-product-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:10px}
-  .hb-product-thumb{border:2px solid #d9e2ef;background:#fff;border-radius:14px;padding:7px;min-height:74px;box-shadow:none}
-  .hb-product-thumb.active,.hb-product-thumb:hover{border-color:#ff6a00;box-shadow:0 0 0 3px rgba(255,106,0,.16)}
-  .hb-product-thumb img{width:100%;height:62px;object-fit:contain;display:block}
-  @media(max-width:760px){.hb-product-main-image{min-height:280px;padding:12px}.hb-product-main-image img{height:280px}.hb-product-thumbs{grid-template-columns:repeat(4,1fr)}}
-  </style><script>function hbProductGallerySwap(sku,src,btn){var img=document.getElementById('hbProductMainImage-'+sku);if(img)img.src=src;var box=btn&&btn.closest('.hb-product-gallery');if(box){box.querySelectorAll('.hb-product-thumb').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');}}</script>`;
-}
-
 async function pageProducts(env) {
   const departments = await itemManagerDepartments(env, false);
   const cards = departments.map(d => {
@@ -20990,9 +20894,8 @@ async function pageItemProduct(env, id) {
   if (!p) return htmlPage('Product Not Found', layout(env, 'Products', `<section class="section"><div class="container"><div class="notice error">Product not found.</div><p><a class="btn" href="/products">Back to Products</a></p></div></section>`), 404);
   const back = p.department ? `/products/${encodeURIComponent(itemSlugify(p.department))}` : '/products';
   const all = await quoteProductsForEnv(env);
-  const galleryUrls = await itemImageGalleryUrls(env, p);
   const bullets = [p.brand, p.size, p.pack, p.category, p.sub_category].filter(Boolean).map(x => `<li>${escapeHtml(x)}</li>`).join('');
-  const body = `<main class="eufy-detail-page">${itemProductGalleryStyles()}<section class="section"><div class="container"><a class="back-link" href="${back}">← Back to ${escapeHtml(p.department || 'Products')}</a><div class="eufy-detail-grid"><div class="eufy-detail-image">${itemProductGalleryHtml(p, galleryUrls)}</div><div class="eufy-detail-info"><div class="eufy-category">${escapeHtml(p.category || p.department || 'Product')}</div><h1>${escapeHtml(p.item_name)}</h1><p class="lead"><strong>SKU:</strong> ${escapeHtml(p.sku || '')}${p.upc ? ` • <strong>UPC:</strong> ${escapeHtml(p.upc)}` : ''}</p><p class="lead">${escapeHtml(p.public_description || p.notes || 'Product available from HB Commerce Solutions.')}</p><div class="eufy-price-row detail"><strong class="eufy-sale">${Number(p.price || 0) > 0 ? money(p.price) : 'Quote Required'}</strong></div>${bullets ? `<ul class="eufy-detail-bullets">${bullets}</ul>` : ''}<div class="notice">${escapeHtml(itemWebsiteNotice(p))}</div><div class="eufy-detail-actions"><input id="detailQty" type="number" min="1" value="1"><button class="orange" type="button" onclick="eufyAddToCart('${escapeHtml(p.id)}',document.getElementById('detailQty').value,false)">${itemWebsiteButtonLabel(p)}</button></div></div></div>${eufyStoreScript(all)}</div></section></main>`;
+  const body = `<main class="eufy-detail-page"><section class="section"><div class="container"><a class="back-link" href="${back}">← Back to ${escapeHtml(p.department || 'Products')}</a><div class="eufy-detail-grid"><div class="eufy-detail-image">${itemPublicImage(p)}</div><div class="eufy-detail-info"><div class="eufy-category">${escapeHtml(p.category || p.department || 'Product')}</div><h1>${escapeHtml(p.item_name)}</h1><p class="lead"><strong>SKU:</strong> ${escapeHtml(p.sku || '')}${p.upc ? ` • <strong>UPC:</strong> ${escapeHtml(p.upc)}` : ''}</p><p class="lead">${escapeHtml(p.public_description || p.notes || 'Product available from HB Commerce Solutions.')}</p><div class="eufy-price-row detail"><strong class="eufy-sale">${Number(p.price || 0) > 0 ? money(p.price) : 'Quote Required'}</strong></div>${bullets ? `<ul class="eufy-detail-bullets">${bullets}</ul>` : ''}<div class="notice">${escapeHtml(itemWebsiteNotice(p))}</div><div class="eufy-detail-actions"><input id="detailQty" type="number" min="1" value="1"><button class="orange" type="button" onclick="eufyAddToCart('${escapeHtml(p.id)}',document.getElementById('detailQty').value,false)">${itemWebsiteButtonLabel(p)}</button></div></div></div>${eufyStoreScript(all)}</div></section></main>`;
   return htmlPage(`${p.item_name} | HB Commerce Solutions`, layout(env, 'Products', body));
 }
 
