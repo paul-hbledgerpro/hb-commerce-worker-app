@@ -15338,10 +15338,10 @@ function industryTrustStrip(){
 
 
 
-function homePosEquipmentHtmlSlide(index = 0, active = false) {
+function homePosEquipmentHtmlSlide(index = 4, active = false) {
   return `<article class="hb-home-combined-slide hb-current-banner-slide hb-pos-html-banner-slide ${active ? "active" : ""}" data-slide="${index}">
       <a class="hb-home-combined-hit" href="/products/pos-equipments" aria-label="Shop Professional POS Equipment Solutions"></a>
-      <div class="hb-pos-html-bg"><span class="hb-pos-html-green"></span><span class="hb-pos-html-orange"></span><span class="hb-pos-html-diagonal"></span></div>
+      <div class="hb-pos-html-bg" aria-hidden="true"><span class="hb-pos-html-green"></span><span class="hb-pos-html-orange"></span><span class="hb-pos-html-diagonal"></span></div>
       <div class="hb-pos-html-copy">
         <img class="hb-pos-html-logo" src="/assets/logo-v182.webp" alt="HB Commerce Solutions">
         <div class="hb-pos-html-kicker">ONE PARTNER. COMPLETE SOLUTIONS.</div>
@@ -15353,12 +15353,12 @@ function homePosEquipmentHtmlSlide(index = 0, active = false) {
         <div class="hb-pos-html-city"></div>
         <div class="hb-pos-html-glow green"></div>
         <div class="hb-pos-html-glow orange"></div>
+        <div class="hb-pos-html-floor"></div>
         <figure class="hb-pos-product hb-pos-terminal"><img src="/assets/item-images/530043-OC.webp" alt="" onerror="this.closest('figure').style.display='none'"></figure>
         <figure class="hb-pos-product hb-pos-scanner"><img src="/assets/item-images/500105-OC.webp" alt="" onerror="this.closest('figure').style.display='none'"></figure>
         <figure class="hb-pos-product hb-pos-printer"><img src="/assets/item-images/500210-OC.webp" alt="" onerror="this.closest('figure').style.display='none'"></figure>
         <figure class="hb-pos-product hb-pos-cashdrawer"><img src="/assets/item-images/500074-OC.webp" alt="" onerror="this.closest('figure').style.display='none'"></figure>
         <figure class="hb-pos-product hb-pos-stand"><img src="/assets/item-images/520005-OC.webp" alt="" onerror="this.closest('figure').style.display='none'"></figure>
-        <div class="hb-pos-html-table-reflection"></div>
       </div>
     </article>`;
 }
@@ -15367,14 +15367,16 @@ function homePosEquipmentBannerCss() {
   return `<style>
 .hb-pos-html-banner-slide{position:absolute!important;inset:0!important;overflow:hidden!important;background:#06101f!important;border-radius:inherit!important;color:#fff!important;display:none!important;grid-template-columns:42% 58%!important;align-items:stretch!important;padding:0!important;isolation:isolate!important}
 .hb-pos-html-banner-slide.active{display:grid!important}
-.hb-pos-html-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(100deg,#06101f 0%,#07172d 48%,#08101c 100%)}
-.hb-pos-html-bg:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(132deg,rgba(64,138,210,.10) 0 1px,transparent 1px 56px);opacity:.72}.hb-pos-html-bg:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 6% 3%,rgba(34,218,74,.26),transparent 23%),radial-gradient(circle at 92% 46%,rgba(255,106,0,.23),transparent 31%),linear-gradient(90deg,rgba(4,17,32,.38),transparent 46%,rgba(255,106,0,.08));opacity:1}
-.hb-pos-html-green,.hb-pos-html-orange,.hb-pos-html-diagonal{position:absolute;display:block;pointer-events:none}.hb-pos-html-green{left:-8%;top:42%;width:76%;height:11%;background:linear-gradient(90deg,rgba(31,224,70,.80),rgba(31,224,70,.22),transparent);clip-path:polygon(0 22%,100% 0,94% 100%,0 76%);filter:blur(.2px);opacity:.72}.hb-pos-html-orange{right:-10%;top:21%;width:50%;height:70%;background:repeating-linear-gradient(154deg,transparent 0 30px,rgba(255,106,0,.42) 31px 33px,transparent 34px 54px);opacity:.85}.hb-pos-html-diagonal{left:60%;top:-20%;width:14%;height:150%;background:linear-gradient(180deg,rgba(255,106,0,.28),rgba(255,106,0,.05),transparent);transform:rotate(16deg);opacity:.38}
-.hb-pos-html-copy{position:relative;z-index:3;padding:clamp(24px,3.4vw,56px) 0 clamp(22px,3vw,46px) clamp(24px,3.6vw,62px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:0}.hb-pos-html-logo{width:clamp(156px,14.2vw,254px)!important;height:auto!important;margin:0 0 clamp(13px,1.5vw,24px)!important;filter:drop-shadow(0 18px 28px rgba(0,0,0,.32))}.hb-pos-html-kicker{color:#8eff5d;font-size:clamp(10px,.85vw,15px);font-weight:950;letter-spacing:.17em;text-transform:uppercase;margin-bottom:clamp(10px,1vw,17px);text-shadow:0 0 20px rgba(88,255,88,.18)}
-.hb-pos-html-copy h2{margin:0!important;color:#fff!important;font-size:clamp(32px,3.45vw,62px)!important;line-height:1.06!important;letter-spacing:-.055em!important;text-shadow:0 16px 34px rgba(0,0,0,.38);max-width:670px}.hb-pos-html-copy p{margin:clamp(12px,1.2vw,20px) 0 0!important;color:#f4f8ff!important;font-size:clamp(13px,1.08vw,19px)!important;line-height:1.42!important;font-weight:800!important;max-width:650px;text-shadow:0 10px 24px rgba(0,0,0,.34)}
-.hb-pos-html-feature-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:clamp(13px,1.25vw,20px)}.hb-pos-html-feature-row span{display:inline-flex;align-items:center;gap:8px;min-height:30px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:950;font-size:clamp(10px,.78vw,13px);box-shadow:0 12px 26px rgba(0,0,0,.18)}.hb-pos-html-feature-row i{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#68ed51;color:#06101f;font-style:normal;font-weight:950;box-shadow:0 0 18px rgba(105,255,83,.36)}
-.hb-pos-html-stage{position:relative;z-index:2;height:100%;min-width:0}.hb-pos-html-city{position:absolute;right:2%;top:12%;width:42%;height:40%;background:repeating-linear-gradient(90deg,transparent 0 20px,rgba(57,126,190,.18) 21px 23px,transparent 24px 48px);opacity:.45;clip-path:polygon(0 66%,8% 66%,8% 45%,15% 45%,15% 62%,23% 62%,23% 25%,31% 25%,31% 66%,39% 66%,39% 38%,48% 38%,48% 65%,58% 65%,58% 12%,66% 12%,66% 66%,76% 66%,76% 48%,85% 48%,85% 66%,100% 66%,100% 100%,0 100%)}.hb-pos-html-glow{position:absolute;border-radius:50%;filter:blur(9px);pointer-events:none}.hb-pos-html-glow.green{left:6%;top:42%;width:48%;height:20%;background:radial-gradient(circle,rgba(20,218,95,.26),transparent 72%)}.hb-pos-html-glow.orange{right:-1%;top:31%;width:50%;height:24%;background:radial-gradient(circle,rgba(255,106,0,.34),transparent 70%)}
-.hb-pos-html-table-reflection{position:absolute;left:7%;right:2%;bottom:1.5%;height:18%;background:radial-gradient(ellipse at 56% 20%,rgba(255,255,255,.14),transparent 54%),linear-gradient(180deg,rgba(255,255,255,.05),transparent);opacity:.65;filter:blur(1px);transform:skewX(-8deg)}.hb-pos-product{position:absolute;margin:0!important;z-index:4;border-radius:24px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(231,239,248,.90));box-shadow:0 28px 64px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.72);overflow:hidden}.hb-pos-product img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 16px 20px rgba(0,0,0,.20));mix-blend-mode:multiply}.hb-pos-terminal{left:28%;top:11%;width:38%;height:62%;z-index:6;padding:0}.hb-pos-scanner{left:3%;top:42%;width:22%;height:32%;z-index:7;transform:rotate(-1deg)}.hb-pos-printer{right:4%;top:22%;width:25%;height:33%;z-index:5}.hb-pos-cashdrawer{right:2%;bottom:5%;width:38%;height:35%;z-index:8}.hb-pos-stand{right:18%;top:8%;width:19%;height:25%;z-index:3;opacity:.92;transform:rotate(2deg)}
+.hb-pos-html-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(104deg,#06101f 0%,#07172d 46%,#071020 100%)}
+.hb-pos-html-bg:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(132deg,rgba(64,138,210,.10) 0 1px,transparent 1px 56px);opacity:.72}
+.hb-pos-html-bg:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 6% 3%,rgba(34,218,74,.28),transparent 23%),radial-gradient(circle at 92% 46%,rgba(255,106,0,.26),transparent 31%),linear-gradient(90deg,rgba(4,17,32,.38),transparent 46%,rgba(255,106,0,.08));opacity:1}
+.hb-pos-html-green,.hb-pos-html-orange,.hb-pos-html-diagonal{position:absolute;display:block;pointer-events:none}.hb-pos-html-green{left:-8%;top:42%;width:76%;height:10%;background:linear-gradient(90deg,rgba(31,224,70,.74),rgba(31,224,70,.19),transparent);clip-path:polygon(0 22%,100% 0,94% 100%,0 76%);filter:blur(.35px);opacity:.56}.hb-pos-html-orange{right:-10%;top:21%;width:50%;height:70%;background:repeating-linear-gradient(154deg,transparent 0 30px,rgba(255,106,0,.42) 31px 33px,transparent 34px 54px);opacity:.82}.hb-pos-html-diagonal{left:61%;top:-20%;width:14%;height:150%;background:linear-gradient(180deg,rgba(255,106,0,.25),rgba(255,106,0,.05),transparent);transform:rotate(16deg);opacity:.34}
+.hb-pos-html-copy{position:relative;z-index:4;padding:clamp(24px,3.4vw,56px) 0 clamp(22px,3vw,46px) clamp(24px,3.6vw,62px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:0}.hb-pos-html-logo{width:clamp(168px,15.8vw,286px)!important;height:auto!important;margin:0 0 clamp(13px,1.5vw,24px)!important;filter:drop-shadow(0 18px 28px rgba(0,0,0,.34))}.hb-pos-html-kicker{color:#8eff5d;font-size:clamp(10px,.85vw,15px);font-weight:950;letter-spacing:.17em;text-transform:uppercase;margin-bottom:clamp(10px,1vw,17px);text-shadow:0 0 20px rgba(88,255,88,.22)}
+.hb-pos-html-copy h2{margin:0!important;color:#fff!important;font-size:clamp(32px,3.45vw,62px)!important;line-height:1.06!important;letter-spacing:-.055em!important;text-shadow:0 16px 34px rgba(0,0,0,.42);max-width:670px}.hb-pos-html-copy p{margin:clamp(12px,1.2vw,20px) 0 0!important;color:#f4f8ff!important;font-size:clamp(13px,1.08vw,19px)!important;line-height:1.42!important;font-weight:800!important;max-width:650px;text-shadow:0 10px 24px rgba(0,0,0,.36)}
+.hb-pos-html-feature-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:clamp(13px,1.25vw,20px)}.hb-pos-html-feature-row span{display:inline-flex;align-items:center;gap:8px;min-height:30px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:950;font-size:clamp(10px,.78vw,13px);box-shadow:0 12px 26px rgba(0,0,0,.18)}.hb-pos-html-feature-row i{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#68ed51;color:#06101f;font-style:normal;font-weight:950;box-shadow:0 0 18px rgba(105,255,83,.36)}
+.hb-pos-html-stage{position:relative;z-index:2;height:100%;min-width:0}.hb-pos-html-city{position:absolute;right:0;top:7%;width:52%;height:48%;background:repeating-linear-gradient(90deg,transparent 0 20px,rgba(57,126,190,.20) 21px 23px,transparent 24px 48px);opacity:.54;clip-path:polygon(0 66%,8% 66%,8% 45%,15% 45%,15% 62%,23% 62%,23% 25%,31% 25%,31% 66%,39% 66%,39% 38%,48% 38%,48% 65%,58% 65%,58% 12%,66% 12%,66% 66%,76% 66%,76% 48%,85% 48%,85% 66%,100% 66%,100% 100%,0 100%)}.hb-pos-html-glow{position:absolute;border-radius:50%;filter:blur(10px);pointer-events:none}.hb-pos-html-glow.green{left:1%;top:43%;width:50%;height:18%;background:radial-gradient(circle,rgba(20,218,95,.28),transparent 72%)}.hb-pos-html-glow.orange{right:-3%;top:27%;width:51%;height:23%;background:radial-gradient(circle,rgba(255,106,0,.38),transparent 70%)}
+.hb-pos-html-floor{position:absolute;left:3%;right:0;bottom:2%;height:21%;background:radial-gradient(ellipse at 58% 14%,rgba(255,255,255,.13),transparent 50%),linear-gradient(180deg,rgba(255,255,255,.055),transparent);opacity:.75;filter:blur(1px);transform:skewX(-9deg)}
+.hb-pos-product{position:absolute;margin:0!important;z-index:4;border-radius:0!important;display:block!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}.hb-pos-product img{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:multiply;filter:brightness(1.30) contrast(1.18) saturate(1.04) drop-shadow(0 27px 24px rgba(0,0,0,.46))}.hb-pos-product:after{content:"";position:absolute;left:13%;right:13%;bottom:-3%;height:18%;border-radius:50%;background:rgba(0,0,0,.30);filter:blur(18px);z-index:-1}.hb-pos-terminal{left:28%;top:8%;width:40%;height:68%;z-index:6}.hb-pos-scanner{left:8%;top:42%;width:21%;height:32%;z-index:7;transform:rotate(-1deg)}.hb-pos-printer{right:2%;top:21%;width:24%;height:33%;z-index:5}.hb-pos-cashdrawer{right:0;bottom:3%;width:39%;height:38%;z-index:8}.hb-pos-stand{right:17%;top:6%;width:18%;height:24%;z-index:3;opacity:.92;transform:rotate(2deg)}
 .hb-pos-html-banner-slide .hb-home-combined-hit{z-index:12!important}.hb-pos-html-banner-slide .hb-home-combined-hit:focus-visible{outline:3px solid #ff8c21!important;outline-offset:-8px!important;border-radius:30px!important}.hb-home-combined-slider:has(.hb-pos-html-banner-slide.active) .hb-home-combined-dots{z-index:20!important}
 @media(max-width:1100px){.hb-pos-html-banner-slide{grid-template-columns:1fr!important}.hb-pos-html-copy{padding:28px 24px 0!important;justify-content:flex-start}.hb-pos-html-logo{width:150px!important}.hb-pos-html-copy h2{font-size:36px!important}.hb-pos-html-copy p{font-size:15px!important;max-width:620px}.hb-pos-html-stage{min-height:360px}.hb-pos-terminal{left:34%;top:3%;width:34%;height:64%}.hb-pos-scanner{left:8%;top:32%;width:22%;height:34%}.hb-pos-printer{right:5%;top:14%;width:23%;height:32%}.hb-pos-cashdrawer{right:6%;bottom:3%;width:34%;height:34%}.hb-pos-stand{display:none!important}}
 @media(max-width:620px){.hb-pos-html-feature-row{gap:7px}.hb-pos-html-feature-row span{font-size:10px;padding:5px 8px}.hb-pos-html-stage{min-height:300px}.hb-pos-terminal{left:32%;top:6%;width:42%;height:53%}.hb-pos-scanner{left:2%;top:42%;width:28%;height:30%}.hb-pos-printer{right:1%;top:24%;width:26%;height:28%}.hb-pos-cashdrawer{right:4%;bottom:5%;width:48%;height:28%}.hb-pos-html-copy h2{font-size:32px!important}}
@@ -15466,8 +15468,8 @@ function homeCombinedBannerSlider() {
       bullets:["8-camera E40 bullet bundle","4K bullet coverage","PoE NVR recording system","Built for broader property coverage"]
     }
   ];
-  const posEquipmentHtml = homePosEquipmentHtmlSlide(0, true);
-  const currentHtml = currentSlides.map((s, i) => `<article class="hb-home-combined-slide hb-current-banner-slide hb-current-${s.tone} ${false ? "active" : ""}" data-slide="${i + 1}">
+  const posEquipmentHtml = homePosEquipmentHtmlSlide(currentSlides.length, false);
+  const currentHtml = currentSlides.map((s, i) => `<article class="hb-home-combined-slide hb-current-banner-slide hb-current-${s.tone} ${i === 0 ? "active" : ""}" data-slide="${i}">
       <a class="hb-home-combined-hit" href="${s.href}" aria-label="${escapeHtml(s.title)}"></a>
       <div class="hb-current-banner-bg"></div>
       <div class="hb-current-banner-copy">
@@ -15480,7 +15482,7 @@ function homeCombinedBannerSlider() {
       <div class="hb-current-banner-visual"><img src="${s.visual}" alt="${escapeHtml(s.title)} visual"></div>
     </article>`).join("");
   const dealSlides = deals.map((d, j) => {
-    const i = 1 + currentSlides.length + j;
+    const i = currentSlides.length + 1 + j;
     return `<article class="hb-home-combined-slide hb-home-eufy-slide" data-slide="${i}">
       <a class="hb-home-combined-hit" href="${d.href}" aria-label="${escapeHtml(d.title)}"></a>
       <div class="hb-eufy-deal-bg"></div>
@@ -15501,11 +15503,11 @@ function homeCombinedBannerSlider() {
       </div>
     </article>`;
   }).join("");
-  const total = 1 + currentSlides.length + deals.length;
+  const total = currentSlides.length + 1 + deals.length;
   const dots = Array.from({ length: total }, (_, i) => `<button type="button" class="hb-home-combined-dot ${i === 0 ? "active" : ""}" data-slide="${i}" aria-label="Show homepage banner ${i + 1}"></button>`).join("");
   return `<section class="hb-home-combined-slider-wrap" aria-label="Homepage featured banners">
     <div class="hb-home-combined-slider">
-      ${homePosEquipmentBannerCss()}${posEquipmentHtml}${currentHtml}${dealSlides}
+      ${homePosEquipmentBannerCss()}${currentHtml}${posEquipmentHtml}${dealSlides}
       <div class="hb-home-combined-dots">${dots}</div>
     </div>
     <script>
