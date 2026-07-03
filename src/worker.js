@@ -23036,6 +23036,7 @@ async function adminDocumentPdf(request, env) {
   const id = new URL(request.url).searchParams.get("id");
   const doc = id ? await getDoc(env, id) : null;
   if (!doc) return htmlPage("PDF Not Found", layout(env, "Not Found", `<section class="section"><div class="container"><div class="notice error">Document not found.</div></div></section>`), 404);
+  await attachOpenInvoiceBalance(env, doc);
   return documentPdfResponse(doc, env, "attachment");
 }
 
@@ -23494,6 +23495,7 @@ async function adminSendPaymentLink(request, env) {
     const body = `<main class="section admin-dashboard"><div class="container"><div class="form-section"><div class="form-title">Payment Link Not Ready</div><div class="notice error">Authorize.Net is not configured yet. Add AUTHORIZE_NET_API_LOGIN_ID, AUTHORIZE_NET_TRANSACTION_KEY, and AUTHORIZE_NET_PUBLIC_CLIENT_KEY as Cloudflare secrets.</div><div class="btn-row"><a class="btn orange" href="/admin/document?id=${encodeURIComponent(doc.id)}">Edit Invoice</a><a class="btn" href="/admin/dashboard?view=invoices">Open Invoices</a></div></div></div></main>`;
     return htmlPage("Payment Link Not Ready | HB Commerce", layout(env, "Dashboard", body));
   }
+  await attachOpenInvoiceBalance(env, doc);
   const totals = calcTotals(doc);
   const attachments = documentEmailAttachments(doc, env);
   const html = documentEmailHtml(env, doc);
@@ -23529,6 +23531,7 @@ async function adminEmail(request, env) {
 async function sendDocEmail(env, doc) {
   if (!env.RESEND_API_KEY) return false;
   if (!doc.email) return false;
+  await attachOpenInvoiceBalance(env, doc);
   const subject = `HB Commerce Solutions ${doc.type} ${doc.number}`;
   const html = documentEmailHtml(env, doc);
   const attachments = documentEmailAttachments(doc, env);
@@ -23632,6 +23635,9 @@ function documentEmailHtml(env, doc) {
   const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
   const statusLabel = isQuote ? String(doc.status || "Pending") : (isPaidInvoice ? "Paid" : String(doc.status || "Open"));
   const statusBg = isPaidInvoice || statusLabel === "Approved" ? "#138a3d" : statusLabel === "Declined" ? "#b64242" : "#ff6a00";
+  const hasCustomerBalance = isInvoice && !isPaidInvoice && Number(doc.customer_balance_count || 0) > 1;
+  const customerBalanceTotal = Number(doc.customer_balance_total || totals.total || 0);
+  const emailBalanceRows = hasCustomerBalance ? `<tr><td style="padding:9px 0 0;color:#475569;font-weight:850">Open Invoices</td><td align="right" style="padding:9px 0 0;color:#10233d;font-weight:950">${escapeHtml(String(doc.customer_balance_count || 0))}</td></tr><tr><td style="padding:12px 0 0;color:#0f7a37;font-size:18px;font-weight:950">Total Balance Due</td><td align="right" style="padding:12px 0 0;color:#0f7a37;font-size:24px;font-weight:950">${money(customerBalanceTotal)}</td></tr>` : "";
   const billTo = escapeHtml(addressToText(docBillingAddress(doc)) || "").replaceAll("\n", "<br>");
   const shipTo = escapeHtml(addressToText(docShippingAddress(doc)) || "").replaceAll("\n", "<br>");
   const rows = (doc.items || []).slice(0, 10).map(item => {
@@ -23677,6 +23683,7 @@ function documentEmailHtml(env, doc) {
           <tr><td style="padding:6px 0;color:#475569">Shipping</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.shipping)}</td></tr>
           <tr><td style="padding:6px 0;color:#475569">Tax (${Number(totals.rate).toFixed(3)}%)</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.tax)}</td></tr>
           <tr><td style="padding:14px 0 0;color:#06284d;font-size:18px;font-weight:950;border-top:3px solid #06284d">${isQuote ? "Quote Total" : "Invoice Total"}</td><td align="right" style="padding:14px 0 0;color:#06284d;font-size:22px;font-weight:950;border-top:3px solid #06284d">${money(totals.total)}</td></tr>
+          ${emailBalanceRows}
           ${isPaidInvoice ? `<tr><td style="padding:9px 0 0;color:#138a3d;font-size:17px;font-weight:950">Amount Paid</td><td align="right" style="padding:9px 0 0;color:#138a3d;font-size:20px;font-weight:950">${money(totals.total)}</td></tr>` : ""}
         </table>
         ${paidSummary}
@@ -23695,6 +23702,8 @@ function buildDocumentPdf(doc = {}, env = {}) {
   const type = doc.type === "Invoice" ? "Invoice" : "Quote";
   const title = type.toUpperCase();
   const totals = calcTotals(doc);
+  const hasCustomerBalance = type === "Invoice" && !doc.paid && Number(doc.customer_balance_count || 0) > 1;
+  const customerBalanceTotal = Number(doc.customer_balance_total || totals.total || 0);
   const billing = docBillingAddress(doc);
   const shipping = docShippingAddress(doc);
   const contact = hbCompanyContactInfo(doc);
@@ -23865,7 +23874,7 @@ function buildDocumentPdf(doc = {}, env = {}) {
     line(mainX, top - rowH, rightX, top - rowH, lightLine, 0.7);
     y -= rowH;
   }
-  ensureSpace(236);
+  ensureSpace(hasCustomerBalance ? 282 : 236);
   y -= 10;
   const lowerTop = y;
   const termsX = mainX, termsW = 206, termsH = 132;
@@ -23879,7 +23888,7 @@ function buildDocumentPdf(doc = {}, env = {}) {
     ty -= Math.max(12, used) + 2;
     if (ty < lowerTop - termsH + 12) break;
   }
-  const tx = mainX + 228, tw = rightX - tx, th = 162;
+  const tx = mainX + 228, tw = rightX - tx, th = hasCustomerBalance ? 206 : 162;
   rect(tx, lowerTop - th, tw, th, "0.965 0.98 1");
   strokeRect(tx, lowerTop - th, tw, th, lightLine, 1);
   let ry = lowerTop - 24;
@@ -23894,6 +23903,10 @@ function buildDocumentPdf(doc = {}, env = {}) {
   totalLine("Shipping Cost", money(totals.shipping));
   totalLine(`Tax (${Number(totals.rate || 0).toFixed(3)}%)`, money(totals.tax));
   totalLine(type === "Invoice" ? "TOTAL DUE" : "QUOTE TOTAL", money(totals.total), true, navy);
+  if (hasCustomerBalance) {
+    totalLine("OPEN INVOICES", String(doc.customer_balance_count || 0));
+    totalLine("BALANCE DUE", money(customerBalanceTotal), true, "0.95 0.35 0");
+  }
   if (doc.paid) totalLine("PAID", money(totals.total), true, green);
   y = lowerTop - Math.max(termsH, th) - 24;
   if (type === "Invoice") {
