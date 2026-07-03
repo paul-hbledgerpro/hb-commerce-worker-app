@@ -15388,6 +15388,163 @@ function homePosEquipmentBannerCss() {
 </style>`;
 }
 
+function homeCombinedBannerSlider() {
+  const currentSlides = [
+    {
+      href:"/",
+      kicker:"ONE PARTNER. COMPLETE SOLUTIONS.",
+      title:"Smart Solutions for Your Business",
+      desc:"Merchant services, POS software, and security camera systems designed to help your business operate smarter.",
+      visual:"/assets/v72-home-hero-visual.webp",
+      tone:"home",
+      features:["Secure Transactions","Smarter Operations","Advanced Security"]
+    },
+    {
+      href:"/merchant-services",
+      kicker:"MERCHANT SERVICES",
+      title:"Merchant Services Powered by CentriqPay",
+      desc:"Secure payment processing, faster funding, seamless POS integration, and technology that helps your business grow.",
+      visual:"/assets/v75-merchant-visual.webp",
+      tone:"merchant",
+      features:["Secure Processing","Fast Funding","Lower Rates"]
+    },
+    {
+      href:"/pos-software-retail",
+      kicker:"POS SOFTWARE FOR RETAIL",
+      title:"POS Software for Retail",
+      desc:"Speed up checkout, manage inventory with ease, accept payments, and get real-time business insights.",
+      visual:"/assets/v75-pos-visual.webp",
+      tone:"pos",
+      features:["Inventory Control","Powerful Reporting","Integrated Payments"]
+    },
+    {
+      href:"/security-camera-systems",
+      kicker:"PROFESSIONAL-GRADE SURVEILLANCE SOLUTIONS",
+      title:"Security Camera Systems",
+      desc:"High-performance security camera hardware built for reliability, clarity, and peace of mind.",
+      visual:"/assets/v75-security-visual.webp",
+      tone:"security",
+      features:["Enterprise Grade","Crystal Clear Video","Scalable Coverage"]
+    }
+  ];
+  const deals = [
+    {
+      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-4-s4-addons",
+      title:"eufy PoE NVR Security System S4 Max + 4 PoE Cam S4 Add-Ons",
+      desc:"Expanded PoE coverage with S4 Max base system plus 4 extra S4 Bullet-PTZ cameras.",
+      regular:"$2,819.99",
+      sale:"$2,299.99",
+      save:"Save $520.00",
+      coupon:"WS24BPOE81ST",
+      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-5_3840x.png?v=1760087772",
+      bullets:["S4 Max NVR base bundle","4 additional S4 Bullet-PTZ cameras","PoE wired connectivity","Built for larger property coverage"]
+    },
+    {
+      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-2-s4-addons",
+      title:"eufy PoE NVR Security System S4 Max + 2 PoE Cam S4 Add-Ons",
+      desc:"S4 Max PoE NVR system with two S4 Bullet-PTZ add-on cameras.",
+      regular:"$2,159.99",
+      sale:"$1,899.99",
+      save:"Save $260.00",
+      coupon:"WS24BPOE2S4",
+      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-4_3840x.png?v=1760087486",
+      bullets:["S4 Max NVR base system","2 S4 add-on cameras","Bullet-PTZ style monitoring","Local NVR recording workflow"]
+    },
+    {
+      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/s4max-2-e40-addons",
+      title:"eufy PoE NVR Security System S4 Max + 2 PoE Cam E40 Add-Ons",
+      desc:"S4 Max PoE NVR system with two E40 4K bullet camera add-ons.",
+      regular:"$1,759.99",
+      sale:"$1,599.99",
+      save:"Save $160.00",
+      coupon:"WS24BPOE2E40",
+      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/1500_1500_2x-6_3840x.png?v=1760087251",
+      bullets:["S4 Max base system","2 E40 4K bullet add-ons","4K camera coverage","PoE wired reliability"]
+    },
+    {
+      href:"/security-camera-systems/eufy-poe-nvr-camera-systems/e40-8-bullet",
+      title:"eufy PoE NVR Security System E40 - 8× 4K Bullet Cameras",
+      desc:"E40 PoE NVR security bundle with eight 4K bullet cameras.",
+      regular:"$1,299.99",
+      sale:"$899.99",
+      save:"Save $400.00",
+      coupon:"HB24BPOE8E40",
+      image:"https://cdn.shopify.com/s/files/1/0504/7094/4954/files/Group2121234924_2_3840x.png?v=1751452080",
+      bullets:["8-camera E40 bullet bundle","4K bullet coverage","PoE NVR recording system","Built for broader property coverage"]
+    }
+  ];
+  const posEquipmentHtml = homePosEquipmentHtmlSlide(currentSlides.length, false);
+  const currentHtml = currentSlides.map((s, i) => `<article class="hb-home-combined-slide hb-current-banner-slide hb-current-${s.tone} ${i === 0 ? "active" : ""}" data-slide="${i}">
+      <a class="hb-home-combined-hit" href="${s.href}" aria-label="${escapeHtml(s.title)}"></a>
+      <div class="hb-current-banner-bg"></div>
+      <div class="hb-current-banner-copy">
+        <img class="hb-current-banner-logo" src="/assets/logo-v182.webp" alt="HB Commerce Solutions">
+        <div class="hb-current-kicker">${escapeHtml(s.kicker)}</div>
+        <h2>${escapeHtml(s.title)}</h2>
+        <p>${escapeHtml(s.desc)}</p>
+        <div class="hb-current-feature-row">${s.features.map(f => `<span><i>✓</i>${escapeHtml(f)}</span>`).join("")}</div>
+      </div>
+      <div class="hb-current-banner-visual"><img src="${s.visual}" alt="${escapeHtml(s.title)} visual"></div>
+    </article>`).join("");
+  const dealSlides = deals.map((d, j) => {
+    const i = currentSlides.length + 1 + j;
+    return `<article class="hb-home-combined-slide hb-home-eufy-slide" data-slide="${i}">
+      <a class="hb-home-combined-hit" href="${d.href}" aria-label="${escapeHtml(d.title)}"></a>
+      <div class="hb-eufy-deal-bg"></div>
+      <div class="hb-eufy-deal-copy">
+        <img class="hb-eufy-deal-logo" src="/assets/logo-v182.webp" alt="HB Commerce Solutions">
+        <div class="hb-eufy-product-brand">eufy PoE NVR Security System</div>
+        <h2>${escapeHtml(d.title)}</h2>
+        <p>${escapeHtml(d.desc)}</p>
+        <div class="hb-eufy-price-row">
+          <div><span>Regular</span><strong class="regular">${escapeHtml(d.regular)}</strong></div>
+          <div><span>After coupon</span><strong class="sale">${escapeHtml(d.sale)}</strong></div>
+          <div><span>${escapeHtml(d.save)}</span><strong class="coupon">${escapeHtml(d.coupon)}</strong></div>
+        </div>
+        <div class="hb-eufy-bullets">${d.bullets.map(b => `<span><i>✓</i>${escapeHtml(b)}</span>`).join("")}</div>
+      </div>
+      <div class="hb-eufy-deal-visual">
+        <img src="${d.image}" alt="${escapeHtml(d.title)} product image">
+      </div>
+    </article>`;
+  }).join("");
+  const total = currentSlides.length + 1 + deals.length;
+  const dots = Array.from({ length: total }, (_, i) => `<button type="button" class="hb-home-combined-dot ${i === 0 ? "active" : ""}" data-slide="${i}" aria-label="Show homepage banner ${i + 1}"></button>`).join("");
+  return `<section class="hb-home-combined-slider-wrap" aria-label="Homepage featured banners">
+    <div class="hb-home-combined-slider">
+      ${homePosEquipmentBannerCss()}${currentHtml}${posEquipmentHtml}${dealSlides}
+      <div class="hb-home-combined-dots">${dots}</div>
+    </div>
+    <script>
+    (function(){
+      var root=document.currentScript && document.currentScript.previousElementSibling;
+      if(!root || !root.classList.contains('hb-home-combined-slider')) root=document.querySelector('.hb-home-combined-slider');
+      if(!root || root.__hbCombinedSliderReady) return;
+      root.__hbCombinedSliderReady=true;
+      var slides=[].slice.call(root.querySelectorAll('.hb-home-combined-slide'));
+      var dots=[].slice.call(root.querySelectorAll('.hb-home-combined-dot'));
+      var current=0;
+      var timer=null;
+      function show(n){
+        if(!slides.length)return;
+        current=(n+slides.length)%slides.length;
+        slides.forEach(function(s,i){s.classList.toggle('active',i===current);});
+        dots.forEach(function(d,i){d.classList.toggle('active',i===current);});
+      }
+      function stop(){if(timer){clearInterval(timer);timer=null;}}
+      function play(){stop();timer=setInterval(function(){show(current+1);},5000);}
+      dots.forEach(function(d,i){d.addEventListener('click',function(e){e.preventDefault();stop();show(i);play();});});
+      root.addEventListener('mouseenter',stop);
+      root.addEventListener('mouseleave',play);
+      root.addEventListener('focusin',stop);
+      root.addEventListener('focusout',play);
+      show(0);play();
+    })();
+    </script>
+  </section>`;
+}
+
+
 function pageHome(env) {
   const content = `<main class="hb-v72-home">
     <section class="hb-v72-hero hb-v122-home-hero">
