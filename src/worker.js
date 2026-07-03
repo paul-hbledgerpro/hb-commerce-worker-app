@@ -16266,6 +16266,23 @@ async function quoteProductsForEnv(env) {
   return [...eufy.map(p => ({ ...p, brand: p.brand || 'eufy', product_url: `/security-camera-systems/eufy-poe-nvr-camera-systems/${encodeURIComponent(p.id)}` })), ...lts];
 }
 
+async function shopProductsForEnv(env) {
+  const baseProducts = await quoteProductsForEnv(env);
+  let itemManagerProducts = [];
+  try {
+    itemManagerProducts = await itemManagerInventoryForEnv(env);
+  } catch (err) {
+    console.error('Item Manager shop product load failed', err);
+  }
+  const map = new Map();
+  for (const p of [...itemManagerProducts, ...baseProducts]) {
+    const id = String(p && p.id || '').trim();
+    if (!id) continue;
+    if (!map.has(id)) map.set(id, { ...p, id });
+  }
+  return Array.from(map.values());
+}
+
 async function adminInventorySearch(request, env) {
   const user = await requireAuth(request, env);
   if (!user) return jsonResponse({ ok: false, error: "Not logged in" }, 401);
@@ -16343,7 +16360,7 @@ function ltsProductCard(p) {
 
 async function pageLtsCollection(env, type = 'recorders') {
   const products = (await ltsProductsForEnv(env)).filter(p => p.type === (type === 'cameras' ? 'cameras' : 'recorders'));
-  const all = await quoteProductsForEnv(env);
+  const all = await shopProductsForEnv(env);
   const title = type === 'cameras' ? 'LTS Cameras' : 'LTS DVR / NVR';
   const desc = type === 'cameras' ? 'Browse LTS IP/network camera hardware. Pricing is not shown online; add items to your quote cart and submit an online order request.' : 'Browse LTS video recorders including DVR and NVR hardware. Pricing is not shown online; add items to your quote cart and submit an online order request.';
   const productHtml = products.map(ltsProductCard).join('') || `<div class="notice warning"><strong>No active LTS products are currently published.</strong><br>Go to Admin → LTS and activate the products you want customers to see.</div>`;
@@ -16353,7 +16370,7 @@ async function pageLtsCollection(env, type = 'recorders') {
 
 async function pageLtsProduct(env, id) {
   const products = await ltsProductsForEnv(env);
-  const all = await quoteProductsForEnv(env);
+  const all = await shopProductsForEnv(env);
   const p = ltsProductById(decodeURIComponent(id || ''), products);
   if (!p) return htmlPage('Product Not Found', layout(env, 'Security', `<section class="section"><div class="container"><div class="notice error">LTS product not found.</div><p><a class="btn" href="/security-camera-systems">Back to Security Camera Systems</a></p></div></section>`), 404);
   const bullets = (p.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join('');
@@ -16785,7 +16802,7 @@ function note(msg,good){let el=document.getElementById('checkoutCouponNote');if(
 function showToast(msg){let t=document.getElementById('eufyCartToast');if(!t){t=document.createElement('div');t.id='eufyCartToast';t.className='eufy-cart-toast';document.body.appendChild(t)}t.innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
 window.eufyCopyCode=function(code){try{navigator.clipboard.writeText(code)}catch(e){}let input=document.getElementById('checkoutCouponCode');if(input)input.value=code;showToast('<strong>Coupon code copied</strong><br>'+code)};
 async function requireCustomerForCart(){try{let r=await fetch('/api/customer-status',{credentials:'same-origin'});let j=await r.json();if(j&&j.verified)return true;}catch(e){}window.location.href='/account/login?required=1&next='+encodeURIComponent(location.pathname+location.search);return false}
-window.eufyAddToCart=async function(id,qty,coupon){if(!(await requireCustomerForCart()))return;let p=find(id);if(!p)return;coupon=!!coupon&&hasCoupon(p);let cart=getCart();let key=id+'::'+(coupon?'coupon':'regular');let row=cart.find(x=>cartKey(x)===key);qty=Math.max(1,parseInt(qty)||1);if(row)row.qty+=qty;else cart.push({id,qty,coupon});saveCart(cart);showToast('<strong>Added to cart</strong><br>'+p.name+'<div><a href="/checkout">Checkout</a></div>')};
+window.eufyAddToCart=async function(id,qty,coupon){if(!(await requireCustomerForCart()))return;id=String(id||'');let p=find(id);if(!p){showToast('<strong>Item could not be added</strong><br>This product was not loaded in the cart catalog. Please refresh the page and try again.');return;}coupon=!!coupon&&hasCoupon(p);let cart=getCart();let key=id+'::'+(coupon?'coupon':'regular');let row=cart.find(x=>cartKey(x)===key);qty=Math.max(1,parseInt(qty)||1);if(row)row.qty+=qty;else cart.push({id,qty,coupon});saveCart(cart);showToast('<strong>Added to cart</strong><br>'+safeText(p.name)+'<div><a href="/cart">View Cart</a><a href="/checkout">Checkout</a></div>')};
 window.eufyRemoveFromCart=function(key){saveCart(getCart().filter(x=>cartKey(x)!==key))};
 window.eufyUpdateCartQty=function(key,val){let cart=getCart();let row=cart.find(x=>cartKey(x)===key);if(row)row.qty=Math.max(1,parseInt(val)||1);saveCart(cart)};
 window.eufyToggleCartCoupon=function(key,checked){let cart=getCart();let row=cart.find(x=>cartKey(x)===key);if(row){let p=find(row.id);row.coupon=!!checked&&hasCoupon(p);saveCart(cart)}};
@@ -16856,7 +16873,7 @@ window.addEventListener('storage',e=>{if(e.key===KEY)render()});document.addEven
 async function pageEufyCollection(env) {
   const products = await eufyProductsForEnv(env);
   const productHtml = products.map(eufyProductCard).join('');
-  const catalog = await quoteProductsForEnv(env);
+  const catalog = await shopProductsForEnv(env);
   const body = `<main class="eufy-page"><section class="eufy-collection-hero"><div class="container"><div class="kicker">EUFY PoE NVR Camera Systems</div><h1>eufy NVR Security System Bundles</h1><p>Browse PoE NVR systems, camera bundles, add-on cameras, and mounting accessories. Add eufy products to your cart and checkout when ready.</p><div class="eufy-hero-actions"><a class="btn orange" href="#eufy-products">View Products</a><a class="btn" href="/cart">View Cart <span class="eufy-cart-floating-count">0</span></a></div></div></section><section class="section" id="eufy-products"><div class="container"><div class="section-title centered"><h2>eufy PoE NVR Products</h2><p>Product pricing is managed from your Admin Portal EUFY section. ZipTax destination sales tax is calculated at checkout for eufy purchases; availability, shipping, and payment are finalized by HB Commerce.</p></div><div class="eufy-store-grid">${productHtml}</div>${eufyStoreScript(catalog)}</div></section></main>`;
   return htmlPage('EUFY PoE NVR Camera Systems | HB Commerce Solutions', layout(env, 'Security', body));
 }
@@ -16949,13 +16966,13 @@ body:has(.hb-shop-page-v192)::before,body:has(.eufy-cart-page)::before,body:has(
 </style>`;
 
 async function pageEufyCart(env) {
-  const products = await quoteProductsForEnv(env);
+  const products = await shopProductsForEnv(env);
   const body = `${HB_SHOP_BACKGROUND_STYLE}<main class="hb-shop-page-v192 eufy-cart-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Cart</div><h1>Your Shopping Cart</h1><p>Review your eufy products, coupon savings, estimated tax, and delivery options before checkout.</p></div><a class="hb-pro-soft-btn" href="/security-camera-systems/eufy-poe-nvr-camera-systems">Continue Shopping</a></div></section><section class="hb-pro-shop-section"><div class="container">${eufyCartPanel(true)}${eufyStoreScript(products)}</div></section></main>`;
   return htmlPage('Cart | HB Commerce Solutions', layout(env, 'Cart', body));
 }
 
 async function pageEufyCheckout(env) {
-  const products = await quoteProductsForEnv(env);
+  const products = await shopProductsForEnv(env);
   const acfg = authNetConfig(env);
   const acceptJsV1 = authNetMode(env) === "sandbox" ? "https://jstest.authorize.net/v1/Accept.js" : "https://js.authorize.net/v1/Accept.js";
   const body = `${HB_SHOP_BACKGROUND_STYLE}<main class="hb-shop-page-v192 eufy-checkout-page"><section class="hb-shop-hero-v192"><div class="container"><div><div class="kicker">Checkout</div><h1>Secure Checkout</h1><p>Complete delivery, live UPS rating, ZipTax, and payment in a clean secure checkout.</p></div><a class="hb-pro-soft-btn" href="/cart">Back to Cart</a></div></section><section class="hb-pro-shop-section"><div class="container hb-pro-checkout-layout">${eufyCheckoutForm()}${eufyCartPanel(false)}</div><script>window.HB_ACCEPT_CONFIG={login:${JSON.stringify(acfg.login)},clientKey:${JSON.stringify(acfg.publicKey)},ready:${authNetReady(env)?"true":"false"}};window.HB_APPLE_PAY_CONFIG=${JSON.stringify(applePayClientConfig(env))};</script><script crossorigin src="https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js"></script><script src="${acceptJsV1}"></script>${eufyStoreScript(products)}<script>(function(){const K='hb_eufy_quote_cart';function m(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0)}function q(id){return document.getElementById(id)}function cart(){try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}}function ship(){return{street:(q('shipStreet')||{}).value||'',city:(q('shipCity')||{}).value||'',state:(q('shipState')||{}).value||'',zip:(q('shipZip')||{}).value||''}}function fulfill(){let r=document.querySelector('input[name=fulfillment_type]:checked');return r?r.value:'ups'}function setShipReq(on){['shipStreet','shipCity','shipState','shipZip'].forEach(id=>{let e=q(id);if(e)e.required=on});let b=q('shippingAddressBlock');if(b)b.style.display=on?'block':'none'}async function rate(){let box=q('shippingRateBox'),c=cart(),f=fulfill();setShipReq(f!=='pickup');if(f==='pickup'){window.hbEufyShippingReady=true;window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(0);if(q('shipService'))q('shipService').value='pickup';if(box)box.innerHTML='<strong>Pickup selected</strong><br><small>No shipping charge.</small>';calc();return}window.hbEufyShippingReady=false;let s=ship();if(!s.zip||String(s.zip).replace(/\D/g,'').length<5){window.hbEufyShipCost=0;if(q('shipCost'))q('shipCost').value='0';if(q('eufyCartShipping'))q('eufyCartShipping').textContent=(f==='fedex'?'FedEx needed':'UPS needed');if(box)box.innerHTML='<strong>'+(f==='fedex'?'FedEx Ground':'UPS Ground')+'</strong><br><small>Enter shipping ZIP to calculate live carrier rate.</small>';calc();return}try{let r=await fetch('/api/shipping/rate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:s,fulfillment_type:f})});let j=await r.json(),x=j.rates&&j.rates[0];if(!j.ok||!x)throw new Error(j.message||'Carrier rate unavailable');window.hbEufyShippingReady=true;window.hbEufyShipCost=Number(x.amount||0);if(q('shipCost'))q('shipCost').value=String(x.amount||0);if(q('shipService'))q('shipService').value=x.code||f;if(q('eufyCartShipping'))q('eufyCartShipping').textContent=m(x.amount||0);if(box)box.innerHTML='<strong>'+x.label+'</strong> '+m(x.amount||0)+'<br><small>'+(j.source||'live carrier rate')+'</small>'}catch(e){if(box)box.innerHTML='<strong>Carrier rate could not be calculated</strong><br><small>Please verify ZIP/address or choose Pickup. Admin can also verify shipping.</small>';window.hbEufyShipCost=0;window.hbEufyShippingReady=false}calc()}async function calc(){let c=cart();if(!c.length)return;try{let r=await fetch('/api/tax/calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cart:c,shipping:ship(),checkout_coupon_code:(q('checkoutCouponCode')||{}).value||''})});let j=await r.json();if(!j.ok)return;let tax=Number(j.tax_amount||0),sub=Number(j.taxable_amount||0),rate=Number(j.rate||0),sh=Number(window.hbEufyShipCost||0);if(q('eufyCartTax'))q('eufyCartTax').textContent=m(tax);if(q('eufyCartTotal'))q('eufyCartTotal').textContent=m(sub+tax+sh);if(q('eufyQuoteItemNote'))q('eufyQuoteItemNote').textContent='Destination tax from '+(j.source||'ZipTax')+' ('+rate.toFixed(3)+'%).'}catch(e){}}window.hbUpdateShippingRate=rate;['shipStreet','shipCity','shipState','shipZip','checkoutCouponCode'].forEach(id=>{let el=q(id);if(el){el.addEventListener('input',()=>setTimeout(rate,350));el.addEventListener('blur',rate)}});document.addEventListener('change',e=>{if(e.target&&e.target.name==='fulfillment_type')rate()});document.addEventListener('DOMContentLoaded',()=>setTimeout(rate,700));})();</script></section></main>`;
@@ -16964,7 +16981,7 @@ async function pageEufyCheckout(env) {
 
 async function pageEufyProduct(env, id) {
   const products = await eufyProductsForEnv(env);
-  const catalog = await quoteProductsForEnv(env);
+  const catalog = await shopProductsForEnv(env);
   const p = eufyProductById(decodeURIComponent(id || ''), products);
   if (!p) return htmlPage('Product Not Found', layout(env, 'Security', `<section class="section"><div class="container"><div class="notice error">eufy product not found.</div><p><a class="btn" href="/security-camera-systems">Back to eufy Products</a></p></div></section>`), 404);
   const bullets = (p.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join('');
@@ -16977,7 +16994,7 @@ async function pageEufyProduct(env, id) {
 }
 
 async function handleEufyOrder(request, env, customer = null) {
-  const products = await quoteProductsForEnv(env);
+  const products = await shopProductsForEnv(env);
   const wantsApplePayJson = request.headers.get("X-HB-Apple-Pay-Checkout") === "1";
   const fd = await request.formData();
   let cart = [];
@@ -19619,7 +19636,7 @@ async function fedExGroundRate(env, ship = {}, cart = []) {
 async function publicTaxCalculate(request, env) {
   try {
     const body = await request.json();
-    const products = await eufyProductsForEnv(env);
+    const products = await shopProductsForEnv(env);
     const rows = Array.isArray(body.cart) ? body.cart : [];
     const items = [];
     const checkoutCouponCode = String(body.checkout_coupon_code || '').trim().toUpperCase();
@@ -20816,8 +20833,9 @@ async function itemManagerInventoryForEnv(env) {
       name: r.item_name || r.sku,
       desc: r.notes || r.public_description || [r.department, r.category, r.size, r.pack].filter(Boolean).join(' • '),
       image: r.image_url || '',
-      regular_price: Number(r.msrp || r.price || 0),
+      regular_price: sale,
       sale_price: sale,
+      msrp: Number(r.msrp || 0),
       cost,
       markup,
       taxable: true,
@@ -21032,7 +21050,7 @@ async function pageItemDepartment(env, slug) {
   const rowsAll = await itemManagerRows(env, { includeInactive: false });
   const rows = rowsAll.filter(r => r.published && (itemSlugify(r.department) === dep.slug || String(r.department || '').trim().toLowerCase() === String(dep.name || '').trim().toLowerCase()));
   const cards = rows.map(r => `<article class="eufy-shop-card lts-shop-card"><a class="eufy-card-image" href="/products/item/${encodeURIComponent(r.id)}">${itemPublicImage(r)}</a><div class="eufy-card-body"><div class="eufy-category">${escapeHtml(r.category || r.department || 'Product')}</div><h3><a href="/products/item/${encodeURIComponent(r.id)}">${escapeHtml(r.item_name)}</a></h3><p>${escapeHtml(r.public_description || r.notes || [r.brand,r.size,r.pack].filter(Boolean).join(' • '))}</p><div class="eufy-price-row"><strong class="eufy-sale">${Number(r.price || 0) > 0 ? money(r.price) : 'Quote'}</strong></div><div class="eufy-actions"><a class="btn small" href="/products/item/${encodeURIComponent(r.id)}">View Details</a><button type="button" class="orange small" onclick="eufyAddToCart('${escapeHtml(r.id)}',1,false)">${itemWebsiteButtonLabel(r)}</button></div></div></article>`).join('') || `<div class="notice warning"><strong>No active products are published in this department yet.</strong><br>Add items in Admin → Item Manager and check “Publish on Website.”</div>`;
-  const all = await quoteProductsForEnv(env);
+  const all = await shopProductsForEnv(env);
   const body = `<main class="eufy-page"><section class="eufy-collection-hero"><div class="container"><div class="kicker">${escapeHtml(dep.name)}</div><h1>${escapeHtml(dep.name)}</h1><p>${escapeHtml(dep.description || 'Browse products from this department and add items to your quote cart.')}</p><div class="eufy-hero-actions"><a class="btn orange" href="#dept-products">View Products</a><a class="btn" href="/cart">View Cart <span class="eufy-cart-floating-count">0</span></a></div></div></section><section class="section" id="dept-products"><div class="container"><div class="section-title centered"><h2>${escapeHtml(dep.name)} Products</h2><p>Published from the HB Commerce Item Manager.</p></div><div class="eufy-store-grid">${cards}</div>${eufyStoreScript(all)}</div></section></main>`;
   return htmlPage(`${dep.name} | HB Commerce Solutions`, layout(env, 'Products', body));
 }
@@ -21042,7 +21060,7 @@ async function pageItemProduct(env, id) {
   const p = rows.find(r => r.id === decodeURIComponent(id || '') && r.published);
   if (!p) return htmlPage('Product Not Found', layout(env, 'Products', `<section class="section"><div class="container"><div class="notice error">Product not found.</div><p><a class="btn" href="/products">Back to Products</a></p></div></section>`), 404);
   const back = p.department ? `/products/${encodeURIComponent(itemSlugify(p.department))}` : '/products';
-  const all = await quoteProductsForEnv(env);
+  const all = await shopProductsForEnv(env);
   const galleryUrls = await itemImageGalleryUrls(env, p);
   const bullets = [p.brand, p.size, p.pack, p.category, p.sub_category].filter(Boolean).map(x => `<li>${escapeHtml(x)}</li>`).join('');
   const body = `<main class="eufy-detail-page">${itemProductGalleryStyles()}<section class="section"><div class="container"><a class="back-link" href="${back}">← Back to ${escapeHtml(p.department || 'Products')}</a><div class="eufy-detail-grid"><div class="eufy-detail-image">${itemProductGalleryHtml(p, galleryUrls)}</div><div class="eufy-detail-info"><div class="eufy-category">${escapeHtml(p.category || p.department || 'Product')}</div><h1>${escapeHtml(p.item_name)}</h1><p class="lead"><strong>SKU:</strong> ${escapeHtml(p.sku || '')}${p.upc ? ` • <strong>UPC:</strong> ${escapeHtml(p.upc)}` : ''}</p><p class="lead">${escapeHtml(p.public_description || p.notes || 'Product available from HB Commerce Solutions.')}</p><div class="eufy-price-row detail"><strong class="eufy-sale">${Number(p.price || 0) > 0 ? money(p.price) : 'Quote Required'}</strong></div>${bullets ? `<ul class="eufy-detail-bullets">${bullets}</ul>` : ''}<div class="notice">${escapeHtml(itemWebsiteNotice(p))}</div><div class="eufy-detail-actions"><input id="detailQty" type="number" min="1" value="1"><button class="orange" type="button" onclick="eufyAddToCart('${escapeHtml(p.id)}',document.getElementById('detailQty').value,false)">${itemWebsiteButtonLabel(p)}</button></div></div></div>${eufyStoreScript(all)}</div></section></main>`;
@@ -23113,6 +23131,7 @@ function reminderKindLabel(kind) {
 
 async function sendReminderEmail(env, doc, kind, days = 0) {
   if (!env.RESEND_API_KEY || !doc.email) return false;
+  await attachOpenInvoiceBalance(env, doc);
   const totals = calcTotals(doc);
   const link = absoluteReviewUrl(env, doc);
   let subject = "", html = "";
@@ -23495,7 +23514,6 @@ async function adminSendPaymentLink(request, env) {
     const body = `<main class="section admin-dashboard"><div class="container"><div class="form-section"><div class="form-title">Payment Link Not Ready</div><div class="notice error">Authorize.Net is not configured yet. Add AUTHORIZE_NET_API_LOGIN_ID, AUTHORIZE_NET_TRANSACTION_KEY, and AUTHORIZE_NET_PUBLIC_CLIENT_KEY as Cloudflare secrets.</div><div class="btn-row"><a class="btn orange" href="/admin/document?id=${encodeURIComponent(doc.id)}">Edit Invoice</a><a class="btn" href="/admin/dashboard?view=invoices">Open Invoices</a></div></div></div></main>`;
     return htmlPage("Payment Link Not Ready | HB Commerce", layout(env, "Dashboard", body));
   }
-  await attachOpenInvoiceBalance(env, doc);
   const totals = calcTotals(doc);
   const attachments = documentEmailAttachments(doc, env);
   const html = documentEmailHtml(env, doc);
@@ -23531,11 +23549,12 @@ async function adminEmail(request, env) {
 async function sendDocEmail(env, doc) {
   if (!env.RESEND_API_KEY) return false;
   if (!doc.email) return false;
-  await attachOpenInvoiceBalance(env, doc);
-  const subject = `HB Commerce Solutions ${doc.type} ${doc.number}`;
-  const html = documentEmailHtml(env, doc);
-  const attachments = documentEmailAttachments(doc, env);
-  return await sendEmail(env, { to: doc.email, subject, html, attachments });
+  const emailDoc = { ...doc };
+  await attachOpenInvoiceBalance(env, emailDoc);
+  const subject = `HB Commerce Solutions ${emailDoc.type} ${emailDoc.number}`;
+  const html = documentEmailHtml(env, emailDoc);
+  const attachments = documentEmailAttachments(emailDoc, env);
+  return await sendEmail(env, { to: emailDoc.email, subject, html, attachments });
 }
 
 async function sendEmail(env, { to, subject, html, attachments = [], reply_to = "" }) {
@@ -23635,9 +23654,9 @@ function documentEmailHtml(env, doc) {
   const declineLink = isQuote ? `${link}${link.includes("?") ? "&" : "?"}action=decline#decline` : "";
   const statusLabel = isQuote ? String(doc.status || "Pending") : (isPaidInvoice ? "Paid" : String(doc.status || "Open"));
   const statusBg = isPaidInvoice || statusLabel === "Approved" ? "#138a3d" : statusLabel === "Declined" ? "#b64242" : "#ff6a00";
-  const hasCustomerBalance = isInvoice && !isPaidInvoice && Number(doc.customer_balance_count || 0) > 1;
+  const showCustomerBalance = isInvoice && !isPaidInvoice && Number(doc.customer_balance_count || 0) > 1;
   const customerBalanceTotal = Number(doc.customer_balance_total || totals.total || 0);
-  const emailBalanceRows = hasCustomerBalance ? `<tr><td style="padding:9px 0 0;color:#475569;font-weight:850">Open Invoices</td><td align="right" style="padding:9px 0 0;color:#10233d;font-weight:950">${escapeHtml(String(doc.customer_balance_count || 0))}</td></tr><tr><td style="padding:12px 0 0;color:#0f7a37;font-size:18px;font-weight:950">Total Balance Due</td><td align="right" style="padding:12px 0 0;color:#0f7a37;font-size:24px;font-weight:950">${money(customerBalanceTotal)}</td></tr>` : "";
+  const customerBalanceCount = Number(doc.customer_balance_count || 0);
   const billTo = escapeHtml(addressToText(docBillingAddress(doc)) || "").replaceAll("\n", "<br>");
   const shipTo = escapeHtml(addressToText(docShippingAddress(doc)) || "").replaceAll("\n", "<br>");
   const rows = (doc.items || []).slice(0, 10).map(item => {
@@ -23683,7 +23702,7 @@ function documentEmailHtml(env, doc) {
           <tr><td style="padding:6px 0;color:#475569">Shipping</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.shipping)}</td></tr>
           <tr><td style="padding:6px 0;color:#475569">Tax (${Number(totals.rate).toFixed(3)}%)</td><td align="right" style="padding:6px 0;color:#10233d;font-weight:850">${money(totals.tax)}</td></tr>
           <tr><td style="padding:14px 0 0;color:#06284d;font-size:18px;font-weight:950;border-top:3px solid #06284d">${isQuote ? "Quote Total" : "Invoice Total"}</td><td align="right" style="padding:14px 0 0;color:#06284d;font-size:22px;font-weight:950;border-top:3px solid #06284d">${money(totals.total)}</td></tr>
-          ${emailBalanceRows}
+          ${showCustomerBalance ? `<tr><td style="padding:11px 0 0;color:#ffffff;font-size:18px;font-weight:950;background:#ff6a00;border-radius:12px 0 0 12px;padding-left:12px">Total Balance Due<br><span style="display:block;color:#fff5ea;font-size:12px;font-weight:800">${escapeHtml(String(customerBalanceCount))} open invoices</span></td><td align="right" style="padding:11px 12px 0 0;color:#ffffff;font-size:23px;font-weight:950;background:#ff6a00;border-radius:0 12px 12px 0">${money(customerBalanceTotal)}</td></tr>` : ""}
           ${isPaidInvoice ? `<tr><td style="padding:9px 0 0;color:#138a3d;font-size:17px;font-weight:950">Amount Paid</td><td align="right" style="padding:9px 0 0;color:#138a3d;font-size:20px;font-weight:950">${money(totals.total)}</td></tr>` : ""}
         </table>
         ${paidSummary}
@@ -23702,8 +23721,6 @@ function buildDocumentPdf(doc = {}, env = {}) {
   const type = doc.type === "Invoice" ? "Invoice" : "Quote";
   const title = type.toUpperCase();
   const totals = calcTotals(doc);
-  const hasCustomerBalance = type === "Invoice" && !doc.paid && Number(doc.customer_balance_count || 0) > 1;
-  const customerBalanceTotal = Number(doc.customer_balance_total || totals.total || 0);
   const billing = docBillingAddress(doc);
   const shipping = docShippingAddress(doc);
   const contact = hbCompanyContactInfo(doc);
@@ -23874,7 +23891,7 @@ function buildDocumentPdf(doc = {}, env = {}) {
     line(mainX, top - rowH, rightX, top - rowH, lightLine, 0.7);
     y -= rowH;
   }
-  ensureSpace(hasCustomerBalance ? 282 : 236);
+  ensureSpace(236);
   y -= 10;
   const lowerTop = y;
   const termsX = mainX, termsW = 206, termsH = 132;
@@ -23888,7 +23905,7 @@ function buildDocumentPdf(doc = {}, env = {}) {
     ty -= Math.max(12, used) + 2;
     if (ty < lowerTop - termsH + 12) break;
   }
-  const tx = mainX + 228, tw = rightX - tx, th = hasCustomerBalance ? 206 : 162;
+  const tx = mainX + 228, tw = rightX - tx, th = 162;
   rect(tx, lowerTop - th, tw, th, "0.965 0.98 1");
   strokeRect(tx, lowerTop - th, tw, th, lightLine, 1);
   let ry = lowerTop - 24;
@@ -23903,10 +23920,7 @@ function buildDocumentPdf(doc = {}, env = {}) {
   totalLine("Shipping Cost", money(totals.shipping));
   totalLine(`Tax (${Number(totals.rate || 0).toFixed(3)}%)`, money(totals.tax));
   totalLine(type === "Invoice" ? "TOTAL DUE" : "QUOTE TOTAL", money(totals.total), true, navy);
-  if (hasCustomerBalance) {
-    totalLine("OPEN INVOICES", String(doc.customer_balance_count || 0));
-    totalLine("BALANCE DUE", money(customerBalanceTotal), true, "0.95 0.35 0");
-  }
+  if (type === "Invoice" && !doc.paid && Number(doc.customer_balance_count || 0) > 1) totalLine("BALANCE TOTAL", money(doc.customer_balance_total || totals.total), true, orange);
   if (doc.paid) totalLine("PAID", money(totals.total), true, green);
   y = lowerTop - Math.max(termsH, th) - 24;
   if (type === "Invoice") {
@@ -24126,29 +24140,58 @@ async function adminTogglePaid(request, env) {
 
 
 function balanceMatchKey(v){return String(v||"").trim().toLowerCase().replace(/\s+/g," ")}
+function balanceSortDate(docLike = {}){
+  return String(docLike.doc_date || docLike.invoice_date || docLike.created_at || docLike.updated_at || "").slice(0, 10);
+}
+function balanceSortKey(row = {}){
+  const date = balanceSortDate(row);
+  const created = String(row.created_at || row.created || "");
+  const updated = String(row.updated_at || row.updated || "");
+  const number = String(row.number || "");
+  const id = String(row.id || "");
+  return `${date}|${created}|${updated}|${number}|${id}`;
+}
+function isOpenInvoiceDoc(row = {}, data = {}){
+  const status = String(row.status || data.status || "").trim().toLowerCase();
+  return !(row.paid || data.paid || status === "paid" || status === "canceled" || status === "cancelled" || status === "deleted" || data.canceled_at || data.cancelled_at || data.deleted_at);
+}
 async function attachOpenInvoiceBalance(env, doc){
   if(!doc||doc.type!=="Invoice"||doc.paid)return doc;
   const email=balanceMatchKey(doc.email), name=balanceMatchKey(doc.customer_name);
   if(!email&&!name)return doc;
-  const res=await env.DB.prepare("SELECT id,customer_name,email,status,paid,total,created_at,updated_at,data_json FROM documents WHERE type='Invoice' AND paid=0 ORDER BY created_at ASC LIMIT 1000").all();
+  // Clear previous computed fields first so an older invoice never shows a stale balance total.
+  delete doc.customer_balance_total;
+  delete doc.customer_balance_count;
+  delete doc.customer_balance_invoice_ids;
+  delete doc.customer_balance_this_invoice_total;
+  const res=await env.DB.prepare("SELECT id,number,customer_name,email,status,paid,total,created_at,updated_at,data_json FROM documents WHERE type='Invoice' AND paid=0 ORDER BY created_at ASC LIMIT 1500").all();
   const matches=[];
   for(const row of (res.results||[])){
     let d={};try{d=JSON.parse(row.data_json||"{}")}catch{}
-    const st=String(row.status||d.status||"").toLowerCase();
-    if(row.paid||d.paid||st==="paid"||st==="canceled"||st==="deleted"||d.canceled_at||d.deleted_at)continue;
+    if(!isOpenInvoiceDoc(row,d))continue;
     const rowEmail=balanceMatchKey(row.email||d.email), rowName=balanceMatchKey(row.customer_name||d.customer_name);
     const ok=email?rowEmail===email:rowName===name;
     if(!ok)continue;
-    const dd={...d,id:row.id,status:row.status||d.status,paid:row.paid||d.paid};
-    matches.push({id:row.id,created:String(row.created_at||d.created_at||""),updated:String(row.updated_at||d.updated_at||""),total:Number(row.total||calcTotals(dd).total||0)});
+    const dd={...d,id:row.id,number:row.number||d.number,status:row.status||d.status,paid:row.paid||d.paid,created_at:row.created_at||d.created_at,updated_at:row.updated_at||d.updated_at};
+    const total=Number(row.total||calcTotals(dd).total||0);
+    matches.push({
+      id:row.id,
+      number:row.number||d.number||"",
+      doc_date:d.doc_date||d.invoice_date||"",
+      created_at:row.created_at||d.created_at||"",
+      updated_at:row.updated_at||d.updated_at||"",
+      total,
+      sort_key:balanceSortKey({...d,id:row.id,number:row.number||d.number,created_at:row.created_at||d.created_at,updated_at:row.updated_at||d.updated_at})
+    });
   }
   if(matches.length<2)return doc;
-  matches.sort((a,b)=>a.created.localeCompare(b.created)||a.updated.localeCompare(b.updated)||a.id.localeCompare(b.id));
+  matches.sort((a,b)=>String(a.sort_key).localeCompare(String(b.sort_key)));
   const latest=matches[matches.length-1];
-  if(latest&&latest.id===doc.id){
-    doc.customer_balance_total=matches.reduce((s,r)=>s+Number(r.total||0),0);
+  if(latest&&String(latest.id)===String(doc.id)){
+    doc.customer_balance_total=Math.round(matches.reduce((s,r)=>s+Number(r.total||0),0)*100)/100;
     doc.customer_balance_count=matches.length;
     doc.customer_balance_invoice_ids=matches.map(r=>r.id);
+    doc.customer_balance_this_invoice_total=Number(latest.total||calcTotals(doc).total||0);
   }
   return doc;
 }
